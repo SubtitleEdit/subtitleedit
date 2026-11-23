@@ -69,7 +69,7 @@ public class TableViewIndexScrollBarTests : IDisposable
         Avalonia.Threading.Dispatcher.UIThread.RunJobs();
 
         var bar = wrapper.BarForTest;
-        var scrollViewer = grid.GetVisualDescendants().OfType<ScrollViewer>().First();
+        var scrollViewer = grid.GetRowsScrollViewer()!;
         return (window, grid, wrapper, bar, scrollViewer);
     }
 
@@ -120,7 +120,7 @@ public class TableViewIndexScrollBarTests : IDisposable
     {
         var (_, grid, _, bar, _) = BuildShownGrid();
 
-        var nativeBar = grid.GetVisualDescendants().OfType<ScrollBar>()
+        var nativeBar = grid.GetRowsScrollViewer()!.GetVisualDescendants().OfType<ScrollBar>()
             .First(s => s.Orientation == Orientation.Vertical && !ReferenceEquals(s, bar));
 
         Assert.False(nativeBar.IsVisible, "the native pixel-mapped vertical bar should be hidden");
@@ -244,7 +244,7 @@ public class TableViewIndexScrollBarTests : IDisposable
         wrapper.ApplyPendingForTest();
         window.UpdateLayout();
         var (grid, scrollViewer) = (wrapper.Children.OfType<TableView>().First(),
-            wrapper.Children.OfType<TableView>().First().GetVisualDescendants().OfType<ScrollViewer>().First());
+            wrapper.Children.OfType<TableView>().First().GetRowsScrollViewer()!);
         Assert.Equal((int)bar.Value, FirstVisibleIndex(grid, scrollViewer));
 
         window.MouseUp(point, MouseButton.Left);

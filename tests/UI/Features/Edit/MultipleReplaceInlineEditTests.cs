@@ -186,7 +186,7 @@ public class MultipleReplaceInlineEditTests : IDisposable
 
         var fix = vm.Fixes[0];
         fix.Apply = false;
-        var scrollViewer = vm.RulesTable.GetVisualDescendants().OfType<ScrollViewer>().First();
+        var scrollViewer = vm.RulesTable.GetRowsScrollViewer()!;
         scrollViewer.Offset = new Avalonia.Vector(0, scrollViewer.Extent.Height);
         window.UpdateLayout();
         WaitFor(() => !ReferenceEquals(fix, vm.Fixes[0]));

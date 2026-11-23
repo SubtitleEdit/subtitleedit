@@ -2688,7 +2688,7 @@ public partial class BinaryEditViewModel : ObservableObject
         Vector savedOffset = default;
         if (preserveScroll)
         {
-            _subtitleGridScrollViewer ??= SubtitleGrid.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+            _subtitleGridScrollViewer ??= SubtitleGrid.GetRowsScrollViewer();
             scrollViewer = _subtitleGridScrollViewer;
             savedOffset = scrollViewer?.Offset ?? default;
         }

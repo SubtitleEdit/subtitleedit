@@ -9,7 +9,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Styling;
-using Avalonia.Themes.Fluent;
+using Avalonia.Themes.Fluent2;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Controls.SyntaxTextEditorControl;
@@ -73,7 +73,7 @@ public static class UiTheme
     /// <summary>Theme art in a theme's image folder, tiled across the empty waveform.</summary>
     public const string WaveformBackgroundFileName = "WaveformBackground.png";
 
-    public static FluentTheme? FluentTheme { get; set; }
+    public static Fluent2Theme? FluentTheme { get; set; }
 
     public static string ThemeName
     {

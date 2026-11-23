@@ -4,7 +4,7 @@ using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
-using Avalonia.Themes.Fluent;
+using Avalonia.Themes.Fluent2;
 using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
@@ -29,7 +29,7 @@ public class TestApp : Application
     {
         // The custom up/down controls embed a ButtonSpinner + TextBox that need a
         // theme to resolve their templates when shown in a headless window.
-        Styles.Add(new FluentTheme());
+        Styles.Add(new Fluent2Theme());
 
         // Windows built in code use Attached.SetIcon; without the providers Program.cs
         // registers at startup, constructing such a window throws KeyNotFoundException.

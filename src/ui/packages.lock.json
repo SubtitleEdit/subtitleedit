@@ -45,11 +45,11 @@
           "Avalonia": "12.1.1"
         }
       },
-      "Avalonia.Themes.Fluent": {
+      "Avalonia.Themes.Fluent2": {
         "type": "Direct",
         "requested": "[12.2.0, )",
         "resolved": "12.2.0",
-        "contentHash": "YjQJdDq3oodw21stIFyk55yqacDBe6Tw0nfgZgFHklegHW01T5iPjLN8t4W9nLDZ6ezMCH4fHdvavxYmCzMQ3w==",
+        "contentHash": "90l6YtfE3VI1nArHkxA4GSmbXHA4z6bJf470GSpcKgcLMQvMm2shLt6fd4LF9+FXUp4bj851Skk1ZvUxv0RwcQ==",
         "dependencies": {
           "Avalonia": "12.2.0"
         }

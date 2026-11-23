@@ -337,9 +337,9 @@ public class OcrTableViewTests
 
         var wrapper = window.GetVisualDescendants().OfType<TableViewIndexScrollBar>().Single();
         var bar = wrapper.BarForTest;
-        var scrollViewer = tableView.GetVisualDescendants().OfType<ScrollViewer>().First();
+        var scrollViewer = tableView.GetRowsScrollViewer()!;
 
-        var nativeBar = tableView.GetVisualDescendants().OfType<ScrollBar>()
+        var nativeBar = tableView.GetRowsScrollViewer()!.GetVisualDescendants().OfType<ScrollBar>()
             .First(s => s.Orientation == Orientation.Vertical && !ReferenceEquals(s, bar));
         Assert.False(nativeBar.IsVisible, "the native pixel-mapped vertical bar should be hidden");
 
@@ -386,7 +386,7 @@ public class OcrTableViewTests
         var tableView = GetTableView(window);
         var wrapper = window.GetVisualDescendants().OfType<TableViewIndexScrollBar>().Single();
         var bar = wrapper.BarForTest;
-        var scrollViewer = tableView.GetVisualDescendants().OfType<ScrollViewer>().First();
+        var scrollViewer = tableView.GetRowsScrollViewer()!;
 
         double RowHeight() => tableView.GetRealizedContainers().OfType<TableViewRow>()
             .Select(r => r.Bounds.Height).DefaultIfEmpty(0).Max();
@@ -537,7 +537,7 @@ public class OcrTableViewTests
         var vm = MakeViewModel(400);
         var window = ShowWindow(vm);
         var tableView = GetTableView(window);
-        var scrollViewer = tableView.GetVisualDescendants().OfType<ScrollViewer>().First();
+        var scrollViewer = tableView.GetRowsScrollViewer()!;
 
         tableView.ScrollIntoView(250);
         Dispatcher.UIThread.RunJobs();

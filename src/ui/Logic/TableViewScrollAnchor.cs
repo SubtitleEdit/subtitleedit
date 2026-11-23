@@ -122,7 +122,7 @@ public sealed class TableViewScrollAnchor
             return;
         }
 
-        _scrollViewer = _tableView.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+        _scrollViewer = _tableView.GetRowsScrollViewer();
         if (_scrollViewer == null)
         {
             return;

@@ -174,6 +174,44 @@ public static class UiUtil
     /// one segment per row instead of continuous columns. The cells carry the inset instead
     /// (see the cell themes above). Call this on any TableView using those cell themes.
     /// </summary>
+    private static bool _fluent2RowLinesRemoved;
+
+    /// <summary>
+    /// Fluent 2's TableView templates draw their own lines: under the header row
+    /// (PART_HeaderRow) and under every row (RootBorder and GridLineBorder). SE draws grid lines
+    /// itself on the cells and headers (<see cref="TableViewColumnHeaderTheme"/>, the grid-lines
+    /// setting), so the template's lines would show even with grid lines off, double SE's own
+    /// and take a pixel off every cell. The templates set them as template values, which outrank
+    /// styles, so they are cleared as each template is applied. Registers once; safe to call
+    /// repeatedly.
+    /// </summary>
+    public static void RemoveFluent2RowLines()
+    {
+        if (_fluent2RowLinesRemoved)
+        {
+            return;
+        }
+
+        _fluent2RowLinesRemoved = true;
+        TemplatedControl.TemplateAppliedEvent.AddClassHandler<TableViewRow>((_, e) =>
+        {
+            foreach (var partName in (string[])["RootBorder", "GridLineBorder"])
+            {
+                if (e.NameScope.Find<Border>(partName) is { } border)
+                {
+                    border.BorderThickness = new Thickness(0);
+                }
+            }
+        });
+        TemplatedControl.TemplateAppliedEvent.AddClassHandler<TableView>((_, e) =>
+        {
+            if (e.NameScope.Find<Border>("PART_HeaderRow") is { } headerRow)
+            {
+                headerRow.BorderThickness = new Thickness(0);
+            }
+        });
+    }
+
     public static void ApplyTableViewRowStyle(TableView tableView)
     {
         tableView.Styles.Add(new Style(x => x.OfType<TableViewRow>())
@@ -184,6 +222,8 @@ public static class UiUtil
                 new Setter(TableViewRow.MinHeightProperty, 0.0),
             }
         });
+
+        RemoveFluent2RowLines();
 
         // TableView's template wraps the header in a Border with hard-coded 6,9,6,12 padding
         // while rows sit flush against the control edge. Left alone the header's column border
