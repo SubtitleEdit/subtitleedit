@@ -392,7 +392,7 @@ public class BatchStatisticsNextParagraphBenchmarks
         var gapTotal = 0.0;
         foreach (var p in _subtitle.Paragraphs)
         {
-            var next = _subtitle.GetParagraphOrDefault(_subtitle.GetIndex(p) + 1);
+            var next = _subtitle.GetParagraphOrDefault(_subtitle.Paragraphs.IndexOf(p) + 1);
             if (next != null)
             {
                 gapTotal += next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds;

@@ -594,7 +594,7 @@ public class PerfHuntRound16Benchmarks
             {
                 for (x = 1; x < bmp.Width; x++)
                 {
-                    c = bmp.GetPixelNext();
+                    c = bmp.GetPixel(x, y);
                     if (c.Alpha > 1)
                     {
                         break;
@@ -640,7 +640,7 @@ public class PerfHuntRound16Benchmarks
             {
                 for (x = 1; x < bmp.Width; x++)
                 {
-                    c = bmp.GetPixelNext();
+                    c = bmp.GetPixel(x, y);
                     if (!IsBackgroundColor(c))
                     {
                         break;
