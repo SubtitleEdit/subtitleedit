@@ -460,6 +460,8 @@ public class LanguageGeneral
     public string PleaseSelectOutputFolder { get; set; }
     public string PickResolutionFromCurrentVideo { get; set; }
     public string PickResolutionFromVideoDotDotDot { get; set; }
+    public string CustomResolutionDotDotDot { get; set; }
+    public string CustomResolution { get; set; }
     public string PickSubtitleFile { get; set; }
     public string PickVideoFile { get; set; }
     public string PickVideoPosition { get; set; }
@@ -1512,6 +1514,8 @@ public class LanguageGeneral
         PleaseSelectOutputFolder = "Please select an output folder";
         PickResolutionFromCurrentVideo = "Pick resolution from current video";
         PickResolutionFromVideoDotDotDot = "Pick resolution from video...";
+        CustomResolutionDotDotDot = "Custom resolution...";
+        CustomResolution = "Custom resolution";
         PickSubtitleFile = "Pick subtitle file...";
         PickVideoFile = "Pick video file...";
         PickVideoPosition = "Pick video position";
