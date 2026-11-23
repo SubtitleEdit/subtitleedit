@@ -2316,7 +2316,7 @@ public static partial class InitListViewAndEditBox
 
         if (Se.Settings.Appearance.TextBoxShowButtonColor)
         {
-            var colorButton = UiUtil.MakeButton(vm.ShowColorPickerCommand, IconNames.Palette, Se.Language.Main.ColorHint);
+            var colorButton = UiUtil.MakeButton(vm.ShowColorPickerOrSelectedTextCommand, IconNames.Palette, Se.Language.Main.ColorHint);
             buttonPanel.Children.Add(colorButton);
         }
 
