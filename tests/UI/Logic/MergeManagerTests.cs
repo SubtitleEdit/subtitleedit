@@ -290,6 +290,26 @@ public class MergeManagerTests
     }
 
     [Fact]
+    public void MergeSelectedLines_ShouldNotTrimEndTimeToReferenceOnlyRow()
+    {
+        // #17121: a display-only original row left in the grid after the merged lines must not
+        // cap the merged end time - only the next working line may.
+        var mergeManager = new MergeManager();
+        var subtitles = new ObservableCollection<SubtitleLineViewModel>
+        {
+            new() { Number = 1, Text = "One", StartTime = TimeSpan.FromMilliseconds(500), EndTime = TimeSpan.FromMilliseconds(1500) },
+            new() { Number = 2, Text = "Two", StartTime = TimeSpan.FromMilliseconds(1600), EndTime = TimeSpan.FromMilliseconds(3500) },
+            new() { IsReferenceOnly = true, OriginalText = "Reference", StartTime = TimeSpan.FromMilliseconds(2500), EndTime = TimeSpan.FromMilliseconds(3500) },
+            new() { Number = 3, Text = "Three", StartTime = TimeSpan.FromMilliseconds(5000), EndTime = TimeSpan.FromMilliseconds(6000) },
+        };
+
+        mergeManager.MergeSelectedLines(subtitles, [subtitles[0], subtitles[1]]);
+
+        Assert.Equal(3, subtitles.Count);
+        Assert.Equal(TimeSpan.FromMilliseconds(3500), subtitles[0].EndTime);
+    }
+
+    [Fact]
     public void MergeSelectedLines_ShouldKeepEndTime_WhenKeepEndTimeIsSet()
     {
         var mergeManager = new MergeManager();
