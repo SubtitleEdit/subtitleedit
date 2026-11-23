@@ -77,6 +77,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
     private readonly List<SubtitleLineViewModel> _originalSubtitles = new();
     private readonly List<SubtitleLineViewModel> _alignedSubtitles = new();
     private string _videoFileName = string.Empty;
+    private (string FileName, double OffsetSeconds)? _frameOffset;
     private int _audioTrackNumber = -1;
     private string? _languageCode;
     private bool _isSpeechToTextLanguage;
@@ -291,6 +292,23 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
             av.WavePeaks = peaks;
             av.InvalidateVisual();
         }
+    }
+
+    /// <summary>The video's first frame time - frames are snapped to a grid starting there (#17149).</summary>
+    private double GetFrameOffsetSeconds()
+    {
+        if (string.IsNullOrEmpty(_videoFileName))
+        {
+            return 0;
+        }
+
+        if (_frameOffset is not { } cached || cached.FileName != _videoFileName)
+        {
+            cached = (_videoFileName, WaveFileExtractor.GetTimelineOffsetMilliseconds(_videoFileName) / 1000.0);
+            _frameOffset = cached;
+        }
+
+        return cached.OffsetSeconds;
     }
 
     private void ResetAligned()
@@ -753,7 +771,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         SubtitleRetimer.Settle(original, placements, MinGapSeconds);
         if (Se.Settings.General.UseFrameMode)
         {
-            SubtitleRetimer.SnapToFrames(original, placements, Se.Settings.General.CurrentFrameRate, MinGapSeconds);
+            SubtitleRetimer.SnapToFrames(original, placements, Se.Settings.General.CurrentFrameRate, MinGapSeconds, GetFrameOffsetSeconds());
         }
 
         _placed = placements;

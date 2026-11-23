@@ -633,6 +633,19 @@ public class SubtitleRetimerTests : IDisposable
     }
 
     [Fact]
+    public void SnapToFrames_VideoStartingAt20Ms_SnapsToItsFrames()
+    {
+        // #17149: a 25 fps video starting at 0.02 s has its frames at 20, 60, 100... ms.
+        var original = new List<SubtitleRetimer.Line> { new("a", 10, 12) };
+        var placements = new[] { new SubtitleRetimer.Placement(10.21, 12.299, true) };
+
+        SubtitleRetimer.SnapToFrames(original, placements, 25, 0, 0.02);
+
+        Assert.Equal(10.22, placements[0].StartSeconds, 6);
+        Assert.Equal(12.30, placements[0].EndSeconds, 6);
+    }
+
+    [Fact]
     public void Settle_TwoLinesThatMayNotMove_AreLeftAlone()
     {
         var original = new List<SubtitleRetimer.Line> { new("a", 10, 12), new("b", 12.5, 14) };
