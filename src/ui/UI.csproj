@@ -23,7 +23,7 @@
 		<PackageReference Include="Avalonia" Version="12.2.0" />
 		<PackageReference Include="Avalonia.Desktop" Version="12.2.0" />
 		<PackageReference Include="Avalonia.Markup.Declarative" Version="12.2.0" />
-		<PackageReference Include="Avalonia.Themes.Fluent" Version="12.2.0" />
+		<PackageReference Include="Avalonia.Themes.Fluent2" Version="12.2.0" />
 		<PackageReference Include="Avalonia.Fonts.Inter" Version="12.2.0" />
 		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
 		<PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.3">

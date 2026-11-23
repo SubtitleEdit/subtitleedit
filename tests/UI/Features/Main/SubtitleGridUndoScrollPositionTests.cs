@@ -52,7 +52,7 @@ public class SubtitleGridUndoScrollPositionTests : IDisposable
         vm.SelectAndScrollToSubtitle(vm.Subtitles[112]);
         await SettleAsync(window);
 
-        var scrollViewer = vm.SubtitleGrid.GetVisualDescendants().OfType<ScrollViewer>().First();
+        var scrollViewer = vm.SubtitleGrid.GetRowsScrollViewer()!;
         var offsetBefore = scrollViewer.Offset.Y;
         Assert.True(offsetBefore > 0);
         var rowTopBefore = TableViewExtras.GetRowViewportTop(vm.SubtitleGrid, vm.Subtitles[112]);

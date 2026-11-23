@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Controls.SyntaxTextEditorControl;
 /// Only the visible lines are tokenized, laid out and drawn, so a 25 MB source opens and scrolls
 /// like a small one. Word wrap is not supported - long lines scroll sideways instead.
 /// </summary>
-public class SyntaxTextEditor : Border
+public partial class SyntaxTextEditor : Border
 {
     public static readonly StyledProperty<IBrush?> ForegroundProperty =
         TextElement.ForegroundProperty.AddOwner<SyntaxTextEditor>();
@@ -27,9 +27,6 @@ public class SyntaxTextEditor : Border
 
     public static readonly StyledProperty<double> FontSizeProperty =
         TextElement.FontSizeProperty.AddOwner<SyntaxTextEditor>();
-
-    public static readonly StyledProperty<bool> ShowLineNumbersProperty =
-        AvaloniaProperty.Register<SyntaxTextEditor, bool>(nameof(ShowLineNumbers), true);
 
     public static readonly StyledProperty<bool> IsReadOnlyProperty =
         SyntaxTextView.IsReadOnlyProperty.AddOwner<SyntaxTextEditor>();
@@ -146,11 +143,8 @@ public class SyntaxTextEditor : Border
         set => SetValue(FontSizeProperty, value);
     }
 
-    public bool ShowLineNumbers
-    {
-        get => GetValue(ShowLineNumbersProperty);
-        set => SetValue(ShowLineNumbersProperty, value);
-    }
+    [GeneratedStyledProperty(DefaultValue = true)]
+    public partial bool ShowLineNumbers { get; set; }
 
     public bool IsReadOnly
     {

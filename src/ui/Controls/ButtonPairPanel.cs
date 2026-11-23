@@ -10,16 +10,10 @@ namespace Nikse.SubtitleEdit.Controls;
 /// Ukrainian "Використовувати один раз") gets its own row instead of running past the window edge
 /// or breaking mid-word (#15901).
 /// </summary>
-public class ButtonPairPanel : Panel
+public partial class ButtonPairPanel : Panel
 {
-    public static readonly StyledProperty<double> SpacingProperty =
-        AvaloniaProperty.Register<ButtonPairPanel, double>(nameof(Spacing), 5);
-
-    public double Spacing
-    {
-        get => GetValue(SpacingProperty);
-        set => SetValue(SpacingProperty, value);
-    }
+    [GeneratedStyledProperty(DefaultValue = 5.0)]
+    public partial double Spacing { get; set; }
 
     private bool _stacked;
 

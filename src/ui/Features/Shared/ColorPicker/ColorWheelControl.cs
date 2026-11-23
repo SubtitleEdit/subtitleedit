@@ -12,31 +12,19 @@ using System;
 
 namespace Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 
-public class ColorWheelControl : Control
+public partial class ColorWheelControl : Control
 {
-    public static readonly StyledProperty<double> HueProperty =
-        AvaloniaProperty.Register<ColorWheelControl, double>(nameof(Hue), defaultBindingMode: BindingMode.TwoWay);
-
-    public static readonly StyledProperty<double> SaturationProperty =
-        AvaloniaProperty.Register<ColorWheelControl, double>(nameof(Saturation), defaultBindingMode: BindingMode.TwoWay);
-
     /// <summary>
     /// Hue in degrees (0-360).
     /// </summary>
-    public double Hue
-    {
-        get => GetValue(HueProperty);
-        set => SetValue(HueProperty, value);
-    }
+    [GeneratedStyledProperty(DefaultBindingMode = BindingMode.TwoWay)]
+    public partial double Hue { get; set; }
 
     /// <summary>
     /// Saturation (0-1), the distance from the wheel center.
     /// </summary>
-    public double Saturation
-    {
-        get => GetValue(SaturationProperty);
-        set => SetValue(SaturationProperty, value);
-    }
+    [GeneratedStyledProperty(DefaultBindingMode = BindingMode.TwoWay)]
+    public partial double Saturation { get; set; }
 
     private Point _center;
     private double _radius;

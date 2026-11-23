@@ -6,7 +6,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Media;
 using Avalonia.Styling;
-using Avalonia.Themes.Fluent;
+using Avalonia.Themes.Fluent2;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit.Features.Main;
@@ -398,8 +398,8 @@ namespace Nikse.SubtitleEdit
 
         private static void ConfigureApplication(AppBuilder b, ClassicDesktopStyleApplicationLifetime lifetime)
         {
-            // Setup Fluent theme
-            UiTheme.FluentTheme = new FluentTheme();
+            // Setup Fluent 2 theme
+            UiTheme.FluentTheme = new Fluent2Theme();
             UiTheme.FluentTheme.Palettes.Add(ThemeVariant.Dark, new ColorPaletteResources()
             {
                 RegionColor = UiUtil.GetDarkThemeBackgroundColor(),
@@ -408,6 +408,7 @@ namespace Nikse.SubtitleEdit
             if (b.Instance != null)
             {
                 b.Instance.Styles.Add(UiTheme.FluentTheme);
+                UiUtil.RemoveFluent2RowLines();
 
                 // Apply app-level style overrides
                 b.Instance.Styles.Add(new StyleInclude(new Uri("avares://SubtitleEdit/Styles.axaml", UriKind.Absolute))

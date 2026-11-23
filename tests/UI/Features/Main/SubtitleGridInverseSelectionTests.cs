@@ -37,7 +37,7 @@ public class SubtitleGridInverseSelectionTests : IDisposable
         vm.SelectAndScrollToSubtitle(vm.Subtitles[150]);
         await SettleAsync(window);
 
-        var scrollViewer = vm.SubtitleGrid.GetVisualDescendants().OfType<ScrollViewer>().First();
+        var scrollViewer = vm.SubtitleGrid.GetRowsScrollViewer()!;
         var before = scrollViewer.Offset.Y;
         Assert.True(before > 0);
 
@@ -88,7 +88,7 @@ public class SubtitleGridInverseSelectionTests : IDisposable
         var (window, vm) = ShowMainWindowWithLines(300);
         vm.SelectAndScrollToSubtitle(vm.Subtitles[150]);
         await SettleAsync(window);
-        var scrollViewer = vm.SubtitleGrid.GetVisualDescendants().OfType<ScrollViewer>().First();
+        var scrollViewer = vm.SubtitleGrid.GetRowsScrollViewer()!;
         var before = scrollViewer.Offset.Y;
 
         vm.SelectAllLinesCommand.Execute(null);
