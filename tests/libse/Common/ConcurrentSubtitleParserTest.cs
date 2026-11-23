@@ -227,6 +227,53 @@ public class ConcurrentSubtitleParserTest : IDisposable
         Assert.Equal(new[] { "just some text", "not a subtitle" }, lines);
     }
 
+    [Theory]
+    [InlineData(".srt")]
+    [InlineData(".ass")]
+    public void FileLoadRetainsParsedContentAndDiagnostics(string extension)
+    {
+        SubtitleFormat reader = extension == ".srt" ? new SubRip() : new AdvancedSubStationAlpha();
+        var input = reader.ToText(MakeSubtitle(), "sample");
+        input = extension == ".srt"
+            ? "This line is outside any cue" + Environment.NewLine + input
+            : input + Environment.NewLine + "Dialogue: 0,bad,0:00:02.00,Default,,0,0,0,,Broken" +
+              Environment.NewLine + "[Fonts]" + Environment.NewLine + "fontname: embedded.ttf";
+
+        var path = Path.Combine(_folder, "sample" + extension);
+        File.WriteAllText(path, input);
+
+        var expected = new Subtitle { Header = null! };
+        reader.LoadSubtitle(expected, input.SplitToLines(), path);
+        var loaded = Subtitle.Parse(path);
+        Assert.NotNull(loaded);
+        Assert.IsType(reader.GetType(), loaded.OriginalFormat);
+        Assert.Equal(expected.Header, loaded.Header);
+        Assert.Equal(expected.Footer, loaded.Footer);
+        Assert.Equal(expected.Paragraphs.Select(p => (p.Number, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds, p.Text)),
+            loaded.Paragraphs.Select(p => (p.Number, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds, p.Text)));
+
+        static string ReadErrors(SubtitleFormat format) => format is SubRip srt ? srt.Errors : ((AdvancedSubStationAlpha)format).Errors;
+        Assert.NotEmpty(ReadErrors(reader));
+        Assert.Equal(ReadErrors(reader), ReadErrors(loaded.OriginalFormat));
+
+        var detectOnly = new Subtitle();
+        var detected = detectOnly.LoadSubtitle(path, out _, null, batchMode: false, loadSubtitle: false);
+        Assert.IsType(reader.GetType(), detected);
+        Assert.Empty(detectOnly.Paragraphs);
+        Assert.Null(ReadErrors(detected!));
+    }
+
+    [Fact]
+    public void RenamedWebVttFallsBackFromSubRip()
+    {
+        var path = Path.Combine(_folder, "renamed.srt");
+        File.WriteAllText(path, "WEBVTT\n\n00:01.000 --> 00:02.000\nCaption\n");
+        var subtitle = Subtitle.Parse(path);
+        Assert.NotNull(subtitle);
+        Assert.IsType<WebVTT>(subtitle.OriginalFormat);
+        Assert.Equal("Caption", Assert.Single(subtitle.Paragraphs).Text);
+    }
+
     [Fact]
     public void MissingFileReturnsNoLines()
     {

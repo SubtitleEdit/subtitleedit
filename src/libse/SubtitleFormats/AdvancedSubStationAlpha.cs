@@ -82,7 +82,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public const int DefaultWidth = 384;
         public const int DefaultHeight = 288;
 
-        public override bool IsMine(List<string> lines, string fileName)
+        public override bool IsMine(List<string> lines, string fileName) =>
+            TryLoadAndDetect(new Subtitle(), lines, fileName, keepErrors: false);
+
+        internal bool TryLoadAndDetect(Subtitle subtitle, List<string> lines, string fileName, bool keepErrors)
         {
             if (!SubStationAlpha.HasEvents(lines))
             {
@@ -90,32 +93,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false; // no event line, no paragraph
             }
 
-            var subtitle = new Subtitle();
-
-            var all = JoinLines(lines);
-            if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".ass", StringComparison.OrdinalIgnoreCase) && !all.Contains("[V4 Styles]"))
-            {
-            }
-            else if (!all.Contains("[V4+ Styles]") && new SubStationAlpha().IsMine(lines, fileName))
+            var assExtension = fileName != null && fileName.EndsWith(".ass", StringComparison.OrdinalIgnoreCase);
+            if (!lines.Exists(line => line.IndexOf("[V4+ Styles]", StringComparison.Ordinal) >= 0) &&
+                (!assExtension || lines.Exists(line => line.IndexOf("[V4 Styles]", StringComparison.Ordinal) >= 0)) &&
+                new SubStationAlpha().IsMine(lines, fileName))
             {
                 return false;
             }
 
             LoadSubtitle(subtitle, lines, fileName);
-            Errors = null;
-            if (subtitle.Paragraphs.Count > _errorCount)
-            {
-                if (!string.IsNullOrEmpty(subtitle.Header))
-                {
-                    subtitle.Header = subtitle.Header.Replace("[V4 Styles]", "[V4+ Styles]");
-                }
 
-                return true;
+            // A style template with no events is a valid ASS file too.
+            var detected = subtitle.Paragraphs.Count > _errorCount ||
+                (subtitle.Paragraphs.Count == 0 && _errorCount == 0 && IsStylesOnlyScript(lines));
+            if (!detected || !keepErrors)
+            {
+                Errors = null;
             }
 
-            // Styles but no lines yet - a style template, an episode not subtitled yet. It is an
-            // ASSA file; opening it keeps the styles instead of "unknown format".
-            return subtitle.Paragraphs.Count == 0 && _errorCount == 0 && IsStylesOnlyScript(lines);
+            return detected;
         }
 
         private static bool IsStylesOnlyScript(List<string> lines)

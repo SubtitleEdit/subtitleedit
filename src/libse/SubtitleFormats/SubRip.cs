@@ -54,17 +54,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override List<string> AlternateExtensions => new List<string> { ".wsrt" };
 
-        public override bool IsMine(List<string> lines, string fileName)
+        public override bool IsMine(List<string> lines, string fileName) =>
+            TryLoadAndDetect(new Subtitle(), lines, fileName, keepErrors: false);
+
+        internal bool TryLoadAndDetect(Subtitle subtitle, List<string> lines, string fileName, bool keepErrors)
         {
             if (lines.Count > 0 && lines[0].StartsWith("WEBVTT", StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
 
-            var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
-            Errors = null;
-            return subtitle.Paragraphs.Count > _errorCount;
+            var detected = subtitle.Paragraphs.Count > _errorCount;
+            if (!detected || !keepErrors)
+            {
+                Errors = null;
+            }
+
+            return detected;
         }
 
         public override string ToText(Subtitle subtitle, string title)
