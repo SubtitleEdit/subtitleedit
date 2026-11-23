@@ -6684,9 +6684,13 @@ public partial class MainViewModel :
             return;
         }
 
-        if (subtitle.Paragraphs.Count != Subtitles.Count)
+        // Only the working lines: with the original's non-matching lines shown, the grid also holds
+        // display-only reference rows, which counted as lines and took imported times by grid
+        // position - every working line after one got the time code meant for the line before it.
+        var workingRows = Subtitles.Where(p => !p.IsReferenceOnly).ToList();
+        if (subtitle.Paragraphs.Count != workingRows.Count)
         {
-            var message = string.Format(Se.Language.File.Import.TimeCodesDifferentNumberOfLinesXY, subtitle.Paragraphs.Count, Subtitles.Count);
+            var message = string.Format(Se.Language.File.Import.TimeCodesDifferentNumberOfLinesXY, subtitle.Paragraphs.Count, workingRows.Count);
             var answer = await MessageBox.Show(Window, Se.Language.General.Import, message, MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
 
@@ -6698,10 +6702,10 @@ public partial class MainViewModel :
         }
 
         var count = 0;
-        for (var i = 0; i < Subtitles.Count && i < subtitle.Paragraphs.Count; i++)
+        for (var i = 0; i < workingRows.Count && i < subtitle.Paragraphs.Count; i++)
         {
-            Subtitles[i].SetStartTimeOnly(subtitle.Paragraphs[i].StartTime.TimeSpan);
-            Subtitles[i].EndTime = subtitle.Paragraphs[i].EndTime.TimeSpan;
+            workingRows[i].SetStartTimeOnly(subtitle.Paragraphs[i].StartTime.TimeSpan);
+            workingRows[i].EndTime = subtitle.Paragraphs[i].EndTime.TimeSpan;
             count++;
         }
 

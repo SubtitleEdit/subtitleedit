@@ -149,6 +149,44 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         internal static int GetSerializedCuesByteCount(IReadOnlyList<Cue> cues) =>
             JsonSerializer.SerializeToUtf8Bytes(cues, CueJsonOptions).Length;
 
+        private static readonly JsonSerializerOptions CueReplyJsonOptions = new()
+        {
+            PropertyNameCaseInsensitive = true,
+        };
+
+        /// <summary>
+        /// The cue array from a batch reply. Models often wrap it in a ```json fence or put a line
+        /// before or after it despite "return only a JSON array"; a plain parse then failed, and every such
+        /// reply cost the halving retries (20, 10, 5, 2 cues) before single-line mode. Null when no
+        /// array can be read.
+        /// </summary>
+        internal static Cue[]? ParseCueReply(string? reply)
+        {
+            if (string.IsNullOrWhiteSpace(reply))
+            {
+                return null;
+            }
+
+            // From the first '[' to the last ']': drops a fence, a preamble line or a closing remark.
+            var start = reply.IndexOf('[');
+            var end = reply.LastIndexOf(']');
+            if (start < 0 || end <= start)
+            {
+                return null;
+            }
+
+            var text = reply.Substring(start, end - start + 1);
+
+            try
+            {
+                return JsonSerializer.Deserialize<Cue[]>(text, CueReplyJsonOptions);
+            }
+            catch (JsonException)
+            {
+                return null;
+            }
+        }
+
         internal async Task<Dictionary<int, string>?> TranslateCues(
             IReadOnlyList<Cue> cues, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
@@ -157,16 +195,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 "Translate only the dialogue belonging to each cue. Never move text between cues or combine cues.";
             var reply = await RequestTranslation(SerializeCues(cues), sourceLanguageCode, targetLanguageCode,
                 cancellationToken, batchInstructions);
-            Cue[]? translated;
-            try
-            {
-                translated = JsonSerializer.Deserialize<Cue[]>(reply);
-            }
-            catch (JsonException)
-            {
-                return null;
-            }
-
+            var translated = ParseCueReply(reply);
             if (translated == null || translated.Length != cues.Count)
             {
                 return null;
