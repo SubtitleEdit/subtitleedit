@@ -18854,7 +18854,43 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
-    private async Task ShowColorPicker()
+    private Task ShowColorPicker()
+    {
+        return ShowColorPickerAndApply(ColorTextBoxIfSelected);
+    }
+
+    /// <summary>
+    /// Color picker for the button under the text box: when a single line is selected and the
+    /// text box has a text selection, only that text is colored (#17141). The selection is
+    /// captured before the dialog opens, as clicking the button moves focus away from the text box.
+    /// </summary>
+    [RelayCommand]
+    private Task ShowColorPickerOrSelectedText()
+    {
+        var selectedItems = GetSelectedEditableSubtitles();
+        var tb = GetFormattingTextBox();
+        var selectionStart = Math.Min(tb.SelectionStart, tb.SelectionEnd);
+        var selectionEnd = Math.Max(tb.SelectionStart, tb.SelectionEnd);
+        if (selectedItems.Count != 1 || selectionEnd <= selectionStart)
+        {
+            return ShowColorPickerAndApply(ColorTextBoxIfSelected);
+        }
+
+        return ShowColorPickerAndApply(color =>
+        {
+            if (tb.Text == null || selectionEnd > tb.Text.Length)
+            {
+                return false;
+            }
+
+            tb.SelectionStart = selectionStart;
+            tb.SelectionEnd = selectionEnd;
+            SetTextBoxColor(tb, color);
+            return true;
+        });
+    }
+
+    private async Task ShowColorPickerAndApply(Func<Color, bool> colorTextBoxSelection)
     {
         var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
@@ -18864,7 +18900,7 @@ public partial class MainViewModel :
 
         if (IsFormatTeletext)
         {
-            await ShowTeletextColorPicker(selectedItems);
+            await ShowTeletextColorPicker(selectedItems, colorTextBoxSelection);
             return;
         }
 
@@ -18874,7 +18910,7 @@ public partial class MainViewModel :
             return;
         }
 
-        if (ColorTextBoxIfSelected(result.SelectedColor))
+        if (colorTextBoxSelection(result.SelectedColor))
         {
             return;
         }
@@ -18890,7 +18926,7 @@ public partial class MainViewModel :
     /// DVB teletext gets the Level 2.5 additions on top: the half intensity CLUT 1
     /// colors and a free color choice via a redefinable colour map entry.
     /// </summary>
-    private async Task ShowTeletextColorPicker(List<SubtitleLineViewModel> selectedItems)
+    private async Task ShowTeletextColorPicker(List<SubtitleLineViewModel> selectedItems, Func<Color, bool> colorTextBoxSelection)
     {
         var isLevel25 = SelectedSubtitleFormat is DvbTeletext;
         var result = await ShowDialogAsync<PickTeletextColorWindow, PickTeletextColorViewModel>(
@@ -18916,7 +18952,7 @@ public partial class MainViewModel :
                 return;
             }
 
-            if (ColorTextBoxIfSelected(customResult.SelectedColor))
+            if (colorTextBoxSelection(customResult.SelectedColor))
             {
                 return;
             }
@@ -18926,7 +18962,7 @@ public partial class MainViewModel :
             return;
         }
 
-        if (ColorTextBoxIfSelected(result.SelectedColor))
+        if (colorTextBoxSelection(result.SelectedColor))
         {
             return;
         }
@@ -22205,7 +22241,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var result = await ShowDialogAsync<ColorPickerWindow, ColorPickerViewModel>();
+        var result = await ShowDialogAsync<ColorPickerWindow, ColorPickerViewModel>(vm => vm.Initialize(Se.Settings.Tools.LastColorPickerColor.FromHexToColor()));
         if (!result.OkPressed)
         {
             return;
