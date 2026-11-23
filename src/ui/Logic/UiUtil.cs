@@ -182,8 +182,8 @@ public static class UiUtil
     /// <list type="bullet">
     /// <item>Installs <see cref="LeanTableViewRowTheme"/> as the app-wide TableViewRow theme. Fluent
     /// 2's own row template is eight visuals deep with ~20 state styles per row, which made grid
-    /// scrolling ~20% slower than under Fluent 1; the lean theme keeps its colours, states and
-    /// selection pill in four visuals and nine styles.</item>
+    /// scrolling ~20% slower than under Fluent 1; the lean theme keeps its colours and states in
+    /// two visuals and seven styles.</item>
     /// <item>Removes the line Fluent 2 draws under the header row (PART_HeaderRow): SE's header
     /// theme (<see cref="TableViewColumnHeaderTheme"/>) draws that line itself, so it would be
     /// doubled and push the first row down 1px. The template sets it as a template value, which
@@ -221,24 +221,13 @@ public static class UiUtil
             Setters = { DynamicSetter(Border.BackgroundProperty, backgroundKey) },
         };
 
-    private static Style RowPillState(Func<Selector?, Selector> selector, params Setter[] setters)
-    {
-        var style = new Style(x => selector(x.Nesting()).Template().OfType<Avalonia.Controls.Shapes.Rectangle>().Name("PART_SelectionIndicator"));
-        foreach (var setter in setters)
-        {
-            style.Setters.Add(setter);
-        }
-
-        return style;
-    }
-
     /// <summary>
-    /// Fluent 2's TableViewRow look (TabularSurface* brushes, selection pill, pointer-over/pressed/
-    /// selected/disabled states) in a lean template: RootBorder > Panel > [cells, pill], with the
-    /// text colour set on the border instead of through an extra ContentPresenter, and no
-    /// GridLineBorder (SE draws grid lines on the cells). Fluent 2 uses the same foreground for
-    /// every state except disabled, so one foreground setter plus a disabled style covers it.
-    /// Part names match Fluent 2's, so selectors written against its template still apply.
+    /// TableViewRow theme in a lean template: RootBorder > cells, with the text colour set on the
+    /// border instead of through an extra ContentPresenter, and no GridLineBorder (SE draws grid
+    /// lines on the cells). Uses Fluent 2's row colours, but selection fills the whole row with the
+    /// accent list brushes like Fluent 1 did, instead of Fluent 2's faint tint plus a small pill.
+    /// Fluent 2 uses the same foreground for every state except disabled, so one foreground setter
+    /// plus a disabled style covers it. Part names match Fluent 2's.
     /// </summary>
     private static readonly ControlTheme LeanTableViewRowTheme = new(typeof(TableViewRow))
     {
@@ -252,21 +241,16 @@ public static class UiUtil
         },
         Children =
         {
-            // Set by style rather than in the template: a value set in a code template is a local
-            // value and would win over the :selected style below.
-            RowPillState(x => x, new Setter(Visual.OpacityProperty, 0.0)),
             RowBorderState(x => x.Class(":pointerover"), "TabularSurfaceRowBackgroundPointerOver"),
             RowBorderState(x => x.Class(":pressed"), "TabularSurfaceRowBackgroundPressed"),
-            RowBorderState(x => x.Class(":selected"), "TabularSurfaceRowBackgroundSelected"),
-            RowBorderState(x => x.Class(":selected").Class(":pointerover"), "TabularSurfaceRowBackgroundSelectedPointerOver"),
-            RowBorderState(x => x.Class(":selected").Class(":pressed"), "TabularSurfaceRowBackgroundSelectedPressed"),
-            RowPillState(x => x.Class(":selected"), new Setter(Visual.OpacityProperty, 1.0)),
+            RowBorderState(x => x.Class(":selected"), "SystemControlHighlightListAccentLowBrush"),
+            RowBorderState(x => x.Class(":selected").Class(":pointerover"), "SystemControlHighlightListAccentMediumBrush"),
+            RowBorderState(x => x.Class(":selected").Class(":pressed"), "SystemControlHighlightListAccentHighBrush"),
             RowBorderState(x => x.Class(":disabled"), "TabularSurfaceRowBackgroundDisabled"),
             new Style(x => x.Nesting().Class(":disabled"))
             {
                 Setters = { DynamicSetter(TemplatedControl.ForegroundProperty, "TabularSurfaceRowForegroundDisabled") },
             },
-            RowPillState(x => x.Class(":selected").Class(":disabled"), DynamicSetter(Avalonia.Controls.Shapes.Shape.FillProperty, "TabularSurfaceSelectionIndicatorFillDisabled")),
         },
     };
 
@@ -279,25 +263,10 @@ public static class UiUtil
         };
         scope.Register(cells.Name, cells);
 
-        var pill = new Avalonia.Controls.Shapes.Rectangle
-        {
-            Name = "PART_SelectionIndicator",
-            Width = 3,
-            Height = 16,
-            RadiusX = 1.5,
-            RadiusY = 1.5,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(2, 0, 0, 0),
-            IsHitTestVisible = false,
-            [!Avalonia.Controls.Shapes.Shape.FillProperty] = new Avalonia.Markup.Xaml.MarkupExtensions.DynamicResourceExtension("TabularSurfaceSelectionIndicatorFill"),
-        };
-        scope.Register(pill.Name, pill);
-
         var root = new Border
         {
             Name = "RootBorder",
-            Child = new Panel { Children = { cells, pill } },
+            Child = cells,
             [!Border.BackgroundProperty] = new TemplateBinding(TemplatedControl.BackgroundProperty),
             [!Decorator.PaddingProperty] = new TemplateBinding(TemplatedControl.PaddingProperty),
             [!Avalonia.Controls.Documents.TextElement.ForegroundProperty] = new TemplateBinding(TemplatedControl.ForegroundProperty),
