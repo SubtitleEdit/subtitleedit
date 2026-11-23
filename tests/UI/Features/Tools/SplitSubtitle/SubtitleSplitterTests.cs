@@ -102,4 +102,76 @@ public class SubtitleSplitterTests
 
         Assert.Empty(parts);
     }
+
+    [Fact]
+    public void SplitByCharacters_ShortTexts_StillReachesRequestedPartCount()
+    {
+        // Four "Hi" cues = 8 characters, limit 4: the +4 slack meant no cue ever crossed it and
+        // one part came back instead of two.
+        var subtitle = new Subtitle();
+        for (var i = 0; i < 4; i++)
+        {
+            subtitle.Paragraphs.Add(new Paragraph("Hi", i * 1000, i * 1000 + 900));
+        }
+
+        var parts = SubtitleSplitter.Split(subtitle, 2, SubtitleSplitter.SplitMode.Characters);
+
+        Assert.Equal(2, parts.Count);
+        Assert.Equal(4, parts.Sum(p => p.Paragraphs.Count));
+    }
+
+    [Fact]
+    public void SplitByTime_CuesBunchedAtStart_StillReachesRequestedPartCount()
+    {
+        // All cues start in the first 3 s but the last one runs to 40 s: no start passed the 20 s
+        // limit, so one part came back instead of two.
+        var subtitle = new Subtitle();
+        for (var i = 0; i < 4; i++)
+        {
+            subtitle.Paragraphs.Add(new Paragraph("Line " + i, i * 1000, i == 3 ? 40_000 : i * 1000 + 900));
+        }
+
+        var parts = SubtitleSplitter.Split(subtitle, 2, SubtitleSplitter.SplitMode.Time);
+
+        Assert.Equal(2, parts.Count);
+        Assert.Equal(4, parts.Sum(p => p.Paragraphs.Count));
+    }
+
+    [Fact]
+    public void SplitByTime_AfterLongGap_DoesNotGiveEachCueItsOwnPart()
+    {
+        // 10 cues at 0-9 s, then 10 cues at 100-109 s, 4 parts of ~27.5 s. The first cue after the
+        // gap used to move the limit only one step, so the next cues each opened a one-cue part.
+        var subtitle = new Subtitle();
+        for (var i = 0; i < 10; i++)
+        {
+            subtitle.Paragraphs.Add(new Paragraph("A" + i, i * 1000, i * 1000 + 900));
+        }
+
+        for (var i = 0; i < 10; i++)
+        {
+            subtitle.Paragraphs.Add(new Paragraph("B" + i, 100_000 + i * 1000, 100_000 + i * 1000 + 900));
+        }
+
+        var parts = SubtitleSplitter.Split(subtitle, 4, SubtitleSplitter.SplitMode.Time);
+
+        Assert.Equal(4, parts.Count);
+        Assert.Equal(20, parts.Sum(p => p.Paragraphs.Count));
+        Assert.Equal(10, parts[0].Paragraphs.Count);
+        Assert.True(parts[1].Paragraphs.Count > 1);
+    }
+
+    [Theory]
+    [InlineData(SubtitleSplitter.SplitMode.Lines)]
+    [InlineData(SubtitleSplitter.SplitMode.Characters)]
+    [InlineData(SubtitleSplitter.SplitMode.Time)]
+    public void Split_AsManyPartsAsParagraphs_GivesOneParagraphPerPart(SubtitleSplitter.SplitMode mode)
+    {
+        var subtitle = MakeSubtitle(7);
+
+        var parts = SubtitleSplitter.Split(subtitle, 7, mode);
+
+        Assert.Equal(7, parts.Count);
+        Assert.All(parts, p => Assert.Single(p.Paragraphs));
+    }
 }

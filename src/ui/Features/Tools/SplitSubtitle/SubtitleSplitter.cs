@@ -90,7 +90,8 @@ public static class SubtitleSplitter
             // Never close an empty part: when the very first paragraph already exceeds the
             // limit, pushing the untouched accumulator produced a 0-byte "Part1" file with all
             // the content in Part2.
-            if (currentSize + size > nextLimit + 4 && parts.Count < numberOfParts - 1 && temp.Paragraphs.Count > 0)
+            if (temp.Paragraphs.Count > 0 && parts.Count < numberOfParts - 1 &&
+                (currentSize + size > nextLimit + 4 || MustStartNewPart(subtitle, i, parts.Count, numberOfParts)))
             {
                 parts.Add(temp);
                 currentSize = size;
@@ -122,12 +123,19 @@ public static class SubtitleSplitter
         for (var i = 0; i < subtitle.Paragraphs.Count; i++)
         {
             var p = subtitle.Paragraphs[i];
-            if (p.StartTime.TotalMilliseconds > nextLimit - 10 && parts.Count < numberOfParts - 1)
+            if (temp.Paragraphs.Count > 0 && parts.Count < numberOfParts - 1 &&
+                (p.StartTime.TotalMilliseconds > nextLimit - 10 || MustStartNewPart(subtitle, i, parts.Count, numberOfParts)))
             {
                 parts.Add(temp);
                 temp = new Subtitle { Header = subtitle.Header };
                 temp.Paragraphs.Add(new Paragraph(p));
-                nextLimit += partSize;
+
+                // Move the limit past this paragraph, not just one step: after a long gap a single
+                // step left the limit behind, so every following cue started a tiny part of its own.
+                do
+                {
+                    nextLimit += partSize;
+                } while (partSize > 0 && p.StartTime.TotalMilliseconds > nextLimit - 10);
             }
             else
             {
@@ -139,5 +147,18 @@ public static class SubtitleSplitter
         parts.Add(temp);
 
         return parts;
+    }
+
+    /// <summary>
+    /// True when paragraph <paramref name="index"/> must open a new part so the requested part count
+    /// can still be reached: if it joined the current part, the paragraphs left after it would be
+    /// fewer than the parts still to fill. Without this, short texts (character mode, because of the
+    /// +4 slack) or cues bunched at the start (time mode) ended with fewer parts than requested.
+    /// </summary>
+    private static bool MustStartNewPart(Subtitle subtitle, int index, int closedParts, int numberOfParts)
+    {
+        var paragraphsLeftIncludingThis = subtitle.Paragraphs.Count - index;
+        var partsLeftIncludingCurrent = numberOfParts - closedParts;
+        return paragraphsLeftIncludingThis < partsLeftIncludingCurrent;
     }
 }
