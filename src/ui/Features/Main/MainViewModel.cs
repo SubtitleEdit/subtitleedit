@@ -18226,7 +18226,7 @@ public partial class MainViewModel :
     /// is enabled, so the playhead lands exactly on a frame. Returns the value unchanged when the
     /// setting is off or no usable frame rate is available.
     /// </summary>
-    private static double SnapSecondsToFrame(double seconds)
+    private double SnapSecondsToFrame(double seconds)
     {
         if (!Se.Settings.Waveform.SnapToFrames)
         {
@@ -18239,7 +18239,7 @@ public partial class MainViewModel :
             return seconds;
         }
 
-        return FrameGrid.Snap(seconds, 1.0 / frameRate, FrameGrid.OffsetSeconds);
+        return FrameGrid.Snap(seconds, 1.0 / frameRate, FrameGridOffsetSeconds);
     }
 
     [RelayCommand]
@@ -32634,12 +32634,18 @@ public partial class MainViewModel :
     }
 
     /// <summary>
+    /// This window's video's first frame time in seconds (0 with no video). Per window, not
+    /// app-wide: File &gt; New window opens editor windows with videos of their own.
+    /// </summary>
+    internal double FrameGridOffsetSeconds { get; private set; }
+
+    /// <summary>
     /// Frame snapping counts frames from the video's first frame, which sits at the file's start
     /// time on the player's timeline (#17149). Looking it up runs ffmpeg, so it is done off the UI thread.
     /// </summary>
     private void UpdateFrameGridOffset(string videoFileName)
     {
-        FrameGrid.OffsetSeconds = 0;
+        FrameGridOffsetSeconds = 0;
         _ = Task.Run(() =>
         {
             var offsetSeconds = WaveFileExtractor.GetTimelineOffsetMilliseconds(videoFileName) / 1000.0;
@@ -32647,7 +32653,7 @@ public partial class MainViewModel :
             {
                 if (string.Equals(_videoFileName, videoFileName, StringComparison.Ordinal))
                 {
-                    FrameGrid.OffsetSeconds = offsetSeconds;
+                    FrameGridOffsetSeconds = FrameGrid.NormalizeOffset(offsetSeconds);
                 }
             });
         });
@@ -32659,7 +32665,7 @@ public partial class MainViewModel :
         ClearSubtitleEndPreview();
         GetVideoPlayerControl()?.Close();
         _videoFileName = string.Empty;
-        FrameGrid.OffsetSeconds = 0;
+        FrameGridOffsetSeconds = 0;
         IsVideoLoaded = false;
         _mediaInfo = null;
 

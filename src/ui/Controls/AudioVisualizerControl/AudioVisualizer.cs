@@ -398,6 +398,15 @@ public partial class AudioVisualizer : Control
     // (#12864). Hosts without a video player (or that never set this) keep plain scrolling.
     public Func<bool>? GetIsVideoPlaying { get; set; }
 
+    /// <summary>
+    /// Where the host's video's first frame sits on the timeline, for "Snap to frames" (#17149).
+    /// Per waveform: each editor window has its own video, and dialogs that never set this keep a
+    /// grid starting at 0.
+    /// </summary>
+    public Func<double>? GetFrameGridOffsetSeconds { get; set; }
+
+    private double FrameGridOffsetSeconds => FrameGrid.NormalizeOffset(GetFrameGridOffsetSeconds?.Invoke() ?? 0);
+
     private Color _waveformFancyHighColor = Colors.Orange;
 
     public Color WaveformFancyHighColor
@@ -2324,14 +2333,14 @@ public partial class AudioVisualizer : Control
         InvalidateVisual();
     }
 
-    private static double SnapToFrame(double seconds)
+    private double SnapToFrame(double seconds)
     {
         if (!TryGetFrameDuration(out var frameDur))
         {
             return seconds;
         }
 
-        return FrameGrid.Snap(seconds, frameDur, FrameGrid.OffsetSeconds);
+        return FrameGrid.Snap(seconds, frameDur, FrameGridOffsetSeconds);
     }
 
     /// <summary>
@@ -2345,14 +2354,14 @@ public partial class AudioVisualizer : Control
     /// frames' whole-ms times against the whole-ms bound keeps it on frame 101.
     /// </para>
     /// </summary>
-    private static double SnapToFrameCeil(double seconds)
+    private double SnapToFrameCeil(double seconds)
     {
         if (!TryGetFrameDuration(out var frameDur))
         {
             return seconds;
         }
 
-        var offset = FrameGrid.OffsetSeconds;
+        var offset = FrameGridOffsetSeconds;
         var boundMs = Math.Round(seconds * TimeCode.BaseUnit, MidpointRounding.AwayFromZero);
         var frame = Math.Max(0, Math.Ceiling((seconds - offset) / frameDur));
         if (frame > 0 && FrameToWholeMs(frame - 1, frameDur, offset) >= boundMs)
@@ -2371,14 +2380,14 @@ public partial class AudioVisualizer : Control
     /// Latest frame time at or before <paramref name="seconds"/>, compared in whole milliseconds -
     /// the mirror of <see cref="SnapToFrameCeil"/>.
     /// </summary>
-    private static double SnapToFrameFloor(double seconds)
+    private double SnapToFrameFloor(double seconds)
     {
         if (!TryGetFrameDuration(out var frameDur))
         {
             return seconds;
         }
 
-        var offset = FrameGrid.OffsetSeconds;
+        var offset = FrameGridOffsetSeconds;
         var boundMs = Math.Round(seconds * TimeCode.BaseUnit, MidpointRounding.AwayFromZero);
         var frame = Math.Floor((seconds - offset) / frameDur);
         if (FrameToWholeMs(frame + 1, frameDur, offset) <= boundMs)

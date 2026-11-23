@@ -9,14 +9,12 @@ namespace Nikse.SubtitleEdit.Logic.Media;
 /// </summary>
 public static class FrameGrid
 {
-    private static double _offsetSeconds;
-
-    /// <summary>The main window's video's first frame time in seconds (0 with no video).</summary>
-    public static double OffsetSeconds
-    {
-        get => System.Threading.Volatile.Read(ref _offsetSeconds);
-        set => System.Threading.Volatile.Write(ref _offsetSeconds, value > 0 && double.IsFinite(value) ? value : 0);
-    }
+    /// <summary>
+    /// A usable grid start: positive and finite, else 0. The offset belongs to one editor window's
+    /// video - File &gt; New window opens windows with videos of their own, so it is not shared.
+    /// </summary>
+    public static double NormalizeOffset(double offsetSeconds) =>
+        offsetSeconds > 0 && double.IsFinite(offsetSeconds) ? offsetSeconds : 0;
 
     /// <summary>
     /// Nearest frame time to <paramref name="seconds"/> on a grid starting at <paramref name="offsetSeconds"/>.
