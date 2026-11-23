@@ -100,6 +100,12 @@ public partial class AdjustDurationViewModel : ObservableObject
                 {
                     subtitle.EndTime = cappedEndTime;
                 }
+                else if (newEndTime < subtitle.EndTime)
+                {
+                    // Already overlapping the next line: a negative adjustment still applies, as it
+                    // only shrinks the overlap (it used to be dropped, leaving the end time as is).
+                    subtitle.EndTime = newEndTime;
+                }
             }
         }
     }
