@@ -16906,6 +16906,15 @@ public partial class MainViewModel :
         Se.Settings.General.ShowColumnGap = !Se.Settings.General.ShowColumnGap;
         ShowColumnGap = Se.Settings.General.ShowColumnGap;
         AutoFitColumns();
+        // Gap errors move between the Gap cell and the Show/Hide cells with the column's
+        // visibility - post the refresh after the layout pass (see ToggleShowColumnCps).
+        Dispatcher.UIThread.Post(() =>
+        {
+            foreach (var row in Subtitles)
+            {
+                row.RefreshAfterSettingsChanged();
+            }
+        });
     }
 
     [RelayCommand]
