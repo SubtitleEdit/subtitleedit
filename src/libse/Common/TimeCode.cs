@@ -35,7 +35,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 : 0;
         }
 
-        internal static bool IsSupportedTimeCode(string text)
+        /// <summary>
+        /// True when the text parses as a time code but is too large for TimeSpan/TimeCode.
+        /// Text that does not parse at all is not out of range.
+        /// </summary>
+        internal static bool IsOutOfRangeTimeCode(string text)
         {
             if (!TryParseTimeParts(text, out var hours, out var minutes, out var seconds, out var milliseconds))
             {
@@ -43,7 +47,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var totalMilliseconds = ((hours * 60L + minutes) * 60 + seconds) * 1000 + milliseconds;
-            return Math.Abs(totalMilliseconds) <= MaxSupportedTotalMilliseconds;
+            return Math.Abs(totalMilliseconds) > MaxSupportedTotalMilliseconds;
         }
 
         private static bool TryParseTimeParts(string text, out int hours, out int minutes, out int seconds, out int milliseconds)

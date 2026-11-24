@@ -158,6 +158,24 @@ public class FuzzFindingsTest
         Assert.Equal(new double[] { 3456, 6789, 9999 }, subtitle.Paragraphs.Select(p => p.EndTime.TotalMilliseconds));
     }
 
+    [Theory]
+    [InlineData("01:23", "01:25", "01:30", "01:35")]
+    [InlineData("1.5s", "2.5s", "3s", "4s")]
+    [InlineData("-1.5", "2.5", "3.0", "4.0")]
+    public void GenericCsv_UnrecognisedTimeFormatKeepsRows(string start1, string end1, string start2, string end2)
+    {
+        var lines = new List<string>
+        {
+            "start,end,text",
+            $"{start1},{end1},First",
+            $"{start2},{end2},Second",
+        };
+
+        var subtitle = new UnknownFormatImporter().AutoGuessImport(lines, "test.csv");
+
+        Assert.Equal(new[] { "First", "Second" }, subtitle.Paragraphs.Select(p => p.Text));
+    }
+
     private static async Task<T> RunWithTimeout<T>(Func<T> action)
     {
         var task = Task.Run(action, TestContext.Current.CancellationToken);

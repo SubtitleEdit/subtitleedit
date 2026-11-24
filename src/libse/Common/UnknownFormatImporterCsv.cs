@@ -79,12 +79,16 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return true;
             }
 
-            if (PlainNumberRegex.IsMatch(value.Trim()))
+            // Only reject values that parse but cannot become a time (NaN, infinity, out of
+            // range). Values in an unrecognised format ("01:23", "1.5s") keep their row, as
+            // they always did - the text is still imported and the times are recalculated.
+            if (TryParseNumber(value, out var number))
             {
-                return TryParseNumber(value, out var number) && number <= TimeCode.MaxSupportedTotalMilliseconds;
+                return !double.IsNaN(number) && !double.IsInfinity(number) &&
+                       Math.Abs(number) <= TimeCode.MaxSupportedTotalMilliseconds;
             }
 
-            return TimeCode.IsSupportedTimeCode(value);
+            return !TimeCode.IsOutOfRangeTimeCode(value);
         }
 
         /// <summary>
