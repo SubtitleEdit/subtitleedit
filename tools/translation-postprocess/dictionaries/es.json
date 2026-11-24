@@ -1,0 +1,24 @@
+{
+  "target_language": "es",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "Muchas gracias."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "Hasta mañana."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "Buenas noches."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "¡Feliz cumpleaños!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "Hasta pronto."},
+      {"source": "Sorry about that.", "draft": "Lo siento por eso.", "suggestions": ["Lo siento.", "Perdón."], "note": "Check the speaker’s intent and register."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "Gracias."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "¿Quién eres?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "No lo sé."},
+      {"source": "Thank you very much.", "draft": "Muchas gracias", "replacement": "Muchas gracias."},
+      {"source": "See you tomorrow.", "draft": "Hasta mañana", "replacement": "Hasta mañana."},
+      {"source": "Good night.", "draft": "Buenas noches", "replacement": "Buenas noches."},
+      {"source": "Happy birthday!", "draft": "¡Feliz cumpleaños", "replacement": "¡Feliz cumpleaños!"},
+      {"source": "See you soon.", "draft": "Hasta pronto", "replacement": "Hasta pronto."},
+      {"source": "Thank you.", "draft": "Gracias", "replacement": "Gracias."},
+      {"source": "Who are you?", "draft": "¿Quién eres", "replacement": "¿Quién eres?"},
+      {"source": "I don't know.", "draft": "No lo sé", "replacement": "No lo sé."}
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "target_language": "vi",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "Cảm ơn rất nhiều."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "Hẹn gặp ngày mai."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "Chúc ngủ ngon."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "Chúc mừng sinh nhật!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "Hẹn sớm gặp lại."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "Cảm ơn."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Bạn là ai?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "Tôi không biết."},
+      {"source": "Thank you very much.", "draft": "Cảm ơn rất nhiều", "replacement": "Cảm ơn rất nhiều."},
+      {"source": "See you tomorrow.", "draft": "Hẹn gặp ngày mai", "replacement": "Hẹn gặp ngày mai."},
+      {"source": "Good night.", "draft": "Chúc ngủ ngon", "replacement": "Chúc ngủ ngon."},
+      {"source": "Happy birthday!", "draft": "Chúc mừng sinh nhật", "replacement": "Chúc mừng sinh nhật!"},
+      {"source": "See you soon.", "draft": "Hẹn sớm gặp lại", "replacement": "Hẹn sớm gặp lại."},
+      {"source": "Thank you.", "draft": "Cảm ơn", "replacement": "Cảm ơn."},
+      {"source": "Who are you?", "draft": "Bạn là ai", "replacement": "Bạn là ai?"},
+      {"source": "I don't know.", "draft": "Tôi không biết", "replacement": "Tôi không biết."}
+    ]
+  }
+}

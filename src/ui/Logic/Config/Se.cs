@@ -204,6 +204,7 @@ public class Se
         set => _dictionariesFolder = value;
     }
     public static string ThemesFolder => Path.Combine(DataFolder, "Themes");
+    public static string TranslationPostProcessDictionariesFolder => Path.Combine(DictionariesFolder, "TranslationPostProcess");
     public static string FontsFolder => Path.Combine(DataFolder, "Fonts");
     public static string AutoBackupFolder => Path.Combine(DataFolder, "AutoBackup");
 

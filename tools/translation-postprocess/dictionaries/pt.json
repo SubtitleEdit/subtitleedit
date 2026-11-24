@@ -1,0 +1,23 @@
+{
+  "target_language": "pt",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "Agradeço muito."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "Até amanhã."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "Boa noite."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "Feliz aniversário!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "Até breve."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "Agradeço."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Quem é você?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "Não sei."},
+      {"source": "Thank you very much.", "draft": "Agradeço muito", "replacement": "Agradeço muito."},
+      {"source": "See you tomorrow.", "draft": "Até amanhã", "replacement": "Até amanhã."},
+      {"source": "Good night.", "draft": "Boa noite", "replacement": "Boa noite."},
+      {"source": "Happy birthday!", "draft": "Feliz aniversário", "replacement": "Feliz aniversário!"},
+      {"source": "See you soon.", "draft": "Até breve", "replacement": "Até breve."},
+      {"source": "Thank you.", "draft": "Agradeço", "replacement": "Agradeço."},
+      {"source": "Who are you?", "draft": "Quem é você", "replacement": "Quem é você?"},
+      {"source": "I don't know.", "draft": "Não sei", "replacement": "Não sei."}
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "target_language": "ro",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "Mulțumesc mult."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "Ne vedem mâine."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "Noapte bună."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "La mulți ani!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "Ne vedem curând."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "Mulțumesc."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Cine ești?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "Nu știu."},
+      {"source": "Thank you very much.", "draft": "Mulțumesc mult", "replacement": "Mulțumesc mult."},
+      {"source": "See you tomorrow.", "draft": "Ne vedem mâine", "replacement": "Ne vedem mâine."},
+      {"source": "Good night.", "draft": "Noapte bună", "replacement": "Noapte bună."},
+      {"source": "Happy birthday!", "draft": "La mulți ani", "replacement": "La mulți ani!"},
+      {"source": "See you soon.", "draft": "Ne vedem curând", "replacement": "Ne vedem curând."},
+      {"source": "Thank you.", "draft": "Mulțumesc", "replacement": "Mulțumesc."},
+      {"source": "Who are you?", "draft": "Cine ești", "replacement": "Cine ești?"},
+      {"source": "I don't know.", "draft": "Nu știu", "replacement": "Nu știu."}
+    ]
+  }
+}

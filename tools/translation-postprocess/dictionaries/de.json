@@ -1,0 +1,24 @@
+{
+  "target_language": "de",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "Vielen Dank."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "Bis morgen."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "Gute Nacht."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "Alles Gute zum Geburtstag!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "Bis bald."},
+      {"source": "Sorry about that.", "draft": "Entschuldigung dafür.", "suggestions": ["Tut mir leid.", "Das tut mir leid."], "note": "Check whether the speaker is apologizing or expressing sympathy."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "Danke."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Wer bist du?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "Ich weiß nicht."},
+      {"source": "Thank you very much.", "draft": "Vielen Dank", "replacement": "Vielen Dank."},
+      {"source": "See you tomorrow.", "draft": "Bis morgen", "replacement": "Bis morgen."},
+      {"source": "Good night.", "draft": "Gute Nacht", "replacement": "Gute Nacht."},
+      {"source": "Happy birthday!", "draft": "Alles Gute zum Geburtstag", "replacement": "Alles Gute zum Geburtstag!"},
+      {"source": "See you soon.", "draft": "Bis bald", "replacement": "Bis bald."},
+      {"source": "Thank you.", "draft": "Danke", "replacement": "Danke."},
+      {"source": "Who are you?", "draft": "Wer bist du", "replacement": "Wer bist du?"},
+      {"source": "I don't know.", "draft": "Ich weiß nicht", "replacement": "Ich weiß nicht."}
+    ]
+  }
+}

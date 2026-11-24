@@ -1,0 +1,76 @@
+using Nikse.SubtitleEdit.UiLogic.Translate;
+
+namespace LibUiLogicTests.Translate;
+
+public class TranslationPostProcessDictionaryTests
+{
+    [Fact]
+    public void EveryBundledDictionaryPassesEditorValidation()
+    {
+        Assert.All(TranslationPostProcessDictionary.Languages, language =>
+            Assert.NotEmpty(TranslationPostProcessDictionary.Read(language)));
+    }
+
+    [Theory]
+    [InlineData("Danish", "Danish", "da", "Tak.")]
+    [InlineData("Norwegian", "Norwegian", "no", "Takk.")]
+    [InlineData("Brazilian Portuguese", "Brazilian Portuguese", "pt-BR", "Agradeço.")]
+    [InlineData("Chinese", "Chinese", "zh-TW", "謝謝。")]
+    public void EmbeddedDictionariesResolveProviderLanguageMetadata(string name, string code, string iso, string expected)
+    {
+        var rules = TranslationPostProcessDictionary.Get(
+            new TranslationPair("English", "EN-US"), new TranslationPair(name, code, iso));
+        Assert.Equal(expected, rules?.Match("Thank you.", "Thank you.")?.Replacement);
+    }
+
+    [Fact]
+    public void DanishRequiresTheObservedSourceAndDraft()
+    {
+        var rules = TranslationPostProcessDictionary.Get(new TranslationPair("English", "en"), new TranslationPair("Danish", "da"));
+        Assert.NotNull(rules);
+        Assert.Null(rules.Match("You got it.", "Det gør jeg."));
+        Assert.Null(rules.Match("I got it.", "Du har det."));
+        Assert.Null(rules.Match("- You got it.", "- Du har det."));
+        Assert.Null(rules.Match("I wouldn't count on it.", "Jeg ville ikke regne med det."));
+        Assert.Equal("Det ville jeg ikke regne med.", rules.Match("I wouldn’t count on it.", "Jeg kan ikke regne på det.")?.Replacement);
+        var review = rules.Match("You got it.", "Du har det.");
+        Assert.NotNull(review);
+        Assert.Null(review.Replacement);
+        Assert.Contains("Det gør jeg.", review.Suggestions);
+    }
+
+    [Fact]
+    public void UserOverridesReloadAndCanRemoveBundledRules()
+    {
+        var folder = Directory.CreateTempSubdirectory();
+        try
+        {
+            var source = new TranslationPair("English", "en");
+            var target = new TranslationPair("Danish", "da");
+            var defaults = TranslationPostProcessDictionary.Read("da");
+            var edit = new TranslationPostProcessDictionary.Entry("en", "Thank you.", "Thank you.",
+                new TranslationPostProcessDictionary.Rule("Mange tak!", Array.Empty<string>(), null));
+            Assert.Equal("Tak.", TranslationPostProcessDictionary.Get(source, target, folder.FullName)
+                ?.Match("Thank you.", "Thank you.")?.Replacement);
+
+            TranslationPostProcessDictionary.Save("da", new[] { edit }, folder.FullName);
+            Assert.Equal("Mange tak!", TranslationPostProcessDictionary.Get(source, target, folder.FullName)
+                ?.Match("Thank you.", "Thank you.")?.Replacement);
+            Assert.Null(TranslationPostProcessDictionary.Get(source, target, folder.FullName)?.Match("Good night.", "Good night."));
+
+            Assert.Throws<InvalidDataException>(() =>
+                TranslationPostProcessDictionary.Save("da", new[] { edit, edit }, folder.FullName));
+            Assert.Single(TranslationPostProcessDictionary.Read("da", folder.FullName));
+            Assert.Equal(defaults.Count, TranslationPostProcessDictionary.Read("da").Count);
+
+            File.WriteAllText(Path.Combine(folder.FullName, "da.json"), "{}");
+            Assert.Throws<InvalidDataException>(() => TranslationPostProcessDictionary.Read("da", folder.FullName));
+            Assert.Equal("Tak.", TranslationPostProcessDictionary.Get(source, target, folder.FullName)
+                ?.Match("Thank you.", "Thank you.")?.Replacement);
+        }
+        finally
+        {
+            folder.Delete(recursive: true);
+        }
+    }
+}

@@ -1,3 +1,4 @@
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Threading;
@@ -5,6 +6,7 @@ using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.UiLogic.Translate;
@@ -26,6 +28,7 @@ public class AutoTranslateSelectedRowsTests
     private sealed class RecordingTranslator : IAutoTranslator
     {
         public List<string> Texts { get; } = new();
+        public Func<string, string> TranslateText { get; set; } = text => text.ToUpperInvariant();
         public string Name => "Recording";
         public string Url => string.Empty;
         public string Error { get; set; } = string.Empty;
@@ -41,7 +44,75 @@ public class AutoTranslateSelectedRowsTests
                 Texts.Add(text);
             }
 
-            return Task.FromResult(text.ToUpperInvariant());
+            return Task.FromResult(TranslateText(text));
+        }
+    }
+
+    [AvaloniaFact]
+    public async Task DictionarySwitch_ReviewsSelectedRows_AndCanEditAcceptOrRevert()
+    {
+        var (vm, window, grid, translator) = OpenWindow("It's no big deal.", "Thank you.", "You got it.");
+        var originalSetting = Se.Settings.AutoTranslate.UsePostProcessDictionary;
+        try
+        {
+            var language = Se.Language.Translate;
+            var toggle = window.GetVisualDescendants().OfType<ToggleSwitch>()
+                .Single(control => AutomationProperties.GetName(control) == language.PostProcessDictionary);
+            toggle.SetCurrentValue(ToggleSwitch.IsCheckedProperty, true);
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(vm.UsePostProcessDictionary);
+
+            translator.TranslateText = text => text switch
+            {
+                "It's no big deal." or "It is no big deal." => "Det er ikke noget stort.",
+                "You got it." => "Du har det.",
+                _ => text,
+            };
+            vm.Rows[1].TranslatedText = "Thank you."; // Existing translation outside the current run.
+            Select(vm, grid, 0, 2);
+            await vm.TranslateRowsCommand.ExecuteAsync(null);
+            await WaitUntilDone(vm);
+
+            Assert.Equal("Det er ikke noget særligt.", vm.Rows[0].TranslatedText);
+            Assert.Equal("Thank you.", vm.Rows[1].TranslatedText);
+            Assert.Equal("Du har det.", vm.Rows[2].TranslatedText);
+            Assert.Equal(string.Format(language.PostProcessSummary, 1, 1), vm.PostProcessSummary);
+
+            vm.SelectedTranslateRow = vm.Rows[0];
+            window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+            var original = window.GetVisualDescendants().OfType<TextBox>()
+                .Single(control => AutomationProperties.GetName(control) == language.PostProcessOriginal);
+            var current = window.GetVisualDescendants().OfType<TextBox>()
+                .Single(control => AutomationProperties.GetName(control) == language.PostProcessCurrent);
+            Assert.True(original.IsVisible);
+            Assert.True(original.IsReadOnly);
+            Assert.Equal("Det er ikke noget stort.", original.Text);
+            Assert.Equal("Det er ikke noget særligt.", current.Text);
+            current.SetCurrentValue(TextBox.TextProperty, "Det betyder ikke det store.");
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal("Det betyder ikke det store.", vm.Rows[0].TranslatedText);
+            vm.RevertDictionaryTextCommand.Execute(null);
+            Assert.Equal("Det er ikke noget stort.", vm.Rows[0].TranslatedText);
+
+            vm.SelectedTranslateRow = vm.Rows[2];
+            vm.UseDictionaryTextCommand.Execute("Det gør jeg.");
+            Assert.Equal("Det gør jeg.", vm.Rows[2].TranslatedText);
+            Assert.Equal(string.Format(language.PostProcessSummary, 1, 0), vm.PostProcessSummary);
+
+            toggle.SetCurrentValue(ToggleSwitch.IsCheckedProperty, false);
+            Select(vm, grid, 2);
+            Assert.False(vm.UsePostProcessDictionary);
+            await vm.TranslateRowsCommand.ExecuteAsync(null);
+            await WaitUntilDone(vm);
+            Assert.Equal("Du har det.", vm.Rows[2].TranslatedText);
+            vm.SelectedTranslateRow = vm.Rows[2];
+            Assert.False(vm.HasSelectedDictionaryMatch);
+        }
+        finally
+        {
+            Se.Settings.AutoTranslate.UsePostProcessDictionary = originalSetting;
+            window.Close();
         }
     }
 

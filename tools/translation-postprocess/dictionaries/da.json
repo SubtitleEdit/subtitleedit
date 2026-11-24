@@ -1,0 +1,43 @@
+{
+  "target_language": "da",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "Mange tak."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "Vi ses i morgen."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "Godnat."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "Tillykke med fødselsdagen!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "Vi ses snart."},
+      {"source": "Break a leg!", "draft": "Brødet på benet!", "replacement": "Held og lykke!"},
+      {"source": "Sorry about that.", "draft": "Beklager for det.", "suggestions": ["Undskyld.", "Det gør mig ondt."], "note": "Distinguish an apology from sympathy using nearby cues."},
+      {"source": "I'm sorry.", "draft": "Det gør mig ondt.", "suggestions": ["Undskyld.", "Undskyld?"], "note": "Keep the draft for sympathy. For an apology or request for clarification, review the alternatives."},
+      {"source": "I'm sorry about your father.", "draft": "Det gør mig ondt for din far.", "suggestions": ["Det gør mig ondt at høre om din far."], "note": "Use if the scene expresses sympathy."},
+      {"source": "I'm sorry about last night. I shouldn't have done that.", "draft": "Undskyld om aftenen i går. Jeg burde ikke have gjort det.", "suggestions": ["Undskyld for i går aftes. Jeg burde ikke have gjort det."], "note": "Apology for the speaker’s own actions; check timing and register."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "Tak."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Hvem er du?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "Det ved jeg ikke."},
+      {"source": "Thank you very much.", "draft": "Mange tak", "replacement": "Mange tak."},
+      {"source": "See you tomorrow.", "draft": "Vi ses i morgen", "replacement": "Vi ses i morgen."},
+      {"source": "Good night.", "draft": "Godnat", "replacement": "Godnat."},
+      {"source": "Happy birthday!", "draft": "Tillykke med fødselsdagen", "replacement": "Tillykke med fødselsdagen!"},
+      {"source": "See you soon.", "draft": "Vi ses snart", "replacement": "Vi ses snart."},
+      {"source": "Thank you.", "draft": "Tak", "replacement": "Tak."},
+      {"source": "Who are you?", "draft": "Hvem er du", "replacement": "Hvem er du?"},
+      {"source": "I don't know.", "draft": "Det ved jeg ikke", "replacement": "Det ved jeg ikke."},
+      {"source": "It's no big deal.", "draft": "Det er ikke noget stort.", "replacement": "Det er ikke noget særligt."},
+      {"source": "You got it.", "draft": "Du har det.", "suggestions": ["Det gør jeg.", "Lige præcis."], "note": "Check whether the speaker is confirming an instruction, agreeing or talking about possession."},
+      {"source": "Fair enough, Major.", "draft": "Det er nok, Major.", "replacement": "Fair nok, major."},
+      {"source": "So don't make a liar out of me, Colonel.", "draft": "Så lav ikke en løgn af mig, oberst.", "suggestions": ["Så lad mig ikke stå som en løgner, oberst."], "note": "The speaker wants to be able to keep a promise."},
+      {"source": "Maybe you take it down a notch.", "draft": "Måske skal du sætte det lidt ned.", "suggestions": ["Måske skulle du lige skrue lidt ned."], "note": "Check whether the speaker means to tone down their behavior or turn down a setting."},
+      {"source": "I'm good. You know me. Work, work, work.", "draft": "Jeg er god. Du kender mig. Arbejde, arbejde, arbejde.", "suggestions": ["Jeg har det fint. Du kender mig. Arbejde, arbejde, arbejde."], "note": "Use when the speaker is saying how they are."},
+      {"source": "I'm sick of your rules! Give me a break!", "draft": "Jeg er mæt af dine regler! Giv mig en pause!", "suggestions": ["Jeg er træt af dine regler! Hold nu op!"], "note": "Use if the speaker is exasperated."},
+      {"source": "I see...", "draft": "Jeg ser...", "suggestions": ["Nå, sådan.", "Det forstår jeg..."], "note": "Use if the speaker is acknowledging information. Keep the existing meaning if they literally see something."},
+      {"source": "No harm done.", "draft": "Ingen skade gjort.", "suggestions": ["Der skete ikke noget.", "Det gør ikke noget."], "note": "Choose between describing the outcome and reassuring someone after an apology."},
+      {"source": "No harm done.", "draft": "Intet skade sket.", "suggestions": ["Der skete ikke noget.", "Det gør ikke noget."], "note": "Choose between describing the outcome and reassuring someone after an apology."},
+      {"source": "That was close.", "draft": "Det var tæt.", "suggestions": ["Det var tæt på.", "Det var lige ved at gå galt."], "note": "Use for a narrow escape. The draft can work for a close contest."},
+      {"source": "I wouldn't count on it.", "draft": "Jeg kan ikke regne på det.", "replacement": "Det ville jeg ikke regne med."},
+      {"source": "You can say that again.", "draft": "Du kan sige det igen.", "suggestions": ["Ja, lige præcis.", "Det kan man roligt sige."], "note": "Use if the speaker emphatically agrees. Keep the literal meaning when asking someone to repeat something."},
+      {"source": "Don't push it.", "draft": "Tryk ikke på det.", "suggestions": ["Pres ikke på.", "Du skal ikke presse citronen."], "note": "Use if the speaker is warning against going too far. Keep the draft if a physical object is involved."},
+      {"source": "Don't push it.", "draft": "Træk ikke på det.", "suggestions": ["Pres ikke på.", "Du skal ikke presse citronen."], "note": "Use if the speaker is warning against going too far. Check context for a physical action."}
+    ]
+  }
+}

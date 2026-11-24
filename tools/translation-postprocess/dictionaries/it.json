@@ -1,0 +1,23 @@
+{
+  "target_language": "it",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "Grazie mille."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "A domani."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "Buonanotte."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "Buon compleanno!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "A presto."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "Grazie."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Chi sei?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "Non lo so."},
+      {"source": "Thank you very much.", "draft": "Grazie mille", "replacement": "Grazie mille."},
+      {"source": "See you tomorrow.", "draft": "A domani", "replacement": "A domani."},
+      {"source": "Good night.", "draft": "Buonanotte", "replacement": "Buonanotte."},
+      {"source": "Happy birthday!", "draft": "Buon compleanno", "replacement": "Buon compleanno!"},
+      {"source": "See you soon.", "draft": "A presto", "replacement": "A presto."},
+      {"source": "Thank you.", "draft": "Grazie", "replacement": "Grazie."},
+      {"source": "Who are you?", "draft": "Chi sei", "replacement": "Chi sei?"},
+      {"source": "I don't know.", "draft": "Non lo so", "replacement": "Non lo so."}
+    ]
+  }
+}

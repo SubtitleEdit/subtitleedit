@@ -1,0 +1,23 @@
+{
+  "target_language": "hu",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "Nagyon köszönöm."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "Holnap találkozunk."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "Jó éjszakát."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "Boldog születésnapot!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "Hamarosan találkozunk."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "Köszönöm."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Ki vagy?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "Nem tudom."},
+      {"source": "Thank you very much.", "draft": "Nagyon köszönöm", "replacement": "Nagyon köszönöm."},
+      {"source": "See you tomorrow.", "draft": "Holnap találkozunk", "replacement": "Holnap találkozunk."},
+      {"source": "Good night.", "draft": "Jó éjszakát", "replacement": "Jó éjszakát."},
+      {"source": "Happy birthday!", "draft": "Boldog születésnapot", "replacement": "Boldog születésnapot!"},
+      {"source": "See you soon.", "draft": "Hamarosan találkozunk", "replacement": "Hamarosan találkozunk."},
+      {"source": "Thank you.", "draft": "Köszönöm", "replacement": "Köszönöm."},
+      {"source": "Who are you?", "draft": "Ki vagy", "replacement": "Ki vagy?"},
+      {"source": "I don't know.", "draft": "Nem tudom", "replacement": "Nem tudom."}
+    ]
+  }
+}

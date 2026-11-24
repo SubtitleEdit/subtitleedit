@@ -59,6 +59,14 @@ public class LanguageTranslate
     public string ServerRunningAtX { get; set; }
     public string CustomPromptHint { get; set; }
     public string EditTranslationHint { get; set; }
+    public string PostProcessDictionary { get; set; }
+    public string PostProcessDictionaryHint { get; set; }
+    public string PostProcessSummary { get; set; }
+    public string PostProcessNoDictionary { get; set; }
+    public string PostProcessOriginal { get; set; }
+    public string PostProcessCurrent { get; set; }
+    public string PostProcessRevert { get; set; }
+    public string PostProcessNextMatch { get; set; }
     public string LlamaCppDownloadEngineAndModelPrompt { get; set; }
     public string LlamaCppDownloadModelPrompt { get; set; }
     public string MicrosoftTranslatorRegionHint { get; set; }
@@ -122,6 +130,14 @@ public class LanguageTranslate
         ServerRunningAtX = "Server running at {0}";
         CustomPromptHint = "Custom instructions ({0} = source language, {1} = target language); empty = built-in prompt";
         EditTranslationHint = "Click the selected row's translation to edit it (Enter saves, Escape cancels)";
+        PostProcessDictionary = "Post-processing dictionary";
+        PostProcessDictionaryHint = "Check short cues after each translation run. Apply exact fixes and show context-dependent suggestions for review.";
+        PostProcessSummary = "{0} changed · {1} to review";
+        PostProcessNoDictionary = "No dictionary for the selected languages";
+        PostProcessOriginal = "Engine translation";
+        PostProcessCurrent = "Current translation";
+        PostProcessRevert = "Revert to engine translation";
+        PostProcessNextMatch = "Next dictionary match";
         LlamaCppDownloadEngineAndModelPrompt = "llama.cpp requires the llama-server engine and a translation model to be downloaded. Download now?";
         LlamaCppDownloadModelPrompt = "llama.cpp requires the selected translation model to be downloaded. Download now?";
         MicrosoftTranslatorRegionHint = "Only for a regional or multi-service Azure resource, e.g. westeurope (see Keys and Endpoint in the Azure portal) - leave empty for a global resource";

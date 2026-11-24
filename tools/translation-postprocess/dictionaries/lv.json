@@ -1,0 +1,23 @@
+{
+  "target_language": "lv",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "Liels paldies."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "Uz redzēšanos rīt."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "Ar labu nakti."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "Daudz laimes dzimšanas dienā!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "Uz drīzu tikšanos."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "Paldies."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Kas tu esi?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "Es nezinu."},
+      {"source": "Thank you very much.", "draft": "Liels paldies", "replacement": "Liels paldies."},
+      {"source": "See you tomorrow.", "draft": "Uz redzēšanos rīt", "replacement": "Uz redzēšanos rīt."},
+      {"source": "Good night.", "draft": "Ar labu nakti", "replacement": "Ar labu nakti."},
+      {"source": "Happy birthday!", "draft": "Daudz laimes dzimšanas dienā", "replacement": "Daudz laimes dzimšanas dienā!"},
+      {"source": "See you soon.", "draft": "Uz drīzu tikšanos", "replacement": "Uz drīzu tikšanos."},
+      {"source": "Thank you.", "draft": "Paldies", "replacement": "Paldies."},
+      {"source": "Who are you?", "draft": "Kas tu esi", "replacement": "Kas tu esi?"},
+      {"source": "I don't know.", "draft": "Es nezinu", "replacement": "Es nezinu."}
+    ]
+  }
+}

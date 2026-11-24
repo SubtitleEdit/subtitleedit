@@ -1,0 +1,24 @@
+{
+  "target_language": "fr",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "Merci beaucoup."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "À demain."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "Bonne nuit."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "Joyeux anniversaire !"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "À bientôt."},
+      {"source": "Sorry about that.", "draft": "Désolé pour ça.", "suggestions": ["Pardon.", "Je suis désolé.", "Je suis désolée."], "note": "Choose wording from the scene and the speaker."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "Merci."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Qui es-tu ?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "Je ne sais pas."},
+      {"source": "Thank you very much.", "draft": "Merci beaucoup", "replacement": "Merci beaucoup."},
+      {"source": "See you tomorrow.", "draft": "À demain", "replacement": "À demain."},
+      {"source": "Good night.", "draft": "Bonne nuit", "replacement": "Bonne nuit."},
+      {"source": "Happy birthday!", "draft": "Joyeux anniversaire", "replacement": "Joyeux anniversaire !"},
+      {"source": "See you soon.", "draft": "À bientôt", "replacement": "À bientôt."},
+      {"source": "Thank you.", "draft": "Merci", "replacement": "Merci."},
+      {"source": "Who are you?", "draft": "Qui es-tu", "replacement": "Qui es-tu ?"},
+      {"source": "I don't know.", "draft": "Je ne sais pas", "replacement": "Je ne sais pas."}
+    ]
+  }
+}

@@ -1,0 +1,385 @@
+{
+  "target_language": "en",
+  "rules": {
+    "ar": [
+      {"source": "شكرًا جزيلًا.", "draft": "شكرًا جزيلًا.", "replacement": "Thank you very much."},
+      {"source": "أراك غدًا.", "draft": "أراك غدًا.", "replacement": "See you tomorrow."},
+      {"source": "ليلة سعيدة.", "draft": "ليلة سعيدة.", "replacement": "Good night."},
+      {"source": "عيد ميلاد سعيد!", "draft": "عيد ميلاد سعيد!", "replacement": "Happy birthday!"},
+      {"source": "أراك قريبًا.", "draft": "أراك قريبًا.", "replacement": "See you soon."},
+      {"source": "شكرًا.", "draft": "شكرًا.", "replacement": "Thank you."},
+      {"source": "من أنت؟", "draft": "من أنت؟", "replacement": "Who are you?"},
+      {"source": "لا أعرف.", "draft": "لا أعرف.", "replacement": "I don't know."}
+    ],
+    "bg": [
+      {"source": "Много благодаря.", "draft": "Много благодаря.", "replacement": "Thank you very much."},
+      {"source": "До утре.", "draft": "До утре.", "replacement": "See you tomorrow."},
+      {"source": "Лека нощ.", "draft": "Лека нощ.", "replacement": "Good night."},
+      {"source": "Честит рожден ден!", "draft": "Честит рожден ден!", "replacement": "Happy birthday!"},
+      {"source": "До скоро.", "draft": "До скоро.", "replacement": "See you soon."},
+      {"source": "Благодаря.", "draft": "Благодаря.", "replacement": "Thank you."},
+      {"source": "Кой си ти?", "draft": "Кой си ти?", "replacement": "Who are you?"},
+      {"source": "Не знам.", "draft": "Не знам.", "replacement": "I don't know."}
+    ],
+    "bs": [
+      {"source": "Hvala lijepa.", "draft": "Hvala lijepa.", "replacement": "Thank you very much."},
+      {"source": "Vidimo se sutra.", "draft": "Vidimo se sutra.", "replacement": "See you tomorrow."},
+      {"source": "Laku noć.", "draft": "Laku noć.", "replacement": "Good night."},
+      {"source": "Sretan rođendan!", "draft": "Sretan rođendan!", "replacement": "Happy birthday!"},
+      {"source": "Vidimo se uskoro.", "draft": "Vidimo se uskoro.", "replacement": "See you soon."},
+      {"source": "Hvala.", "draft": "Hvala.", "replacement": "Thank you."},
+      {"source": "Ko si ti?", "draft": "Ko si ti?", "replacement": "Who are you?"},
+      {"source": "Ne znam.", "draft": "Ne znam.", "replacement": "I don't know."}
+    ],
+    "cs": [
+      {"source": "Moc děkuju.", "draft": "Moc děkuju.", "replacement": "Thank you very much."},
+      {"source": "Uvidíme se zítra.", "draft": "Uvidíme se zítra.", "replacement": "See you tomorrow."},
+      {"source": "Dobrou noc.", "draft": "Dobrou noc.", "replacement": "Good night."},
+      {"source": "Všechno nejlepší k narozeninám!", "draft": "Všechno nejlepší k narozeninám!", "replacement": "Happy birthday!"},
+      {"source": "Brzy se uvidíme.", "draft": "Brzy se uvidíme.", "replacement": "See you soon."},
+      {"source": "Děkuju.", "draft": "Děkuju.", "replacement": "Thank you."},
+      {"source": "Kdo jsi?", "draft": "Kdo jsi?", "replacement": "Who are you?"},
+      {"source": "Nevím.", "draft": "Nevím.", "replacement": "I don't know."}
+    ],
+    "da": [
+      {"source": "Mange tak.", "draft": "Mange tak.", "replacement": "Thank you very much."},
+      {"source": "Vi ses i morgen.", "draft": "Vi ses i morgen.", "replacement": "See you tomorrow."},
+      {"source": "Godnat.", "draft": "Godnat.", "replacement": "Good night."},
+      {"source": "Tillykke med fødselsdagen!", "draft": "Tillykke med fødselsdagen!", "replacement": "Happy birthday!"},
+      {"source": "Vi ses snart.", "draft": "Vi ses snart.", "replacement": "See you soon."},
+      {"source": "Tak.", "draft": "Tak.", "replacement": "Thank you."},
+      {"source": "Hvem er du?", "draft": "Hvem er du?", "replacement": "Who are you?"},
+      {"source": "Det ved jeg ikke.", "draft": "Det ved jeg ikke.", "replacement": "I don't know."}
+    ],
+    "de": [
+      {"source": "Vielen Dank.", "draft": "Vielen Dank.", "replacement": "Thank you very much."},
+      {"source": "Bis morgen.", "draft": "Bis morgen.", "replacement": "See you tomorrow."},
+      {"source": "Gute Nacht.", "draft": "Gute Nacht.", "replacement": "Good night."},
+      {"source": "Alles Gute zum Geburtstag!", "draft": "Alles Gute zum Geburtstag!", "replacement": "Happy birthday!"},
+      {"source": "Bis bald.", "draft": "Bis bald.", "replacement": "See you soon."},
+      {"source": "Danke.", "draft": "Danke.", "replacement": "Thank you."},
+      {"source": "Wer bist du?", "draft": "Wer bist du?", "replacement": "Who are you?"},
+      {"source": "Ich weiß nicht.", "draft": "Ich weiß nicht.", "replacement": "I don't know."}
+    ],
+    "el": [
+      {"source": "Ευχαριστώ πολύ.", "draft": "Ευχαριστώ πολύ.", "replacement": "Thank you very much."},
+      {"source": "Τα λέμε αύριο.", "draft": "Τα λέμε αύριο.", "replacement": "See you tomorrow."},
+      {"source": "Καληνύχτα.", "draft": "Καληνύχτα.", "replacement": "Good night."},
+      {"source": "Χρόνια πολλά για τα γενέθλιά σου!", "draft": "Χρόνια πολλά για τα γενέθλιά σου!", "replacement": "Happy birthday!"},
+      {"source": "Τα λέμε σύντομα.", "draft": "Τα λέμε σύντομα.", "replacement": "See you soon."},
+      {"source": "Ευχαριστώ.", "draft": "Ευχαριστώ.", "replacement": "Thank you."},
+      {"source": "Ποιος είσαι;", "draft": "Ποιος είσαι;", "replacement": "Who are you?"},
+      {"source": "Δεν ξέρω.", "draft": "Δεν ξέρω.", "replacement": "I don't know."}
+    ],
+    "es": [
+      {"source": "Muchas gracias.", "draft": "Muchas gracias.", "replacement": "Thank you very much."},
+      {"source": "Hasta mañana.", "draft": "Hasta mañana.", "replacement": "See you tomorrow."},
+      {"source": "Buenas noches.", "draft": "Buenas noches.", "replacement": "Good night."},
+      {"source": "¡Feliz cumpleaños!", "draft": "¡Feliz cumpleaños!", "replacement": "Happy birthday!"},
+      {"source": "Hasta pronto.", "draft": "Hasta pronto.", "replacement": "See you soon."},
+      {"source": "Gracias.", "draft": "Gracias.", "replacement": "Thank you."},
+      {"source": "¿Quién eres?", "draft": "¿Quién eres?", "replacement": "Who are you?"},
+      {"source": "No lo sé.", "draft": "No lo sé.", "replacement": "I don't know."}
+    ],
+    "et": [
+      {"source": "Suur aitäh.", "draft": "Suur aitäh.", "replacement": "Thank you very much."},
+      {"source": "Homseni.", "draft": "Homseni.", "replacement": "See you tomorrow."},
+      {"source": "Head ööd.", "draft": "Head ööd.", "replacement": "Good night."},
+      {"source": "Palju õnne sünnipäevaks!", "draft": "Palju õnne sünnipäevaks!", "replacement": "Happy birthday!"},
+      {"source": "Näeme varsti.", "draft": "Näeme varsti.", "replacement": "See you soon."},
+      {"source": "Aitäh.", "draft": "Aitäh.", "replacement": "Thank you."},
+      {"source": "Kes sa oled?", "draft": "Kes sa oled?", "replacement": "Who are you?"},
+      {"source": "Ma ei tea.", "draft": "Ma ei tea.", "replacement": "I don't know."}
+    ],
+    "fi": [
+      {"source": "Kiitos paljon.", "draft": "Kiitos paljon.", "replacement": "Thank you very much."},
+      {"source": "Nähdään huomenna.", "draft": "Nähdään huomenna.", "replacement": "See you tomorrow."},
+      {"source": "Hyvää yötä.", "draft": "Hyvää yötä.", "replacement": "Good night."},
+      {"source": "Hyvää syntymäpäivää!", "draft": "Hyvää syntymäpäivää!", "replacement": "Happy birthday!"},
+      {"source": "Nähdään pian.", "draft": "Nähdään pian.", "replacement": "See you soon."},
+      {"source": "Kiitos.", "draft": "Kiitos.", "replacement": "Thank you."},
+      {"source": "Kuka olet?", "draft": "Kuka olet?", "replacement": "Who are you?"},
+      {"source": "En tiedä.", "draft": "En tiedä.", "replacement": "I don't know."}
+    ],
+    "fr": [
+      {"source": "Merci beaucoup.", "draft": "Merci beaucoup.", "replacement": "Thank you very much."},
+      {"source": "À demain.", "draft": "À demain.", "replacement": "See you tomorrow."},
+      {"source": "Bonne nuit.", "draft": "Bonne nuit.", "replacement": "Good night."},
+      {"source": "Joyeux anniversaire !", "draft": "Joyeux anniversaire !", "replacement": "Happy birthday!"},
+      {"source": "À bientôt.", "draft": "À bientôt.", "replacement": "See you soon."},
+      {"source": "Merci.", "draft": "Merci.", "replacement": "Thank you."},
+      {"source": "Qui es-tu ?", "draft": "Qui es-tu ?", "replacement": "Who are you?"},
+      {"source": "Je ne sais pas.", "draft": "Je ne sais pas.", "replacement": "I don't know."}
+    ],
+    "hr": [
+      {"source": "Hvala lijepa.", "draft": "Hvala lijepa.", "replacement": "Thank you very much."},
+      {"source": "Vidimo se sutra.", "draft": "Vidimo se sutra.", "replacement": "See you tomorrow."},
+      {"source": "Laku noć.", "draft": "Laku noć.", "replacement": "Good night."},
+      {"source": "Sretan rođendan!", "draft": "Sretan rođendan!", "replacement": "Happy birthday!"},
+      {"source": "Vidimo se uskoro.", "draft": "Vidimo se uskoro.", "replacement": "See you soon."},
+      {"source": "Hvala.", "draft": "Hvala.", "replacement": "Thank you."},
+      {"source": "Tko si ti?", "draft": "Tko si ti?", "replacement": "Who are you?"},
+      {"source": "Ne znam.", "draft": "Ne znam.", "replacement": "I don't know."}
+    ],
+    "hu": [
+      {"source": "Nagyon köszönöm.", "draft": "Nagyon köszönöm.", "replacement": "Thank you very much."},
+      {"source": "Holnap találkozunk.", "draft": "Holnap találkozunk.", "replacement": "See you tomorrow."},
+      {"source": "Jó éjszakát.", "draft": "Jó éjszakát.", "replacement": "Good night."},
+      {"source": "Boldog születésnapot!", "draft": "Boldog születésnapot!", "replacement": "Happy birthday!"},
+      {"source": "Hamarosan találkozunk.", "draft": "Hamarosan találkozunk.", "replacement": "See you soon."},
+      {"source": "Köszönöm.", "draft": "Köszönöm.", "replacement": "Thank you."},
+      {"source": "Ki vagy?", "draft": "Ki vagy?", "replacement": "Who are you?"},
+      {"source": "Nem tudom.", "draft": "Nem tudom.", "replacement": "I don't know."}
+    ],
+    "id": [
+      {"source": "Terima kasih banyak.", "draft": "Terima kasih banyak.", "replacement": "Thank you very much."},
+      {"source": "Sampai besok.", "draft": "Sampai besok.", "replacement": "See you tomorrow."},
+      {"source": "Selamat tidur.", "draft": "Selamat tidur.", "replacement": "Good night."},
+      {"source": "Selamat ulang tahun!", "draft": "Selamat ulang tahun!", "replacement": "Happy birthday!"},
+      {"source": "Sampai jumpa lagi.", "draft": "Sampai jumpa lagi.", "replacement": "See you soon."},
+      {"source": "Terima kasih.", "draft": "Terima kasih.", "replacement": "Thank you."},
+      {"source": "Siapa kamu?", "draft": "Siapa kamu?", "replacement": "Who are you?"},
+      {"source": "Saya tidak tahu.", "draft": "Saya tidak tahu.", "replacement": "I don't know."}
+    ],
+    "it": [
+      {"source": "Grazie mille.", "draft": "Grazie mille.", "replacement": "Thank you very much."},
+      {"source": "A domani.", "draft": "A domani.", "replacement": "See you tomorrow."},
+      {"source": "Buonanotte.", "draft": "Buonanotte.", "replacement": "Good night."},
+      {"source": "Buon compleanno!", "draft": "Buon compleanno!", "replacement": "Happy birthday!"},
+      {"source": "A presto.", "draft": "A presto.", "replacement": "See you soon."},
+      {"source": "Grazie.", "draft": "Grazie.", "replacement": "Thank you."},
+      {"source": "Chi sei?", "draft": "Chi sei?", "replacement": "Who are you?"},
+      {"source": "Non lo so.", "draft": "Non lo so.", "replacement": "I don't know."}
+    ],
+    "ja": [
+      {"source": "どうもありがとうございます。", "draft": "どうもありがとうございます。", "replacement": "Thank you very much."},
+      {"source": "また明日。", "draft": "また明日。", "replacement": "See you tomorrow."},
+      {"source": "おやすみなさい。", "draft": "おやすみなさい。", "replacement": "Good night."},
+      {"source": "お誕生日おめでとう！", "draft": "お誕生日おめでとう！", "replacement": "Happy birthday!"},
+      {"source": "また近いうちに。", "draft": "また近いうちに。", "replacement": "See you soon."},
+      {"source": "ありがとう。", "draft": "ありがとう。", "replacement": "Thank you."},
+      {"source": "あなたは誰ですか？", "draft": "あなたは誰ですか？", "replacement": "Who are you?"},
+      {"source": "わかりません。", "draft": "わかりません。", "replacement": "I don't know."}
+    ],
+    "ko": [
+      {"source": "정말 감사합니다.", "draft": "정말 감사합니다.", "replacement": "Thank you very much."},
+      {"source": "내일 봐요.", "draft": "내일 봐요.", "replacement": "See you tomorrow."},
+      {"source": "잘 자요.", "draft": "잘 자요.", "replacement": "Good night."},
+      {"source": "생일 축하해요!", "draft": "생일 축하해요!", "replacement": "Happy birthday!"},
+      {"source": "곧 봐요.", "draft": "곧 봐요.", "replacement": "See you soon."},
+      {"source": "감사합니다.", "draft": "감사합니다.", "replacement": "Thank you."},
+      {"source": "누구세요?", "draft": "누구세요?", "replacement": "Who are you?"},
+      {"source": "모르겠어요.", "draft": "모르겠어요.", "replacement": "I don't know."}
+    ],
+    "lt": [
+      {"source": "Labai ačiū.", "draft": "Labai ačiū.", "replacement": "Thank you very much."},
+      {"source": "Iki rytojaus.", "draft": "Iki rytojaus.", "replacement": "See you tomorrow."},
+      {"source": "Labanakt.", "draft": "Labanakt.", "replacement": "Good night."},
+      {"source": "Su gimtadieniu!", "draft": "Su gimtadieniu!", "replacement": "Happy birthday!"},
+      {"source": "Iki greito.", "draft": "Iki greito.", "replacement": "See you soon."},
+      {"source": "Ačiū.", "draft": "Ačiū.", "replacement": "Thank you."},
+      {"source": "Kas tu?", "draft": "Kas tu?", "replacement": "Who are you?"},
+      {"source": "Nežinau.", "draft": "Nežinau.", "replacement": "I don't know."}
+    ],
+    "lv": [
+      {"source": "Liels paldies.", "draft": "Liels paldies.", "replacement": "Thank you very much."},
+      {"source": "Uz redzēšanos rīt.", "draft": "Uz redzēšanos rīt.", "replacement": "See you tomorrow."},
+      {"source": "Ar labu nakti.", "draft": "Ar labu nakti.", "replacement": "Good night."},
+      {"source": "Daudz laimes dzimšanas dienā!", "draft": "Daudz laimes dzimšanas dienā!", "replacement": "Happy birthday!"},
+      {"source": "Uz drīzu tikšanos.", "draft": "Uz drīzu tikšanos.", "replacement": "See you soon."},
+      {"source": "Paldies.", "draft": "Paldies.", "replacement": "Thank you."},
+      {"source": "Kas tu esi?", "draft": "Kas tu esi?", "replacement": "Who are you?"},
+      {"source": "Es nezinu.", "draft": "Es nezinu.", "replacement": "I don't know."}
+    ],
+    "mk": [
+      {"source": "Многу благодарам.", "draft": "Многу благодарам.", "replacement": "Thank you very much."},
+      {"source": "Се гледаме утре.", "draft": "Се гледаме утре.", "replacement": "See you tomorrow."},
+      {"source": "Добра ноќ.", "draft": "Добра ноќ.", "replacement": "Good night."},
+      {"source": "Среќен роденден!", "draft": "Среќен роденден!", "replacement": "Happy birthday!"},
+      {"source": "Се гледаме наскоро.", "draft": "Се гледаме наскоро.", "replacement": "See you soon."},
+      {"source": "Благодарам.", "draft": "Благодарам.", "replacement": "Thank you."},
+      {"source": "Кој си ти?", "draft": "Кој си ти?", "replacement": "Who are you?"},
+      {"source": "Не знам.", "draft": "Не знам.", "replacement": "I don't know."}
+    ],
+    "nb": [
+      {"source": "Tusen takk.", "draft": "Tusen takk.", "replacement": "Thank you very much."},
+      {"source": "Vi ses i morgen.", "draft": "Vi ses i morgen.", "replacement": "See you tomorrow."},
+      {"source": "God natt.", "draft": "God natt.", "replacement": "Good night."},
+      {"source": "Gratulerer med dagen!", "draft": "Gratulerer med dagen!", "replacement": "Happy birthday!"},
+      {"source": "Vi ses snart.", "draft": "Vi ses snart.", "replacement": "See you soon."},
+      {"source": "Takk.", "draft": "Takk.", "replacement": "Thank you."},
+      {"source": "Hvem er du?", "draft": "Hvem er du?", "replacement": "Who are you?"},
+      {"source": "Jeg vet ikke.", "draft": "Jeg vet ikke.", "replacement": "I don't know."}
+    ],
+    "nl": [
+      {"source": "Hartelijk dank.", "draft": "Hartelijk dank.", "replacement": "Thank you very much."},
+      {"source": "Tot morgen.", "draft": "Tot morgen.", "replacement": "See you tomorrow."},
+      {"source": "Goedenacht.", "draft": "Goedenacht.", "replacement": "Good night."},
+      {"source": "Gefeliciteerd met je verjaardag!", "draft": "Gefeliciteerd met je verjaardag!", "replacement": "Happy birthday!"},
+      {"source": "Tot snel.", "draft": "Tot snel.", "replacement": "See you soon."},
+      {"source": "Bedankt.", "draft": "Bedankt.", "replacement": "Thank you."},
+      {"source": "Wie ben je?", "draft": "Wie ben je?", "replacement": "Who are you?"},
+      {"source": "Ik weet het niet.", "draft": "Ik weet het niet.", "replacement": "I don't know."}
+    ],
+    "pl": [
+      {"source": "Dziękuję bardzo.", "draft": "Dziękuję bardzo.", "replacement": "Thank you very much."},
+      {"source": "Do jutra.", "draft": "Do jutra.", "replacement": "See you tomorrow."},
+      {"source": "Dobranoc.", "draft": "Dobranoc.", "replacement": "Good night."},
+      {"source": "Wszystkiego najlepszego z okazji urodzin!", "draft": "Wszystkiego najlepszego z okazji urodzin!", "replacement": "Happy birthday!"},
+      {"source": "Do zobaczenia wkrótce.", "draft": "Do zobaczenia wkrótce.", "replacement": "See you soon."},
+      {"source": "Dziękuję.", "draft": "Dziękuję.", "replacement": "Thank you."},
+      {"source": "Kim jesteś?", "draft": "Kim jesteś?", "replacement": "Who are you?"},
+      {"source": "Nie wiem.", "draft": "Nie wiem.", "replacement": "I don't know."}
+    ],
+    "pt": [
+      {"source": "Agradeço muito.", "draft": "Agradeço muito.", "replacement": "Thank you very much."},
+      {"source": "Até amanhã.", "draft": "Até amanhã.", "replacement": "See you tomorrow."},
+      {"source": "Boa noite.", "draft": "Boa noite.", "replacement": "Good night."},
+      {"source": "Feliz aniversário!", "draft": "Feliz aniversário!", "replacement": "Happy birthday!"},
+      {"source": "Até breve.", "draft": "Até breve.", "replacement": "See you soon."},
+      {"source": "Agradeço.", "draft": "Agradeço.", "replacement": "Thank you."},
+      {"source": "Quem é você?", "draft": "Quem é você?", "replacement": "Who are you?"},
+      {"source": "Não sei.", "draft": "Não sei.", "replacement": "I don't know."}
+    ],
+    "pt-BR": [
+      {"source": "Agradeço muito.", "draft": "Agradeço muito.", "replacement": "Thank you very much."},
+      {"source": "Até amanhã.", "draft": "Até amanhã.", "replacement": "See you tomorrow."},
+      {"source": "Boa noite.", "draft": "Boa noite.", "replacement": "Good night."},
+      {"source": "Feliz aniversário!", "draft": "Feliz aniversário!", "replacement": "Happy birthday!"},
+      {"source": "Até logo.", "draft": "Até logo.", "replacement": "See you soon."},
+      {"source": "Agradeço.", "draft": "Agradeço.", "replacement": "Thank you."},
+      {"source": "Quem é você?", "draft": "Quem é você?", "replacement": "Who are you?"},
+      {"source": "Não sei.", "draft": "Não sei.", "replacement": "I don't know."}
+    ],
+    "pt-PT": [
+      {"source": "Agradeço muito.", "draft": "Agradeço muito.", "replacement": "Thank you very much."},
+      {"source": "Até amanhã.", "draft": "Até amanhã.", "replacement": "See you tomorrow."},
+      {"source": "Boa noite.", "draft": "Boa noite.", "replacement": "Good night."},
+      {"source": "Feliz aniversário!", "draft": "Feliz aniversário!", "replacement": "Happy birthday!"},
+      {"source": "Até breve.", "draft": "Até breve.", "replacement": "See you soon."},
+      {"source": "Agradeço.", "draft": "Agradeço.", "replacement": "Thank you."},
+      {"source": "Quem és tu?", "draft": "Quem és tu?", "replacement": "Who are you?"},
+      {"source": "Não sei.", "draft": "Não sei.", "replacement": "I don't know."}
+    ],
+    "ro": [
+      {"source": "Mulțumesc mult.", "draft": "Mulțumesc mult.", "replacement": "Thank you very much."},
+      {"source": "Ne vedem mâine.", "draft": "Ne vedem mâine.", "replacement": "See you tomorrow."},
+      {"source": "Noapte bună.", "draft": "Noapte bună.", "replacement": "Good night."},
+      {"source": "La mulți ani!", "draft": "La mulți ani!", "replacement": "Happy birthday!"},
+      {"source": "Ne vedem curând.", "draft": "Ne vedem curând.", "replacement": "See you soon."},
+      {"source": "Mulțumesc.", "draft": "Mulțumesc.", "replacement": "Thank you."},
+      {"source": "Cine ești?", "draft": "Cine ești?", "replacement": "Who are you?"},
+      {"source": "Nu știu.", "draft": "Nu știu.", "replacement": "I don't know."}
+    ],
+    "ru": [
+      {"source": "Большое спасибо.", "draft": "Большое спасибо.", "replacement": "Thank you very much."},
+      {"source": "До завтра.", "draft": "До завтра.", "replacement": "See you tomorrow."},
+      {"source": "Спокойной ночи.", "draft": "Спокойной ночи.", "replacement": "Good night."},
+      {"source": "С днём рождения!", "draft": "С днём рождения!", "replacement": "Happy birthday!"},
+      {"source": "До скорого.", "draft": "До скорого.", "replacement": "See you soon."},
+      {"source": "Спасибо.", "draft": "Спасибо.", "replacement": "Thank you."},
+      {"source": "Кто ты?", "draft": "Кто ты?", "replacement": "Who are you?"},
+      {"source": "Не знаю.", "draft": "Не знаю.", "replacement": "I don't know."}
+    ],
+    "sk": [
+      {"source": "Ďakujem veľmi pekne.", "draft": "Ďakujem veľmi pekne.", "replacement": "Thank you very much."},
+      {"source": "Uvidíme sa zajtra.", "draft": "Uvidíme sa zajtra.", "replacement": "See you tomorrow."},
+      {"source": "Dobrú noc.", "draft": "Dobrú noc.", "replacement": "Good night."},
+      {"source": "Všetko najlepšie k narodeninám!", "draft": "Všetko najlepšie k narodeninám!", "replacement": "Happy birthday!"},
+      {"source": "Uvidíme sa čoskoro.", "draft": "Uvidíme sa čoskoro.", "replacement": "See you soon."},
+      {"source": "Ďakujem.", "draft": "Ďakujem.", "replacement": "Thank you."},
+      {"source": "Kto si?", "draft": "Kto si?", "replacement": "Who are you?"},
+      {"source": "Neviem.", "draft": "Neviem.", "replacement": "I don't know."}
+    ],
+    "sl": [
+      {"source": "Najlepša hvala.", "draft": "Najlepša hvala.", "replacement": "Thank you very much."},
+      {"source": "Se vidimo jutri.", "draft": "Se vidimo jutri.", "replacement": "See you tomorrow."},
+      {"source": "Lahko noč.", "draft": "Lahko noč.", "replacement": "Good night."},
+      {"source": "Vse najboljše za rojstni dan!", "draft": "Vse najboljše za rojstni dan!", "replacement": "Happy birthday!"},
+      {"source": "Se vidimo kmalu.", "draft": "Se vidimo kmalu.", "replacement": "See you soon."},
+      {"source": "Hvala.", "draft": "Hvala.", "replacement": "Thank you."},
+      {"source": "Kdo si?", "draft": "Kdo si?", "replacement": "Who are you?"},
+      {"source": "Ne vem.", "draft": "Ne vem.", "replacement": "I don't know."}
+    ],
+    "sq": [
+      {"source": "Faleminderit shumë.", "draft": "Faleminderit shumë.", "replacement": "Thank you very much."},
+      {"source": "Shihemi nesër.", "draft": "Shihemi nesër.", "replacement": "See you tomorrow."},
+      {"source": "Natën e mirë.", "draft": "Natën e mirë.", "replacement": "Good night."},
+      {"source": "Gëzuar ditëlindjen!", "draft": "Gëzuar ditëlindjen!", "replacement": "Happy birthday!"},
+      {"source": "Shihemi së shpejti.", "draft": "Shihemi së shpejti.", "replacement": "See you soon."},
+      {"source": "Faleminderit.", "draft": "Faleminderit.", "replacement": "Thank you."},
+      {"source": "Kush je?", "draft": "Kush je?", "replacement": "Who are you?"},
+      {"source": "Nuk e di.", "draft": "Nuk e di.", "replacement": "I don't know."}
+    ],
+    "sr": [
+      {"source": "Хвала вам пуно.", "draft": "Хвала вам пуно.", "replacement": "Thank you very much."},
+      {"source": "Видимо се сутра.", "draft": "Видимо се сутра.", "replacement": "See you tomorrow."},
+      {"source": "Лаку ноћ.", "draft": "Лаку ноћ.", "replacement": "Good night."},
+      {"source": "Срећан рођендан!", "draft": "Срећан рођендан!", "replacement": "Happy birthday!"},
+      {"source": "Видимо се ускоро.", "draft": "Видимо се ускоро.", "replacement": "See you soon."},
+      {"source": "Хвала.", "draft": "Хвала.", "replacement": "Thank you."},
+      {"source": "Ко си ти?", "draft": "Ко си ти?", "replacement": "Who are you?"},
+      {"source": "Не знам.", "draft": "Не знам.", "replacement": "I don't know."}
+    ],
+    "sv": [
+      {"source": "Tack så mycket.", "draft": "Tack så mycket.", "replacement": "Thank you very much."},
+      {"source": "Vi ses i morgon.", "draft": "Vi ses i morgon.", "replacement": "See you tomorrow."},
+      {"source": "God natt.", "draft": "God natt.", "replacement": "Good night."},
+      {"source": "Grattis på födelsedagen!", "draft": "Grattis på födelsedagen!", "replacement": "Happy birthday!"},
+      {"source": "Vi ses snart.", "draft": "Vi ses snart.", "replacement": "See you soon."},
+      {"source": "Tack.", "draft": "Tack.", "replacement": "Thank you."},
+      {"source": "Vem är du?", "draft": "Vem är du?", "replacement": "Who are you?"},
+      {"source": "Jag vet inte.", "draft": "Jag vet inte.", "replacement": "I don't know."}
+    ],
+    "tr": [
+      {"source": "Çok teşekkür ederim.", "draft": "Çok teşekkür ederim.", "replacement": "Thank you very much."},
+      {"source": "Yarın görüşürüz.", "draft": "Yarın görüşürüz.", "replacement": "See you tomorrow."},
+      {"source": "İyi geceler.", "draft": "İyi geceler.", "replacement": "Good night."},
+      {"source": "Doğum günün kutlu olsun!", "draft": "Doğum günün kutlu olsun!", "replacement": "Happy birthday!"},
+      {"source": "Yakında görüşürüz.", "draft": "Yakında görüşürüz.", "replacement": "See you soon."},
+      {"source": "Teşekkür ederim.", "draft": "Teşekkür ederim.", "replacement": "Thank you."},
+      {"source": "Sen kimsin?", "draft": "Sen kimsin?", "replacement": "Who are you?"},
+      {"source": "Bilmiyorum.", "draft": "Bilmiyorum.", "replacement": "I don't know."}
+    ],
+    "uk": [
+      {"source": "Щиро дякую.", "draft": "Щиро дякую.", "replacement": "Thank you very much."},
+      {"source": "До завтра.", "draft": "До завтра.", "replacement": "See you tomorrow."},
+      {"source": "На добраніч.", "draft": "На добраніч.", "replacement": "Good night."},
+      {"source": "З днем народження!", "draft": "З днем народження!", "replacement": "Happy birthday!"},
+      {"source": "До скорої зустрічі.", "draft": "До скорої зустрічі.", "replacement": "See you soon."},
+      {"source": "Дякую.", "draft": "Дякую.", "replacement": "Thank you."},
+      {"source": "Хто ти?", "draft": "Хто ти?", "replacement": "Who are you?"},
+      {"source": "Не знаю.", "draft": "Не знаю.", "replacement": "I don't know."}
+    ],
+    "vi": [
+      {"source": "Cảm ơn rất nhiều.", "draft": "Cảm ơn rất nhiều.", "replacement": "Thank you very much."},
+      {"source": "Hẹn gặp ngày mai.", "draft": "Hẹn gặp ngày mai.", "replacement": "See you tomorrow."},
+      {"source": "Chúc ngủ ngon.", "draft": "Chúc ngủ ngon.", "replacement": "Good night."},
+      {"source": "Chúc mừng sinh nhật!", "draft": "Chúc mừng sinh nhật!", "replacement": "Happy birthday!"},
+      {"source": "Hẹn sớm gặp lại.", "draft": "Hẹn sớm gặp lại.", "replacement": "See you soon."},
+      {"source": "Cảm ơn.", "draft": "Cảm ơn.", "replacement": "Thank you."},
+      {"source": "Bạn là ai?", "draft": "Bạn là ai?", "replacement": "Who are you?"},
+      {"source": "Tôi không biết.", "draft": "Tôi không biết.", "replacement": "I don't know."}
+    ],
+    "zh-Hans": [
+      {"source": "非常感谢。", "draft": "非常感谢。", "replacement": "Thank you very much."},
+      {"source": "明天见。", "draft": "明天见。", "replacement": "See you tomorrow."},
+      {"source": "晚安。", "draft": "晚安。", "replacement": "Good night."},
+      {"source": "生日快乐！", "draft": "生日快乐！", "replacement": "Happy birthday!"},
+      {"source": "回头见。", "draft": "回头见。", "replacement": "See you soon."},
+      {"source": "谢谢。", "draft": "谢谢。", "replacement": "Thank you."},
+      {"source": "你是谁？", "draft": "你是谁？", "replacement": "Who are you?"},
+      {"source": "我不知道。", "draft": "我不知道。", "replacement": "I don't know."}
+    ],
+    "zh-Hant": [
+      {"source": "非常感謝。", "draft": "非常感謝。", "replacement": "Thank you very much."},
+      {"source": "明天見。", "draft": "明天見。", "replacement": "See you tomorrow."},
+      {"source": "晚安。", "draft": "晚安。", "replacement": "Good night."},
+      {"source": "生日快樂！", "draft": "生日快樂！", "replacement": "Happy birthday!"},
+      {"source": "回頭見。", "draft": "回頭見。", "replacement": "See you soon."},
+      {"source": "謝謝。", "draft": "謝謝。", "replacement": "Thank you."},
+      {"source": "你是誰？", "draft": "你是誰？", "replacement": "Who are you?"},
+      {"source": "我不知道。", "draft": "我不知道。", "replacement": "I don't know."}
+    ]
+  }
+}

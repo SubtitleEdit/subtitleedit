@@ -1,0 +1,23 @@
+{
+  "target_language": "nl",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "Hartelijk dank."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "Tot morgen."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "Goedenacht."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "Gefeliciteerd met je verjaardag!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "Tot snel."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "Bedankt."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Wie ben je?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "Ik weet het niet."},
+      {"source": "Thank you very much.", "draft": "Hartelijk dank", "replacement": "Hartelijk dank."},
+      {"source": "See you tomorrow.", "draft": "Tot morgen", "replacement": "Tot morgen."},
+      {"source": "Good night.", "draft": "Goedenacht", "replacement": "Goedenacht."},
+      {"source": "Happy birthday!", "draft": "Gefeliciteerd met je verjaardag", "replacement": "Gefeliciteerd met je verjaardag!"},
+      {"source": "See you soon.", "draft": "Tot snel", "replacement": "Tot snel."},
+      {"source": "Thank you.", "draft": "Bedankt", "replacement": "Bedankt."},
+      {"source": "Who are you?", "draft": "Wie ben je", "replacement": "Wie ben je?"},
+      {"source": "I don't know.", "draft": "Ik weet het niet", "replacement": "Ik weet het niet."}
+    ]
+  }
+}

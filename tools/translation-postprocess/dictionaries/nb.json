@@ -1,0 +1,23 @@
+{
+  "target_language": "nb",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "Tusen takk."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "Vi ses i morgen."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "God natt."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "Gratulerer med dagen!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "Vi ses snart."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "Takk."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Hvem er du?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "Jeg vet ikke."},
+      {"source": "Thank you very much.", "draft": "Tusen takk", "replacement": "Tusen takk."},
+      {"source": "See you tomorrow.", "draft": "Vi ses i morgen", "replacement": "Vi ses i morgen."},
+      {"source": "Good night.", "draft": "God natt", "replacement": "God natt."},
+      {"source": "Happy birthday!", "draft": "Gratulerer med dagen", "replacement": "Gratulerer med dagen!"},
+      {"source": "See you soon.", "draft": "Vi ses snart", "replacement": "Vi ses snart."},
+      {"source": "Thank you.", "draft": "Takk", "replacement": "Takk."},
+      {"source": "Who are you?", "draft": "Hvem er du", "replacement": "Hvem er du?"},
+      {"source": "I don't know.", "draft": "Jeg vet ikke", "replacement": "Jeg vet ikke."}
+    ]
+  }
+}

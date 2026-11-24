@@ -1,0 +1,23 @@
+{
+  "target_language": "uk",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "Щиро дякую."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "До завтра."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "На добраніч."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "З днем народження!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "До скорої зустрічі."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "Дякую."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Хто ти?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "Не знаю."},
+      {"source": "Thank you very much.", "draft": "Щиро дякую", "replacement": "Щиро дякую."},
+      {"source": "See you tomorrow.", "draft": "До завтра", "replacement": "До завтра."},
+      {"source": "Good night.", "draft": "На добраніч", "replacement": "На добраніч."},
+      {"source": "Happy birthday!", "draft": "З днем народження", "replacement": "З днем народження!"},
+      {"source": "See you soon.", "draft": "До скорої зустрічі", "replacement": "До скорої зустрічі."},
+      {"source": "Thank you.", "draft": "Дякую", "replacement": "Дякую."},
+      {"source": "Who are you?", "draft": "Хто ти", "replacement": "Хто ти?"},
+      {"source": "I don't know.", "draft": "Не знаю", "replacement": "Не знаю."}
+    ]
+  }
+}

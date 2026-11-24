@@ -1,5 +1,7 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
@@ -72,13 +74,15 @@ public class AutoTranslateWindow : Window
         // a short screen.
         var grid = new Grid
         {
-            RowDefinitions = new RowDefinitions("Auto,Auto,*,Auto,Auto"),
+            RowDefinitions = new RowDefinitions("Auto,Auto,Auto,*,Auto,Auto,Auto"),
         };
         grid.Add(toolbar, 0, 0);
         grid.Add(engineSettings, 1, 0);
-        grid.Add(rows, 2, 0);
-        grid.Add(progress, 3, 0);
-        grid.Add(buttonBar, 4, 0);
+        grid.Add(BuildDictionaryToolbar(vm), 2, 0);
+        grid.Add(rows, 3, 0);
+        grid.Add(BuildDictionaryReview(vm), 4, 0);
+        grid.Add(progress, 5, 0);
+        grid.Add(buttonBar, 6, 0);
 
         Content = grid;
 
@@ -389,6 +393,81 @@ public class AutoTranslateWindow : Window
 
         strip.Bind(IsVisibleProperty, anySetting);
         return strip;
+    }
+
+    private static Control BuildDictionaryToolbar(AutoTranslateViewModel vm)
+    {
+        var language = Se.Language.Translate;
+        var toggle = new ToggleSwitch { OnContent = null, OffContent = null, MinWidth = 0 };
+        toggle.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.UsePostProcessDictionary)) { Mode = BindingMode.TwoWay });
+        toggle.Bind(IsEnabledProperty, new Binding(nameof(vm.IsTranslateEnabled)));
+        AutomationProperties.SetName(toggle, language.PostProcessDictionary);
+        ToolTip.SetTip(toggle, language.PostProcessDictionaryHint);
+
+        var summary = Label(string.Empty);
+        summary.Bind(TextBlock.TextProperty, new Binding(nameof(vm.PostProcessSummary)));
+        summary.Bind(IsVisibleProperty, new Binding(nameof(vm.ShowPostProcessSummary)));
+        var next = UiUtil.MakeButton(language.PostProcessNextMatch, vm.SelectNextDictionaryMatchCommand);
+        next.Bind(IsVisibleProperty, new Binding(nameof(vm.HasDictionaryMatches)));
+        next.Bind(IsEnabledProperty, new Binding(nameof(vm.IsTranslateEnabled)));
+
+        return new WrapPanel
+        {
+            Margin = new Thickness(12, 4),
+            ItemSpacing = 8,
+            Children = { toggle, Label(language.PostProcessDictionary), summary, next },
+        };
+    }
+
+    private static Control BuildDictionaryReview(AutoTranslateViewModel vm)
+    {
+        var language = Se.Language.Translate;
+        var original = new TextBox { IsReadOnly = true, TextWrapping = TextWrapping.Wrap, MaxHeight = 75 };
+        original.Bind(TextBox.TextProperty, new Binding(nameof(vm.OriginalDictionaryText)));
+        AutomationProperties.SetName(original, language.PostProcessOriginal);
+        var current = new TextBox { TextWrapping = TextWrapping.Wrap, MaxHeight = 75 };
+        current.Bind(TextBox.TextProperty, new Binding(nameof(vm.SelectedDictionaryText))
+        {
+            Mode = BindingMode.TwoWay,
+            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+        });
+        AutomationProperties.SetName(current, language.PostProcessCurrent);
+
+        var texts = new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), ColumnSpacing = 8 };
+        texts.Add(new StackPanel { Children = { Label(language.PostProcessOriginal), original } }, 0, 0);
+        texts.Add(new StackPanel { Children = { Label(language.PostProcessCurrent), current } }, 0, 1);
+        var note = Label(string.Empty);
+        note.TextWrapping = TextWrapping.Wrap;
+        note.Bind(TextBlock.TextProperty, new Binding(nameof(vm.DictionaryNote)));
+        note.Bind(IsVisibleProperty, new Binding(nameof(vm.DictionaryNote)) { Converter = StringConverters.IsNotNullOrEmpty });
+        var choices = new ItemsControl
+        {
+            ItemsPanel = new FuncTemplate<Panel?>(() => new WrapPanel { ItemSpacing = 6, LineSpacing = 4 }),
+            ItemTemplate = new FuncDataTemplate<string>((text, _) => new Button
+            {
+                Content = text,
+                Command = vm.UseDictionaryTextCommand,
+                CommandParameter = text,
+            }),
+        };
+        choices.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(vm.DictionaryChoices)));
+        var revert = UiUtil.MakeButton(language.PostProcessRevert, vm.RevertDictionaryTextCommand);
+        revert.HorizontalAlignment = HorizontalAlignment.Left;
+        var panel = new StackPanel
+        {
+            Margin = new Thickness(12, 4),
+            Spacing = 4,
+            Children =
+            {
+                texts,
+                note,
+                choices,
+                revert,
+            },
+        };
+        panel.Bind(IsVisibleProperty, new Binding(nameof(vm.HasSelectedDictionaryMatch)));
+        panel.Bind(IsEnabledProperty, new Binding(nameof(vm.IsTranslateEnabled)));
+        return panel;
     }
 
     private Border BuildRowGrid(AutoTranslateViewModel vm)

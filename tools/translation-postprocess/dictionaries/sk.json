@@ -1,0 +1,23 @@
+{
+  "target_language": "sk",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "Ďakujem veľmi pekne."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "Uvidíme sa zajtra."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "Dobrú noc."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "Všetko najlepšie k narodeninám!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "Uvidíme sa čoskoro."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "Ďakujem."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Kto si?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "Neviem."},
+      {"source": "Thank you very much.", "draft": "Ďakujem veľmi pekne", "replacement": "Ďakujem veľmi pekne."},
+      {"source": "See you tomorrow.", "draft": "Uvidíme sa zajtra", "replacement": "Uvidíme sa zajtra."},
+      {"source": "Good night.", "draft": "Dobrú noc", "replacement": "Dobrú noc."},
+      {"source": "Happy birthday!", "draft": "Všetko najlepšie k narodeninám", "replacement": "Všetko najlepšie k narodeninám!"},
+      {"source": "See you soon.", "draft": "Uvidíme sa čoskoro", "replacement": "Uvidíme sa čoskoro."},
+      {"source": "Thank you.", "draft": "Ďakujem", "replacement": "Ďakujem."},
+      {"source": "Who are you?", "draft": "Kto si", "replacement": "Kto si?"},
+      {"source": "I don't know.", "draft": "Neviem", "replacement": "Neviem."}
+    ]
+  }
+}

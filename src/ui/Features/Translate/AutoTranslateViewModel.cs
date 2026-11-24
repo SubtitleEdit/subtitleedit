@@ -210,6 +210,9 @@ public partial class AutoTranslateViewModel : ObservableObject
 
     public void Initialize(Subtitle subtitle)
     {
+        _dictionaryMatches.Clear();
+        UsePostProcessDictionary = Se.Settings.AutoTranslate.UsePostProcessDictionary;
+        RefreshDictionaryRows();
         _subtitle = new Subtitle(subtitle, false);
         LoadSettings();
     }
@@ -763,6 +766,14 @@ public partial class AutoTranslateViewModel : ObservableObject
     {
         row.TranslatedText = text;
         HasTranslatedSomething = HasUsableTranslation;
+        if (_dictionaryMatches.ContainsKey(row))
+        {
+            OnPropertyChanged(nameof(PostProcessSummary));
+            if (ReferenceEquals(row, SelectedTranslateRow))
+            {
+                OnPropertyChanged(nameof(SelectedDictionaryText));
+            }
+        }
     }
 
     [RelayCommand]
@@ -1684,9 +1695,13 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         // do translation in background
 #pragma warning disable CS4014
+        var dictionary = UsePostProcessDictionary
+            ? TranslationPostProcessDictionary.Get(sourceLanguage, targetLanguage, Se.TranslationPostProcessDictionariesFolder)
+            : null;
+        var completedRows = dictionary != null || HasDictionaryMatches ? new List<TranslateRow>() : null;
         Task.Run(() =>
         {
-            DoTranslate(sourceLanguage, targetLanguage, translator, _cancellationTokenSource.Token);
+            DoTranslate(sourceLanguage, targetLanguage, translator, _cancellationTokenSource.Token, dictionary, completedRows);
         });
 #pragma warning restore CS4014
         return true;
@@ -1701,13 +1716,13 @@ public partial class AutoTranslateViewModel : ObservableObject
         Se.Settings.AutoTranslate.AutoTranslateLastTarget = targetLanguage.Code;
     }
 
-    private async Task DoTranslate(TranslationPair sourceLanguage, TranslationPair targetLanguage, IAutoTranslator translator, CancellationToken cancellationToken)
+    private async Task DoTranslate(TranslationPair sourceLanguage, TranslationPair targetLanguage, IAutoTranslator translator, CancellationToken cancellationToken, TranslationPostProcessDictionary? dictionary, List<TranslateRow>? completedRows)
     {
         try
         {
             if (_onlyRowIndices.Count > 0)
             {
-                await TranslateSelectedRows(sourceLanguage, targetLanguage, translator, cancellationToken);
+                await TranslateSelectedRows(sourceLanguage, targetLanguage, translator, cancellationToken, completedRows);
                 return; // the finally block below reports completion
             }
 
@@ -1717,7 +1732,7 @@ public partial class AutoTranslateViewModel : ObservableObject
                 start = Rows.IndexOf(selectedItem);
             }
 
-            await TranslateRange(Rows, start, EnqueueTranslateProgress, sourceLanguage, targetLanguage, translator, cancellationToken);
+            await TranslateRange(Rows, start, EnqueueTranslateProgress, sourceLanguage, targetLanguage, translator, cancellationToken, completedRows);
         }
         catch (OperationCanceledException) when (_abort || _cancellationTokenSource.IsCancellationRequested)
         {
@@ -1784,6 +1799,11 @@ public partial class AutoTranslateViewModel : ObservableObject
                 // Apply whatever is still queued first, so the final progress/selection below
                 // is the last word instead of being overridden by a stale queued update.
                 TranslateUiUpdates.Flush();
+                if (completedRows != null)
+                {
+                    // Finish using the engine drafts as context before changing the displayed translations.
+                    ApplyPostProcessDictionary(completedRows, dictionary);
+                }
 
                 IsTranslateEnabled = true;
                 IsProgressEnabled = false;
@@ -1804,7 +1824,7 @@ public partial class AutoTranslateViewModel : ObservableObject
                     SelectAndScrollToRow(Rows.IndexOf(lastTranslatedRow));
                 }
 
-                if (_autoStart && !_abort && !_translationFailed && HasTranslatedSomething)
+                if (_autoStart && !_abort && !_translationFailed && HasTranslatedSomething && !HasDictionaryMatches)
                 {
                     Ok();
                 }
@@ -1817,7 +1837,7 @@ public partial class AutoTranslateViewModel : ObservableObject
     /// translation, so lines are still merged and the rows above stay available as context.
     /// A run gets a list that ends at its last row, which keeps a batch from reaching past the selection.
     /// </summary>
-    private async Task TranslateSelectedRows(TranslationPair sourceLanguage, TranslationPair targetLanguage, IAutoTranslator translator, CancellationToken cancellationToken)
+    private async Task TranslateSelectedRows(TranslationPair sourceLanguage, TranslationPair targetLanguage, IAutoTranslator translator, CancellationToken cancellationToken, List<TranslateRow>? completedRows)
     {
         var total = _onlyRowIndices.Count;
         var finishedRows = 0;
@@ -1831,7 +1851,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             var finishedBefore = finishedRows;
             var rows = new ObservableCollection<TranslateRow>(Rows.Take(last + 1));
             await TranslateRange(rows, first, index => EnqueueSelectedRowsProgress(finishedBefore + index - first, total),
-                sourceLanguage, targetLanguage, translator, cancellationToken);
+                sourceLanguage, targetLanguage, translator, cancellationToken, completedRows);
             finishedRows += last - first + 1;
         }
     }
@@ -1857,7 +1877,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         return runs;
     }
 
-    private async Task TranslateRange(ObservableCollection<TranslateRow> rows, int start, Action<int> reportProgress, TranslationPair sourceLanguage, TranslationPair targetLanguage, IAutoTranslator translator, CancellationToken cancellationToken)
+    private async Task TranslateRange(ObservableCollection<TranslateRow> rows, int start, Action<int> reportProgress, TranslationPair sourceLanguage, TranslationPair targetLanguage, IAutoTranslator translator, CancellationToken cancellationToken, List<TranslateRow>? completedRows)
     {
         // Single-line mode forced by the user setting or the engine itself is permanent;
         // forceSingleLineMode may additionally be turned on temporarily after errors and
@@ -1882,11 +1902,11 @@ public partial class AutoTranslateViewModel : ObservableObject
             {
                 if (_abort || cancellationToken.IsCancellationRequested)
                 {
-                    Dispatcher.UIThread.Invoke(() => IsTranslateEnabled = true);
                     break;
                 }
 
                 var translatedCount = await advancedTranslator.TranslateBatchAsync(rows, index, sourceLanguage.Code, targetLanguage.Code, ApplyRowUpdateOnUiThread, cancellationToken);
+                completedRows?.AddRange(rows.Skip(index).Take(translatedCount));
                 index += translatedCount;
 
                 reportProgress(index);
@@ -1903,7 +1923,6 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             if (_abort || cancellationToken.IsCancellationRequested)
             {
-                Dispatcher.UIThread.Invoke(() => IsTranslateEnabled = true);
                 break;
             }
 
@@ -1917,6 +1936,7 @@ public partial class AutoTranslateViewModel : ObservableObject
 
             if (linesMergedAndTranslated > 0)
             {
+                completedRows?.AddRange(rows.Skip(index).Take(linesMergedAndTranslated));
                 noErrorCount++;
                 index += linesMergedAndTranslated;
 
@@ -1959,9 +1979,9 @@ public partial class AutoTranslateViewModel : ObservableObject
                 cancellationToken,
                 ApplyRowUpdateOnUiThread);
 
+            completedRows?.AddRange(rows.Skip(index).Take(translateCount));
             if (_abort || cancellationToken.IsCancellationRequested)
             {
-                Dispatcher.UIThread.Invoke(() => IsTranslateEnabled = true);
                 return;
             }
 
@@ -1974,7 +1994,6 @@ public partial class AutoTranslateViewModel : ObservableObject
 
                 if (_onlyCurrentLine)
                 {
-                    Dispatcher.UIThread.Invoke(() => IsTranslateEnabled = true);
                     break;
                 }
             }
@@ -2170,6 +2189,7 @@ public partial class AutoTranslateViewModel : ObservableObject
     partial void OnSelectedTargetLanguageChanged(TranslationPair? value)
     {
         UpdateFormalityVisibility();
+        OnPropertyChanged(nameof(PostProcessSummary));
     }
 
     partial void OnSelectedFormalityChanged(DeepLFormalityItem? value)
