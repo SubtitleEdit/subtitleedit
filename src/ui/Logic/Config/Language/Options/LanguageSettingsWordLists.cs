@@ -12,6 +12,7 @@ public class LanguageSettingsWordLists
     public string UnableToAddItem { get; set; }
     public string UnableToRemoveItem { get; set; }
     public string RegexRulesDotDotDot { get; set; }
+    public string DoNotBreakAfterListDotDotDot { get; set; }
     public string RegexRulesTitle { get; set; }
     public string RegexRulesDescription { get; set; }
     public string RegexRules { get; set; }
@@ -75,6 +76,7 @@ public class LanguageSettingsWordLists
         UnableToAddItem = "Unable to add item, it probably already exists!";
         UnableToRemoveItem = "Unable to remove item!";
         RegexRulesDotDotDot = "Regex rules...";
+        DoNotBreakAfterListDotDotDot = "Do-not-break-after list...";
         RegexRulesTitle = "OCR regex rules - {0}";
         RegexRulesDescription = "Regular expressions used by \"Fix common OCR errors\" in Fix common errors. Turn a rule off to stop it, or add your own.";
         RegexRules = "Rules";

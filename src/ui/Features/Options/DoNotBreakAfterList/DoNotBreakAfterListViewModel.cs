@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -42,6 +42,18 @@ public partial class DoNotBreakAfterListViewModel : ObservableObject
         IsTextItem = true;
 
         InitLanguages(null);
+    }
+
+    /// <summary>
+    /// Opens on the given language (e.g. the one picked in the word lists window) when it has a list.
+    /// </summary>
+    public void Initialize(string? twoLetterCode)
+    {
+        var language = Languages.FirstOrDefault(p => p.TwoLetterCode == twoLetterCode);
+        if (language != null)
+        {
+            SelectedLanguage = language;
+        }
     }
 
     private void InitLanguages(string? selectTwoLetterCode)
