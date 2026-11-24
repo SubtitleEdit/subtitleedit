@@ -814,14 +814,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             ResetLoadFrameRate();
 
+            var xmlText = JoinLines(lines).RemoveControlCharactersButWhiteSpace().Trim();
             var xml = new XmlDocument { XmlResolver = null, PreserveWhitespace = true };
             try
             {
-                xml.LoadXml(JoinLines(lines).RemoveControlCharactersButWhiteSpace().Trim());
+                xml.LoadXml(xmlText);
             }
-            catch
+            catch (XmlException)
             {
-                xml.LoadXml(FixBadXml(JoinLines(lines)));
+                xml.LoadXml(FixBadXml(xmlText));
             }
 
             const string ns = "http://www.w3.org/ns/ttml";

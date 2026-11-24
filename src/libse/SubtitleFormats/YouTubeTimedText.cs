@@ -183,8 +183,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             duration++;
                         }
 
+                        var end = start + duration;
+                        if (!double.IsFinite(start) || !double.IsFinite(end))
+                        {
+                            _errorCount++;
+                            continue;
+                        }
+
                         var linePen = YttHead.GetInt(element, "p");
-                        var p = new Paragraph(YttText.FromXml(element, linePen), start, start + duration)
+                        var p = new Paragraph(YttText.FromXml(element, linePen), start, end)
                         {
                             Style = linePen?.ToString(CultureInfo.InvariantCulture),
                             Region = YttHead.GetInt(element, "wp")?.ToString(CultureInfo.InvariantCulture),
