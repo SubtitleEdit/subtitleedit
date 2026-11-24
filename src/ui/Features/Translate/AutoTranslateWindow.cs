@@ -422,22 +422,77 @@ public class AutoTranslateWindow : Window
         var next = UiUtil.MakeButton(language.PostProcessNextMatch, vm.SelectNextDictionaryMatchCommand);
         next.Bind(IsVisibleProperty, new Binding(nameof(vm.HasDictionaryMatches)));
         next.Bind(IsEnabledProperty, new Binding(nameof(vm.IsTranslateEnabled)));
+        var edit = UiUtil.MakeButton(language.PostProcessEditDictionary, vm.EditPostProcessDictionaryCommand);
+        edit.Bind(IsEnabledProperty, new Binding(nameof(vm.IsTranslateEnabled)));
 
         return new WrapPanel
         {
             Margin = new Thickness(12, 4),
             ItemSpacing = 8,
-            Children = { toggle, caption, summary, next },
+            Children = { toggle, caption, summary, next, edit },
         };
     }
 
+    /// <summary>
+    /// A card under the grid for the selected line the dictionary matched: the engine's text struck
+    /// through on the left, the fixed text (editable) on the right, and the rule's alternatives.
+    /// </summary>
     private static Control BuildDictionaryReview(AutoTranslateViewModel vm)
     {
         var language = Se.Language.Translate;
-        var original = new TextBox { IsReadOnly = true, TextWrapping = TextWrapping.Wrap, MaxHeight = 75 };
-        original.Bind(TextBox.TextProperty, new Binding(nameof(vm.OriginalDictionaryText)));
+
+        var badgeText = new TextBlock
+        {
+            FontSize = EditorChrome.ScaledFont(11.5),
+            FontWeight = FontWeight.SemiBold,
+            Foreground = EditorChrome.AccentBrush,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.SelectedDictionaryBadge)),
+        };
+        var badge = new Border
+        {
+            Background = EditorChrome.AccentSoftBrush,
+            CornerRadius = new CornerRadius(10),
+            Padding = new Thickness(9, 2),
+            VerticalAlignment = VerticalAlignment.Center,
+            Child = badgeText,
+        };
+        var note = new TextBlock
+        {
+            Foreground = EditorChrome.DimTextBrush,
+            TextWrapping = TextWrapping.Wrap,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(10, 0, 0, 0),
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.DictionaryNote)),
+            [!IsVisibleProperty] = new Binding(nameof(vm.DictionaryNote)) { Converter = StringConverters.IsNotNullOrEmpty },
+        };
+        var revert = UiUtil.MakeButton(language.PostProcessRevert, vm.RevertDictionaryTextCommand);
+        var header = new DockPanel { Margin = new Thickness(0, 0, 0, 10) };
+        DockPanel.SetDock(revert, Dock.Right);
+        DockPanel.SetDock(badge, Dock.Left);
+        header.Children.Add(revert);
+        header.Children.Add(badge);
+        header.Children.Add(note);
+
+        var original = new SelectableTextBlock
+        {
+            TextWrapping = TextWrapping.Wrap,
+            TextDecorations = TextDecorations.Strikethrough,
+            Foreground = EditorChrome.DimTextBrush,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.OriginalDictionaryText)),
+        };
         AutomationProperties.SetName(original, language.PostProcessOriginal);
-        var current = new TextBox { TextWrapping = TextWrapping.Wrap, MaxHeight = 75 };
+        var originalBox = new Border
+        {
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(6),
+            Padding = new Thickness(8, 5),
+            MinHeight = EditorChrome.FieldHeight,
+            Child = original,
+        };
+
+        var current = new TextBox { TextWrapping = TextWrapping.Wrap, MaxHeight = 75, BorderBrush = EditorChrome.AccentBrush };
         current.Bind(TextBox.TextProperty, new Binding(nameof(vm.SelectedDictionaryText))
         {
             Mode = BindingMode.TwoWay,
@@ -445,41 +500,69 @@ public class AutoTranslateWindow : Window
         });
         AutomationProperties.SetName(current, language.PostProcessCurrent);
 
-        var texts = new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), ColumnSpacing = 8 };
-        texts.Add(new StackPanel { Children = { Label(language.PostProcessOriginal), original } }, 0, 0);
-        texts.Add(new StackPanel { Children = { Label(language.PostProcessCurrent), current } }, 0, 1);
-        var note = Label(string.Empty);
-        note.TextWrapping = TextWrapping.Wrap;
-        note.Bind(TextBlock.TextProperty, new Binding(nameof(vm.DictionaryNote)));
-        note.Bind(IsVisibleProperty, new Binding(nameof(vm.DictionaryNote)) { Converter = StringConverters.IsNotNullOrEmpty });
+        var arrow = new TextBlock
+        {
+            Text = "→",
+            FontSize = EditorChrome.ScaledFont(20),
+            Foreground = EditorChrome.AccentBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 16, 0, 0),
+        };
+        var fixedLabel = Label(language.PostProcessCurrent);
+        fixedLabel.Foreground = EditorChrome.SuccessTextBrush;
+        fixedLabel.FontWeight = FontWeight.SemiBold;
+        var texts = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto,*"), ColumnSpacing = 12 };
+        texts.Add(new StackPanel { Spacing = 4, Children = { Label(language.PostProcessOriginal), originalBox } }, 0, 0);
+        texts.Add(arrow, 0, 1);
+        texts.Add(new StackPanel { Spacing = 4, Children = { fixedLabel, current } }, 0, 2);
+
         var choices = new ItemsControl
         {
             ItemsPanel = new FuncTemplate<Panel?>(() => new WrapPanel { ItemSpacing = 6, LineSpacing = 4 }),
-            ItemTemplate = new FuncDataTemplate<string>((text, _) => new Button
+            ItemTemplate = new FuncDataTemplate<AutoTranslateViewModel.DictionaryChoice>((choice, _) =>
             {
-                Content = text,
-                Command = vm.UseDictionaryTextCommand,
-                CommandParameter = text,
+                var button = new Button
+                {
+                    Content = choice == null ? string.Empty : (choice.IsCurrent ? "✓ " : string.Empty) + choice.Text,
+                    Command = vm.UseDictionaryTextCommand,
+                    CommandParameter = choice?.Text,
+                    CornerRadius = new CornerRadius(12),
+                    Padding = new Thickness(12, 3),
+                };
+                if (choice?.IsCurrent == true)
+                {
+                    button.Background = EditorChrome.AccentSoftBrush;
+                    button.Foreground = EditorChrome.AccentBrush;
+                    button.FontWeight = FontWeight.SemiBold;
+                }
+
+                return button;
             }),
         };
         choices.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(vm.DictionaryChoices)));
-        var revert = UiUtil.MakeButton(language.PostProcessRevert, vm.RevertDictionaryTextCommand);
-        revert.HorizontalAlignment = HorizontalAlignment.Left;
-        var panel = new StackPanel
+        var alternatives = new StackPanel
         {
-            Margin = new Thickness(12, 4),
-            Spacing = 4,
-            Children =
-            {
-                texts,
-                note,
-                choices,
-                revert,
-            },
+            Orientation = Orientation.Horizontal,
+            Spacing = 10,
+            Margin = new Thickness(0, 10, 0, 0),
+            Children = { Label(language.PostProcessAlternatives), choices },
         };
-        panel.Bind(IsVisibleProperty, new Binding(nameof(vm.HasSelectedDictionaryMatch)));
-        panel.Bind(IsEnabledProperty, new Binding(nameof(vm.IsTranslateEnabled)));
-        return panel;
+        alternatives.Children[0].VerticalAlignment = VerticalAlignment.Center;
+        alternatives.Bind(IsVisibleProperty, new Binding(nameof(vm.SelectedDictionaryMatchHasAlternatives)));
+
+        var card = new Border
+        {
+            Margin = new Thickness(14, 0, 14, 8),
+            Padding = new Thickness(14, 12),
+            CornerRadius = new CornerRadius(8),
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1),
+            Child = new StackPanel { Children = { header, texts, alternatives } },
+        };
+        card.Bind(IsVisibleProperty, new Binding(nameof(vm.HasSelectedDictionaryMatch)));
+        card.Bind(IsEnabledProperty, new Binding(nameof(vm.IsTranslateEnabled)));
+        return card;
     }
 
     private Border BuildRowGrid(AutoTranslateViewModel vm)
@@ -637,7 +720,27 @@ public class AutoTranslateWindow : Window
     {
         var text = (TextBlock)TableViewExtras.MakeTextCellTemplate(nameof(TranslateRow.TranslatedText)).Build(row)!;
         text.FontWeight = FontWeight.Medium;
-        return text;
+
+        // A line the dictionary changed shows the engine's text struck through under the fix.
+        var original = new TextBlock
+        {
+            FontSize = EditorChrome.ScaledFont(11.5),
+            Foreground = EditorChrome.FaintTextBrush,
+            TextDecorations = TextDecorations.Strikethrough,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            [!TextBlock.TextProperty] = new Binding(nameof(TranslateRow.PostProcessOriginal)),
+            [!IsVisibleProperty] = new Binding(nameof(TranslateRow.PostProcessOriginal)) { Converter = StringConverters.IsNotNullOrEmpty },
+        };
+        ToolTip.SetTip(original, string.Format(Se.Language.Translate.PostProcessEngineTranslationX, row.PostProcessOriginal));
+        original.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == TextBlock.TextProperty)
+            {
+                ToolTip.SetTip(original, string.Format(Se.Language.Translate.PostProcessEngineTranslationX, original.Text));
+            }
+        };
+
+        return new StackPanel { VerticalAlignment = VerticalAlignment.Center, Children = { text, original } };
     }
 
     /// <summary>

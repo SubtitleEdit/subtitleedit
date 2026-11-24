@@ -443,16 +443,6 @@ public partial class WordListsViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task EditTranslationDictionary()
-    {
-        if (Window != null)
-        {
-            await _windowService.ShowDialogAsync<TranslationDictionaryWindow, TranslationDictionaryViewModel>(
-                Window, vm => vm.Initialize(SelectedLanguage));
-        }
-    }
-
-    [RelayCommand]
     private void Ok()
     {
         Window?.Close();

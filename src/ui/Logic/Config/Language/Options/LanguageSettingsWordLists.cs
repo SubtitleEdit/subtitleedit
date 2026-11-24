@@ -9,7 +9,6 @@ public class LanguageSettingsWordLists
     public string RemovedWords { get; set; }
     public string AddRemovedWord { get; set; }
     public string OcrFixList { get; set; }
-    public string TranslationDictionaryButton { get; set; }
     public string TranslationTargetLanguage { get; set; }
     public string TranslationSourceLanguage { get; set; }
     public string TranslationSourceCue { get; set; }
@@ -82,7 +81,6 @@ public class LanguageSettingsWordLists
         RemovedWords = "Removed from dictionary";
         AddRemovedWord = "Add removed word";
         OcrFixList = "OCR fix list";
-        TranslationDictionaryButton = "Translation dictionaries...";
         TranslationTargetLanguage = "Target language";
         TranslationSourceLanguage = "Source language";
         TranslationSourceCue = "Exact source cue";

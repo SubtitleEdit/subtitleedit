@@ -75,18 +75,20 @@ public class AutoTranslateSelectedRowsTests
 
             Assert.Equal("Det er ikke noget særligt.", vm.Rows[0].TranslatedText);
             Assert.Equal("Thank you.", vm.Rows[1].TranslatedText);
-            Assert.Equal("Du har det.", vm.Rows[2].TranslatedText);
-            Assert.Equal(string.Format(language.PostProcessSummary, 1, 1), vm.PostProcessSummary);
+            Assert.Equal("Det gør jeg.", vm.Rows[2].TranslatedText); // first suggestion applied
+            Assert.Equal(string.Format(language.PostProcessSummary, 2, 1), vm.PostProcessSummary);
+            Assert.Equal("Det er ikke noget stort.", vm.Rows[0].PostProcessOriginal);
+            Assert.Null(vm.Rows[1].PostProcessOriginal);
+            Assert.Equal("Du har det.", vm.Rows[2].PostProcessOriginal);
 
             vm.SelectedTranslateRow = vm.Rows[0];
             window.UpdateLayout();
             Dispatcher.UIThread.RunJobs();
-            var original = window.GetVisualDescendants().OfType<TextBox>()
+            var original = window.GetVisualDescendants().OfType<SelectableTextBlock>()
                 .Single(control => AutomationProperties.GetName(control) == language.PostProcessOriginal);
             var current = window.GetVisualDescendants().OfType<TextBox>()
                 .Single(control => AutomationProperties.GetName(control) == language.PostProcessCurrent);
-            Assert.True(original.IsVisible);
-            Assert.True(original.IsReadOnly);
+            Assert.True(original.IsEffectivelyVisible);
             Assert.Equal("Det er ikke noget stort.", original.Text);
             Assert.Equal("Det er ikke noget særligt.", current.Text);
             current.SetCurrentValue(TextBox.TextProperty, "Det betyder ikke det store.");
@@ -94,10 +96,14 @@ public class AutoTranslateSelectedRowsTests
             Assert.Equal("Det betyder ikke det store.", vm.Rows[0].TranslatedText);
             vm.RevertDictionaryTextCommand.Execute(null);
             Assert.Equal("Det er ikke noget stort.", vm.Rows[0].TranslatedText);
+            Assert.Null(vm.Rows[0].PostProcessOriginal);
 
             vm.SelectedTranslateRow = vm.Rows[2];
-            vm.UseDictionaryTextCommand.Execute("Det gør jeg.");
-            Assert.Equal("Det gør jeg.", vm.Rows[2].TranslatedText);
+            Assert.True(vm.SelectedDictionaryMatchNeedsCheck);
+            Assert.True(Assert.Single(vm.DictionaryChoices, choice => choice.Text == "Det gør jeg.").IsCurrent);
+            vm.UseDictionaryTextCommand.Execute("Lige præcis.");
+            Assert.Equal("Lige præcis.", vm.Rows[2].TranslatedText);
+            Assert.False(vm.SelectedDictionaryMatchNeedsCheck);
             Assert.Equal(string.Format(language.PostProcessSummary, 1, 0), vm.PostProcessSummary);
 
             toggle.SetCurrentValue(ToggleSwitch.IsCheckedProperty, false);

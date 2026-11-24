@@ -29,11 +29,11 @@ The shortcut **Auto-translate selected lines (no prompt, use last engine/languag
 
 ### Post-processing dictionary
 
-Turn on **Post-processing dictionary** to check short cues after each translation run. The dictionary matches the source cue and the engine's full draft. It applies straightforward fixes and offers context-dependent suggestions for review.
+Turn on **Post-processing dictionary** to check short cues after each translation run. The dictionary matches the source cue and the engine's full draft. A fix is applied straight away. For a cue whose wording depends on the scene, the first suggestion is applied and the line is marked to check.
 
-The window shows how many matches have changed and how many still have suggestions to review. Click **Next dictionary match** to inspect the engine's original and the current translation side by side. Edit the current text, choose a suggestion, or use **Revert to engine translation**. Turning the switch off affects future translations.
+A changed line shows the engine's text struck through under the fix in the grid. The toolbar counts how many lines were fixed and how many are still to check. Click **Next dictionary match** to go through them: a card under the grid shows the engine translation next to the fixed translation, which you can edit. Pick one of the **Alternatives**, or use **Revert to engine translation**. Turning the switch off affects future translations.
 
-To edit the rules, open **Options → Word lists → Translation dictionaries**. Choose a target language and select a rule to edit or remove, or start a new rule. Enter the exact source cue and engine translation. Use **Suggest for review** for wording that depends on the scene. Saving or deleting a rule updates your personal copy for that target language. Auto Translate reads it on the next run.
+Click **Edit dictionary...** to change the rules for the selected languages. Select a rule to edit or remove, or start a new rule. Enter the exact source cue and engine translation. Use **Suggest for review** for wording that depends on the scene; the first suggestion is the one applied. Saving or deleting a rule updates your personal copy for that target language, and the next run uses it.
 
 The dictionary is used only in the Auto Translate window. Batch Convert does not apply it.
 

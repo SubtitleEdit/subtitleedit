@@ -196,7 +196,7 @@ public sealed class TranslationPostProcessDictionary
         .Where(name => name.StartsWith(ResourcePrefix, StringComparison.Ordinal))
         .ToDictionary(name => Path.GetFileNameWithoutExtension(name[ResourcePrefix.Length..]), StringComparer.OrdinalIgnoreCase);
 
-    internal static string GetLanguage(TranslationPair language)
+    public static string GetLanguage(TranslationPair language)
     {
         var code = language.Code.Replace('_', '-').ToLowerInvariant();
         var iso = language.TwoLetterIsoLanguageName.Replace('_', '-').ToLowerInvariant();

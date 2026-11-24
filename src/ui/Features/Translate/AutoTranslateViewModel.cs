@@ -769,10 +769,13 @@ public partial class AutoTranslateViewModel : ObservableObject
         HasTranslatedSomething = HasUsableTranslation;
         if (_dictionaryMatches.ContainsKey(row))
         {
+            // An edit by the user counts as having checked the dictionary's choice.
+            MarkDictionaryMatchChecked(row);
+            SyncDictionaryMarker(row);
             OnPropertyChanged(nameof(PostProcessSummary));
             if (ReferenceEquals(row, SelectedTranslateRow))
             {
-                OnPropertyChanged(nameof(SelectedDictionaryText));
+                RefreshDictionarySelection();
             }
         }
     }

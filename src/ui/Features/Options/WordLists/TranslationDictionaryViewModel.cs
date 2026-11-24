@@ -56,6 +56,25 @@ public partial class TranslationDictionaryViewModel : ObservableObject
             FindLanguage(preferredLanguage?.TwoLetterISOLanguageName) ?? FindLanguage("en");
     }
 
+    /// <summary>Opens on the language pair chosen in Auto Translate, so a new rule starts with the right languages.</summary>
+    public void Initialize(string? targetCode, string? sourceCode)
+    {
+        Initialize(targetCode, sourceCode, Se.TranslationPostProcessDictionariesFolder);
+    }
+
+    internal void Initialize(string? targetCode, string? sourceCode, string folder)
+    {
+        _folder = folder;
+        TargetLanguage = FindLanguage(targetCode) ?? FindLanguage("en");
+        _preferredSourceLanguage = FindLanguage(sourceCode);
+        if (_preferredSourceLanguage != null && _preferredSourceLanguage != TargetLanguage)
+        {
+            SourceLanguage = _preferredSourceLanguage;
+        }
+    }
+
+    private LanguageChoice? _preferredSourceLanguage;
+
     partial void OnTargetLanguageChanged(LanguageChoice? value)
     {
         CanEdit = false;
@@ -98,9 +117,11 @@ public partial class TranslationDictionaryViewModel : ObservableObject
     private void NewRule()
     {
         SelectedEntry = null;
-        SourceLanguage = TargetLanguage?.Code.Equals("en", StringComparison.OrdinalIgnoreCase) == true
-            ? Languages.FirstOrDefault(language => language != TargetLanguage)
-            : FindLanguage("en");
+        SourceLanguage = _preferredSourceLanguage != null && _preferredSourceLanguage != TargetLanguage
+            ? _preferredSourceLanguage
+            : TargetLanguage?.Code.Equals("en", StringComparison.OrdinalIgnoreCase) == true
+                ? Languages.FirstOrDefault(language => language != TargetLanguage)
+                : FindLanguage("en");
         SourceCue = string.Empty;
         EngineTranslation = string.Empty;
         Output = string.Empty;

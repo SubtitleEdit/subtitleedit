@@ -67,6 +67,11 @@ public class LanguageTranslate
     public string PostProcessCurrent { get; set; }
     public string PostProcessRevert { get; set; }
     public string PostProcessNextMatch { get; set; }
+    public string PostProcessEditDictionary { get; set; }
+    public string PostProcessAlternatives { get; set; }
+    public string PostProcessFixBadge { get; set; }
+    public string PostProcessCheckBadge { get; set; }
+    public string PostProcessEngineTranslationX { get; set; }
     public string LlamaCppDownloadEngineAndModelPrompt { get; set; }
     public string LlamaCppDownloadModelPrompt { get; set; }
     public string MicrosoftTranslatorRegionHint { get; set; }
@@ -131,13 +136,18 @@ public class LanguageTranslate
         CustomPromptHint = "Custom instructions ({0} = source language, {1} = target language); empty = built-in prompt";
         EditTranslationHint = "Click the selected row's translation to edit it (Enter saves, Escape cancels)";
         PostProcessDictionary = "Post-processing dictionary";
-        PostProcessDictionaryHint = "Check short cues after each translation run. Apply exact fixes and show context-dependent suggestions for review.";
-        PostProcessSummary = "{0} changed · {1} to review";
+        PostProcessDictionaryHint = "Check short cues after each translation run. Fixes are applied automatically; for context-dependent cues the first suggestion is applied and marked for checking.";
+        PostProcessSummary = "{0} fixed · {1} to check";
         PostProcessNoDictionary = "No dictionary for the selected languages";
         PostProcessOriginal = "Engine translation";
-        PostProcessCurrent = "Current translation";
+        PostProcessCurrent = "Fixed translation";
         PostProcessRevert = "Revert to engine translation";
         PostProcessNextMatch = "Next dictionary match";
+        PostProcessEditDictionary = "Edit dictionary...";
+        PostProcessAlternatives = "Alternatives";
+        PostProcessFixBadge = "Dictionary fix";
+        PostProcessCheckBadge = "Check in context";
+        PostProcessEngineTranslationX = "Engine translation: {0}";
         LlamaCppDownloadEngineAndModelPrompt = "llama.cpp requires the llama-server engine and a translation model to be downloaded. Download now?";
         LlamaCppDownloadModelPrompt = "llama.cpp requires the selected translation model to be downloaded. Download now?";
         MicrosoftTranslatorRegionHint = "Only for a regional or multi-service Azure resource, e.g. westeurope (see Keys and Endpoint in the Azure portal) - leave empty for a global resource";

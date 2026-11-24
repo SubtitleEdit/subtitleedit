@@ -44,12 +44,7 @@ public class WordListsWindow : Window
         {
             Orientation = Orientation.Horizontal,
             Spacing = 10,
-            Children =
-            {
-                EditorChrome.MakeDimLabel(Se.Language.General.Language, new Thickness(0)),
-                comboLanguages,
-                UiUtil.MakeButton(Se.Language.Options.WordLists.TranslationDictionaryButton, vm.EditTranslationDictionaryCommand),
-            },
+            Children = { EditorChrome.MakeDimLabel(Se.Language.General.Language, new Thickness(0)), comboLanguages },
         };
 
         var lists = new Grid
