@@ -24606,6 +24606,38 @@ public partial class MainViewModel :
     }
 
     /// <summary>
+    /// Pastes the clipboard text as one line and then auto-breaks the whole paragraph again.
+    /// Text copied from a PDF keeps the PDF's own line breaks - often without a space between the
+    /// last word of a line and the first word of the next - so a plain paste needs an unbreak +
+    /// auto-break afterwards (#17137).
+    /// </summary>
+    [RelayCommand]
+    private async Task TextBoxPasteAndAutoBreak()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var textBox = EditTextBoxOriginal.IsFocused ? EditTextBoxOriginal : EditTextBox;
+        if (textBox.IsReadOnly)
+        {
+            return;
+        }
+
+        var clipboardText = await ClipboardHelper.GetTextAsync(Window);
+        if (string.IsNullOrWhiteSpace(clipboardText))
+        {
+            return;
+        }
+
+        textBox.Text = TextBoxPasteNormalizer.ComposePasteAndAutoBreak(
+            textBox.Text ?? string.Empty, textBox.SelectionStart, textBox.SelectionEnd, clipboardText, GetDetectedLanguageCode());
+        textBox.CaretIndex = textBox.Text.Length;
+        _updateAudioVisualizer = true;
+    }
+
+    /// <summary>
     /// Routes a WM_PASTE sent to the window's HWND (clipboard managers and automation tools
     /// send it instead of synthesizing Ctrl+V) to whichever control has keyboard focus.
     /// Avalonia has a single HWND per window, so the message always lands on the window and

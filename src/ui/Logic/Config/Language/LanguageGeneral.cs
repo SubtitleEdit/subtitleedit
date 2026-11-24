@@ -446,6 +446,7 @@ public class LanguageGeneral
     public string ParsingXDotDotDot { get; set; }
     public string Paste { get; set; }
     public string PasteNewSelection { get; set; }
+    public string PasteAndAutoBreak { get; set; }
     public string Pause { get; set; }
     public string Percent { get; set; }
     public string PickLayer { get; set; }
@@ -1500,6 +1501,7 @@ public class LanguageGeneral
         ParsingXDotDotDot = "Parsing {0}...";
         Paste = "Paste";
         PasteNewSelection = "Paste clipboard text to new selection";
+        PasteAndAutoBreak = "Paste and auto-break";
         Pause = "Pause";
         Percent = "Percent";
         PickLayer = "Set layer";
