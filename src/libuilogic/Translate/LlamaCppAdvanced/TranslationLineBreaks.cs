@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.RegularExpressions;
 using Nikse.SubtitleEdit.Core.Common;
 
@@ -44,7 +45,7 @@ internal static class TranslationLineBreaks
 
         var sourceLines = source.SplitToLines();
         var translatedLines = translation.SplitToLines();
-        var flattened = string.Join(" ", translatedLines);
+        var flattened = JoinLines(translatedLines);
         string? repaired = null;
         var sourceHasSpeakers = sourceLines.Any(StartsWithSpeakerMarker);
         if (sourceHasSpeakers)
@@ -82,6 +83,43 @@ internal static class TranslationLineBreaks
             string.Join(" ", repairedLines) == flattened
             ? repaired
             : translation;
+    }
+
+    /// <summary>
+    /// Joins lines with a space, except where a line break sits next to a script written without
+    /// spaces between words (Chinese, Japanese, Thai...) - a space there would be a new character
+    /// in the translation, not a restored layout.
+    /// </summary>
+    private static string JoinLines(List<string> lines)
+    {
+        var sb = new StringBuilder(lines[0]);
+        for (var i = 1; i < lines.Count; i++)
+        {
+            var previous = sb.Length > 0 ? sb[sb.Length - 1] : ' ';
+            var next = lines[i].Length > 0 ? lines[i][0] : ' ';
+            if (!IsUnspacedScript(previous) && !IsUnspacedScript(next))
+            {
+                sb.Append(' ');
+            }
+
+            sb.Append(lines[i]);
+        }
+
+        return sb.ToString();
+    }
+
+    private static bool IsUnspacedScript(char c)
+    {
+        return c is >= '฀' and <= '໿' // Thai, Lao
+            or >= 'က' and <= '႟' // Myanmar
+            or >= 'ក' and <= '៿' // Khmer
+            or >= '⺀' and <= '⿟' // CJK radicals
+            or >= '　' and <= 'ヿ' // CJK punctuation, Hiragana, Katakana
+            or >= '㄀' and <= 'ㇿ' // Bopomofo, Katakana extensions
+            or >= '㐀' and <= '䶿' // CJK extension A
+            or >= '一' and <= '鿿' // CJK unified ideographs
+            or >= '豈' and <= '﫿' // CJK compatibility ideographs
+            or >= '＀' and <= '￯'; // full-width and half-width forms
     }
 
     private static bool StartsWithSpeakerMarker(string line)

@@ -11,6 +11,10 @@ public class TranslationLineBreaksTests
     [InlineData("– Is Nora driving?\n– No.", "— Kører Nora? — Nej.", "— Kører Nora?\n— Nej.")]
     [InlineData("- Wait.\n- Why?\n- Go.", "- Vent. - Hvorfor? - Gå.", "- Vent.\n- Hvorfor?\n- Gå.")]
     [InlineData("I have to go.", "Jeg skal\r\ngå.", "Jeg skal gå.")]
+    [InlineData("I have to go now.", "もう行かなきゃ\nいけない。", "もう行かなきゃいけない。")]
+    [InlineData("I have to go now.", "我现在\n必须走了。", "我现在必须走了。")]
+    [InlineData("I have to go now.", "ฉันต้อง\nไปแล้ว", "ฉันต้องไปแล้ว")]
+    [InlineData("I have to go now.", "나 이제\n가야 해.", "나 이제 가야 해.")]
     public void RepairsLayoutWithoutRewritingText(string source, string translation, string expected)
     {
         Assert.Equal(expected.ReplaceLineEndings(), TranslationLineBreaks.Repair(source, translation, 43));
