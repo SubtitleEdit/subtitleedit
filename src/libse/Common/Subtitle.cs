@@ -478,29 +478,24 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static List<string> ReadLinesFromFile(string fileName, Encoding useThisEncoding, out Encoding encoding)
         {
-            StreamReader sr;
+            string text;
             if (useThisEncoding != null)
             {
-                sr = new StreamReader(fileName, useThisEncoding);
+                text = FileUtil.ReadAllTextShared(fileName, useThisEncoding, out encoding);
             }
             else
             {
                 try
                 {
-                    sr = new StreamReader(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName), true);
+                    text = FileUtil.ReadAllTextShared(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName), out encoding);
                 }
                 catch
                 {
-                    var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                    sr = new StreamReader(fs);
+                    text = FileUtil.ReadAllTextShared(fileName, new UTF8Encoding(false, true), out encoding);
                 }
             }
 
-            encoding = sr.CurrentEncoding;
-            var lines = sr.ReadToEnd().SplitToLines();
-            sr.Close();
-            sr.Dispose();
-            return lines;
+            return text.SplitToLines();
         }
 
         private SubtitleFormat FinalizeFormat(string fileName, bool batchMode, double? sourceFrameRate, List<string> lines, SubtitleFormat subtitleFormat, bool loadSubtitle, Subtitle parsed = null)
