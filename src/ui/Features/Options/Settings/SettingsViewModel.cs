@@ -516,9 +516,8 @@ public partial class SettingsViewModel : ObservableObject
     public bool SettingsImported { get; private set; }
 
     /// <summary>
-    /// True once an import or a reset has replaced the settings wholesale. The main window then
-    /// applies the layout sizes and the waveform zoom *from* the settings instead of carrying its
-    /// current on-screen state over them, which is what a plain OK does (#16213).
+    /// True while an import or reset has replaced settings that still need to be applied.
+    /// The main window then restores the saved layout and waveform zoom (#16213).
     /// </summary>
     public bool SettingsReplaced { get; private set; }
 
@@ -3277,7 +3276,8 @@ public partial class SettingsViewModel : ObservableObject
         }
 
         await FileTypeAssociationsManager.SaveFileTypeAssociationsAsync(FileTypeAssociations, Window);
-        _mainViewModel?.ApplySettings();
+        _mainViewModel?.ApplySettings(SettingsReplaced);
+        SettingsReplaced = false;
 
         // Everything up to here is now applied, so this is the baseline the OK press must be
         // compared against - without it OK re-applies every change this Apply already made and
