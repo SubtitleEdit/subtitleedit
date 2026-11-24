@@ -84,7 +84,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
         }
 
         return map.TryGetValue(1, out var translation) && translation.Length > 0
-            ? stripped.Restore(translation)
+            ? RestoreTranslation(stripped, translation)
             : string.Empty;
     }
 
@@ -180,7 +180,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
                 {
                     var translation = map[i + 1];
                     rows[index + i].TranslatedText = translation.Length > 0
-                        ? stripped[i].Restore(translation)
+                        ? RestoreTranslation(stripped[i], translation)
                         : rows[index + i].Text;
                 }
             });
@@ -202,6 +202,13 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
 
         throw new HttpRequestException("No usable translation in " + Name + " reply" +
                                        (string.IsNullOrEmpty(Error) ? string.Empty : ": " + Error));
+    }
+
+    private string RestoreTranslation(StrippedLine source, string translation)
+    {
+        return Settings.KeepLineBreaks
+            ? TranslationLineBreaks.Restore(source, translation, Configuration.Settings.General.SubtitleLineMaximumLength)
+            : source.Restore(translation);
     }
 
     /// <summary>
