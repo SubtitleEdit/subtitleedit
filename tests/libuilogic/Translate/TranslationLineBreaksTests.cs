@@ -21,6 +21,29 @@ public class TranslationLineBreaksTests
     }
 
     [Theory]
+    [InlineData("Can you hold the door?\nMy hands are full.", "ドアを押さえてくれる？手がふさがってるの。", "ja", "ドアを押さえてくれる？\n手がふさがってるの。")]
+    [InlineData("Can you hold the door?\nMy hands are full.", "你能帮我扶一下门吗？我手里拿满了东西。", "zh", "你能帮我扶一下门吗？\n我手里拿满了东西。")]
+    [InlineData("Can you hold the door?\nMy hands are full.", "ドアを押さえてくれる？手がふさがってるの。", "", "ドアを押さえてくれる？手がふさがってるの。")]
+    [InlineData("I have to go\nbecause it is dark.", "我现在必须走了因为天已经黑了", "zh", "我现在必须走了因为天已经黑了")]
+    public void BreaksWithTheTargetLanguageRules(string source, string translation, string language, string expected)
+    {
+        Assert.Equal(expected.ReplaceLineEndings(), TranslationLineBreaks.Repair(source, translation, 43, language));
+    }
+
+    [Theory]
+    [InlineData("Danish", "da")]
+    [InlineData("chinese (simplified)", "zh")]
+    [InlineData("Chinese (Traditional)", "zh")]
+    [InlineData("Norwegian", "nb")]
+    [InlineData("Portuguese", "pt")]
+    [InlineData("Klingon", "")]
+    [InlineData("", "")]
+    public void MapsTheEngineLanguageNameToALineBreakCode(string name, string expected)
+    {
+        Assert.Equal(expected, AdvancedTranslatorBase.LineBreakLanguage(name));
+    }
+
+    [Theory]
     [InlineData("- You all right?\n- Never better.", "- Er du okay? Aldrig bedre.", 43)]
     [InlineData("- Wait.\n- Go.", "- Vent. - Nej. - Gå.", 43)]
     [InlineData("– Wait.\n– Go.", "– Vent – bare lidt. – Gå.", 43)]
