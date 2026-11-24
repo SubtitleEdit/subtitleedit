@@ -3,6 +3,36 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.5.0-beta13 (24th of November 2026)
+
+* Update to Avalonia 12.2 with the Fluent 2 theme, full-row selection highlight in the grid
+* Color button: color only the selected text - thx christoph-9
+* Image export: add "Custom resolution..." - thx pepelugil
+* Beautify/snap to frames: count frames from the video's start time - thx Tenespirited
+* Faster startup and faster file opening (SubRip/ASSA/WebVTT/SSA/SAMI/sbv/JSON parsed once, .ttml/.dfxp detected first)
+* Final Cut Pro Xml Name: fix very slow loading of large files
+* Text box: bare Delete/Backspace always edit text - thx kadrimarzouki
+* Merge with line below: keep end time when original non-matching rows are shown - thx bichitoxxx
+* Syntax coloring: color gap too short/in range on Show/Hide cells when the Gap column is hidden - thx christoph-9
+* Status bar video offset button: only shown with a video loaded when no offset is set - thx accessallareas
+* Split subtitle: ask before overwriting files + always produce the requested number of parts
+* Adjust duration: negative seconds now shorten overlapping lines, fixed minimum is 0
+* Merge short lines: keep the later end time
+* Point sync: a point on a line with the same start time replaces the existing point
+* Import time codes: ignore display-only reference rows
+* ChatGPT batch translate: send cue text unescaped + accept fenced JSON replies
+* Remove burned-in subtitles: ask for the output file name on Start
+* Remove burned-in subtitles: updated ProPainter on macOS with live progress
+* PaddleOCR: don't remove temp folders of downloads running in another window
+* Update ffmpeg to 9.1 and CrispEmbed to v0.17.20
+* Update German translation - thx FunkyKnilch
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+* Update Turkish translation - thx bilimiyorum
+
+-----------------------------------------------------------------------------------------------------
+
 v5.5.0-beta12 (22nd of November 2026)
 
 * Import time codes: read Blu-ray sup, VobSub, mkv/mp4/ts tracks and binary formats again - thx martinluponda
