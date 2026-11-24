@@ -10072,6 +10072,12 @@ public partial class MainViewModel :
     {
         var request = PluginRequestHelper.CreateRequest(plugin, PluginConstants.RequestTypeRun);
         request.Subtitle = PluginRequestHelper.ToPluginSubtitle(GetUpdateSubtitle(), SelectedSubtitleFormat, _subtitleFileName ?? string.Empty);
+        if (ShowColumnOriginalText)
+        {
+            var original = GetUpdateSubtitleOriginal();
+            request.OriginalSubtitle = PluginRequestHelper.ToPluginSubtitle(original, original.OriginalFormat ?? SelectedSubtitleFormat, _subtitleFileNameOriginal ?? string.Empty);
+        }
+
         request.SubtitleEncoding = SelectedEncoding?.DisplayName ?? string.Empty;
         request.SelectedIndices = selectedIndices;
         request.VideoFileName = _videoFileName ?? string.Empty;
