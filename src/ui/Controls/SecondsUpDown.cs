@@ -98,6 +98,8 @@ public class SecondsUpDown : TemplatedControl
                 Background = Brushes.Transparent,
             };
 
+            CompactSpinner.MakeInnerTextBoxBorderless(textBox);
+
             var grid = new Grid
             {
                 ColumnDefinitions = new ColumnDefinitions("*,Auto"),
