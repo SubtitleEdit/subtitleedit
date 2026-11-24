@@ -1104,6 +1104,10 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             Duration = 0;
             StartDurationProbe(videoFileName);
 
+            // The mpv core only comes up with the OpenGL control's first frame - ask for one in
+            // case the request made when it was attached never ran.
+            (PlayerContent as LibMpvDynamicOpenGlControl)?.RequestInitialization();
+
             await _videoPlayerInstance.LoadFile(videoFileName, UiToPlayerSeconds(startPositionSeconds));
 
             // The control may have been torn down while LoadFile was awaiting (fullscreen
@@ -1113,6 +1117,8 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             {
                 return;
             }
+
+            RecoverOpenGlInitialization();
 
             _videoPlayerInstance.Volume = Volume;
             _positionTimer?.Stop();
@@ -1134,6 +1140,28 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
             _textBlockVideoFileName.Text = System.IO.Path.GetFileName(videoFileName);
             UpdateVideoFileNameMaxWidth();
+        }
+
+        /// <summary>
+        /// LoadFile waited for the mpv core and gave up: the load is parked until the OpenGL
+        /// control's first frame initializes the core. If Avalonia's one-time OpenGL
+        /// initialization failed (or the request for that first frame was lost), that frame never
+        /// comes - Avalonia ignores every later frame request - and the video stays unplayable for
+        /// the rest of the session. Detaching and re-attaching the control resets Avalonia's
+        /// initialization, so the next frame retries it and the parked load is replayed.
+        /// </summary>
+        private void RecoverOpenGlInitialization()
+        {
+            if (PlayerContent is not LibMpvDynamicOpenGlControl glControl ||
+                glControl.Player is not { IsCoreInitialized: false } ||
+                TopLevel.GetTopLevel(glControl) == null)
+            {
+                return;
+            }
+
+            Se.LogError("VideoPlayerControl: mpv OpenGL control never initialized - re-attaching it to retry");
+            PlayerContent = null;
+            PlayerContent = glControl;
         }
 
         /// <summary>
