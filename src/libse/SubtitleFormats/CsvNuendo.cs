@@ -151,7 +151,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     CsvLineNoQuotesFirst.IsMatch(line))
                 {
                     var parts = CsvUtil.CsvSplit(line, false, out var con);
-                    continuation = con;
+                    continuation = false;
                     if (parts.Length == 4)
                     {
                         try
@@ -167,6 +167,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
 
                             subtitle.Paragraphs.Add(p);
+                            continuation = con;
                         }
                         catch
                         {

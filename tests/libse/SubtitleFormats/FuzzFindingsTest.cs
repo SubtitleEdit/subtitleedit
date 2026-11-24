@@ -80,6 +80,38 @@ public class FuzzFindingsTest
         }
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void CsvNuendo_SkipsContinuationOfMalformedRow(bool includePreviousCue)
+    {
+        const string header = "\"Character\",\"Timecode In\",\"Timecode Out\",\"Dialogue\"\n";
+        const string previousCue = ",00:00:00:00,00:00:01:00,\"Previous cue\"\n";
+        const string malformedCue = ",00:00:01:00,00:00:03:05,\"Hello\"00:04:00,00:00:06:00,\"Second line\nThird line\"\n";
+        const string validCue = ",00:00:07:00,00:00:10:00,\"Keep me\nAnd this line\"";
+        var fileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".csv");
+        File.WriteAllText(fileName, header + (includePreviousCue ? previousCue : string.Empty) + malformedCue + validCue);
+        try
+        {
+            var subtitle = new Subtitle();
+            var format = subtitle.LoadSubtitle(fileName, out _, null);
+
+            Assert.IsType<CsvNuendo>(format);
+            var expected = new List<string>();
+            if (includePreviousCue)
+            {
+                expected.Add("Previous cue");
+            }
+
+            expected.Add("Keep me" + Environment.NewLine + "And this line");
+            Assert.Equal(expected, subtitle.Paragraphs.Select(p => p.Text));
+        }
+        finally
+        {
+            File.Delete(fileName);
+        }
+    }
+
     private static async Task<T> RunWithTimeout<T>(Func<T> action)
     {
         var task = Task.Run(action, TestContext.Current.CancellationToken);
