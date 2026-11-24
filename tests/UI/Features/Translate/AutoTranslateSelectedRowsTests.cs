@@ -49,6 +49,51 @@ public class AutoTranslateSelectedRowsTests
     }
 
     [AvaloniaFact]
+    public async Task DictionarySwitch_IsLive_AppliesAndRevertsFixesOnExistingTranslations()
+    {
+        var (vm, window, grid, translator) = OpenWindow("It's no big deal.", "You got it.", "Fair enough, Major.");
+        var originalSetting = Se.Settings.AutoTranslate.UsePostProcessDictionary;
+        try
+        {
+            vm.UsePostProcessDictionary = false;
+            // Neighbouring lines reach the engine merged, so translate line by line.
+            translator.TranslateText = text => string.Join("\n", text.Split('\n').Select(line => line.Trim() switch
+            {
+                "It's no big deal." or "It is no big deal." => "Det er ikke noget stort.",
+                "You got it." => "Du har det.",
+                "Fair enough, Major." => "Det er nok, Major.",
+                var other => other,
+            }));
+            Select(vm, grid, 0, 1, 2);
+            await vm.TranslateRowsCommand.ExecuteAsync(null);
+            await WaitUntilDone(vm);
+            Assert.Equal("Det er ikke noget stort.", vm.Rows[0].TranslatedText);
+            Assert.False(vm.HasDictionaryMatches);
+
+            // On: the lines already translated are fixed straight away.
+            vm.UsePostProcessDictionary = true;
+            Assert.Equal("Det er ikke noget særligt.", vm.Rows[0].TranslatedText);
+            Assert.Equal("Det gør jeg.", vm.Rows[1].TranslatedText);
+            Assert.Equal("Fair nok, major.", vm.Rows[2].TranslatedText);
+            Assert.Equal("Det er ikke noget stort.", vm.Rows[0].PostProcessOriginal);
+
+            // A line the user edits keeps the edit when the switch goes off; the others go back.
+            vm.OnTranslationEdited(vm.Rows[2], "Fair nok, hr. major.");
+            vm.UsePostProcessDictionary = false;
+            Assert.Equal("Det er ikke noget stort.", vm.Rows[0].TranslatedText);
+            Assert.Equal("Du har det.", vm.Rows[1].TranslatedText);
+            Assert.Equal("Fair nok, hr. major.", vm.Rows[2].TranslatedText);
+            Assert.False(vm.HasDictionaryMatches);
+            Assert.All(vm.Rows, row => Assert.Null(row.PostProcessOriginal));
+        }
+        finally
+        {
+            Se.Settings.AutoTranslate.UsePostProcessDictionary = originalSetting;
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public async Task DictionarySwitch_ReviewsSelectedRows_AndCanEditAcceptOrRevert()
     {
         var (vm, window, grid, translator) = OpenWindow("It's no big deal.", "Thank you.", "You got it.");

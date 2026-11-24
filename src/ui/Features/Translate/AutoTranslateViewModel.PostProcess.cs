@@ -117,6 +117,20 @@ public partial class AutoTranslateViewModel
     partial void OnUsePostProcessDictionaryChanged(bool value)
     {
         Se.Settings.AutoTranslate.UsePostProcessDictionary = value;
+        if (!_loadingDictionarySetting && IsTranslateEnabled)
+        {
+            // Live: switching on fixes the lines already translated, switching off undoes the fixes.
+            if (value)
+            {
+                ApplyPostProcessDictionary(Rows.Where(row => !string.IsNullOrEmpty(row.TranslatedText) && !_dictionaryMatches.ContainsKey(row)).ToList(),
+                    TranslationPostProcessDictionary.Get(SelectedSourceLanguage, SelectedTargetLanguage, Se.TranslationPostProcessDictionariesFolder));
+            }
+            else
+            {
+                RevertPostProcessDictionary();
+            }
+        }
+
         OnPropertyChanged(nameof(ShowPostProcessSummary));
         RefreshDictionaryCounts();
     }
@@ -224,6 +238,30 @@ public partial class AutoTranslateViewModel
                 return;
             }
         }
+    }
+
+    private bool _loadingDictionarySetting;
+
+    /// <summary>
+    /// Puts the engine's text back on every line the dictionary changed and forgets the matches. A
+    /// line the user edited since keeps the edit: only text the dictionary itself put there is undone.
+    /// </summary>
+    internal void RevertPostProcessDictionary()
+    {
+        foreach (var (row, match) in _dictionaryMatches.ToList())
+        {
+            var applied = match.Rule.Replacement is { } replacement ? new[] { replacement } : match.Rule.Suggestions;
+            if (applied.Contains(row.TranslatedText))
+            {
+                row.TranslatedText = match.OriginalText;
+            }
+
+            _dictionaryMatches.Remove(row);
+            SyncDictionaryMarker(row);
+        }
+
+        HasTranslatedSomething = HasUsableTranslation;
+        RefreshDictionaryRows();
     }
 
     internal void ApplyPostProcessDictionary(IEnumerable<TranslateRow> completedRows, TranslationPostProcessDictionary? dictionary)

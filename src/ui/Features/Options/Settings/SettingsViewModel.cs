@@ -19,6 +19,7 @@ using Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Options.CustomErrorRules;
 using Nikse.SubtitleEdit.Features.Options.DoNotBreakAfterList;
+using Nikse.SubtitleEdit.Features.Options.WordLists;
 using Nikse.SubtitleEdit.Features.Options.Settings.MinGapCalculate;
 using Nikse.SubtitleEdit.Features.Options.Settings.SyntaxColorTooWideSettings;
 using Nikse.SubtitleEdit.Features.Tools.BeautifyTimeCodes.Profile;
@@ -88,6 +89,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _autoBreakPreferBottomHeavy;
     [ObservableProperty] private int _autoBreakPreferBottomPercent;
     [ObservableProperty] private bool _useNoLineBreakAfter;
+    [ObservableProperty] private bool _usePostProcessDictionary;
 
     // "Color text if more than N lines" must track the live "Max number of lines"
     // value instead of a hardcoded "2" (#12028), including while typing (nullable/
@@ -882,6 +884,7 @@ public partial class SettingsViewModel : ObservableObject
         AutoBreakPreferBottomHeavy = Se.Settings.Tools.AutoBreakPreferBottomHeavy;
         AutoBreakPreferBottomPercent = (int)Math.Round(Se.Settings.Tools.AutoBreakPreferBottomPercent, MidpointRounding.AwayFromZero);
         UseNoLineBreakAfter = Se.Settings.Tools.UseNoLineBreakAfter;
+        UsePostProcessDictionary = Se.Settings.AutoTranslate.UsePostProcessDictionary;
         DialogStyle = DialogStyles.FirstOrDefault(p => p.Code == general.DialogStyle) ?? DialogStyles.First();
         ContinuationStyle = ContinuationStyles.FirstOrDefault(p => p.Code == general.ContinuationStyle) ?? ContinuationStyles.First();
         IsEditCustomContinuationStyleVisible = ContinuationStyle?.Code == nameof(Core.Enums.ContinuationStyle.Custom);
@@ -1833,6 +1836,7 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Tools.AutoBreakPreferBottomHeavy = AutoBreakPreferBottomHeavy;
         Se.Settings.Tools.AutoBreakPreferBottomPercent = AutoBreakPreferBottomPercent;
         Se.Settings.Tools.UseNoLineBreakAfter = UseNoLineBreakAfter;
+        Se.Settings.AutoTranslate.UsePostProcessDictionary = UsePostProcessDictionary;
         general.DialogStyle = DialogStyle.Code;
         general.ContinuationStyle = ContinuationStyle.Code;
         general.CpsLineLengthStrategy = CpsLineLengthStrategy.Code;
@@ -2559,6 +2563,26 @@ public partial class SettingsViewModel : ObservableObject
             RuleValueChanged();
         }
     }
+
+    [RelayCommand]
+    private async Task EditPostProcessDictionary()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var target = Se.Settings.AutoTranslate.AutoTranslateLastTarget;
+        var source = Se.Settings.AutoTranslate.AutoTranslateLastSource;
+        await _windowService.ShowDialogAsync<TranslationDictionaryWindow, TranslationDictionaryViewModel>(Window,
+            vm => vm.Initialize(NormalizeLanguageCode(target), NormalizeLanguageCode(source)));
+    }
+
+    /// <summary>"pt-BR", "zh_CN", "en-US" to the dictionary's codes; null when unknown.</summary>
+    private static string? NormalizeLanguageCode(string? code) => string.IsNullOrWhiteSpace(code)
+        ? null
+        : Nikse.SubtitleEdit.UiLogic.Translate.TranslationPostProcessDictionary.GetLanguage(
+            new Nikse.SubtitleEdit.UiLogic.Translate.TranslationPair(code, code, code));
 
     [RelayCommand]
     private async Task EditDoNotBreakAfterList()
