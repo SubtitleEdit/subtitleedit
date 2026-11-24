@@ -11,11 +11,11 @@ internal static class TranslationLineBreaks
     private static readonly Regex SpeakerBoundary = new(@"(?<=[.!?…]) (?=[-–—−] )");
     private static readonly Regex StyleWrapper = new(@"\A(?:[ \t]*</?[ibu]>)*[ \t]*\z", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
-    internal static string Restore(StrippedLine source, string translation, int maximumLength)
+    internal static string Restore(StrippedLine source, string translation, int maximumLength, string language = "")
     {
         if (string.IsNullOrWhiteSpace(source.Prefix) && string.IsNullOrWhiteSpace(source.Suffix))
         {
-            return source.Restore(Repair(source.Text, translation, maximumLength));
+            return source.Restore(Repair(source.Text, translation, maximumLength, language));
         }
 
         var restored = source.Restore(translation);
@@ -31,10 +31,10 @@ internal static class TranslationLineBreaks
             return restored;
         }
 
-        return target.Prefix + Repair(source.Text, target.Text, maximumLength) + target.Suffix;
+        return target.Prefix + Repair(source.Text, target.Text, maximumLength, language) + target.Suffix;
     }
 
-    internal static string Repair(string source, string translation, int maximumLength)
+    internal static string Repair(string source, string translation, int maximumLength, string language = "")
     {
         if (source.CountLines() == translation.CountLines() ||
             source.IndexOfAny(ProtectedCharacters) >= 0 ||
@@ -66,7 +66,7 @@ internal static class TranslationLineBreaks
             }
             else if (sourceLines.Count == 2 && translatedLines.Count == 1)
             {
-                repaired = Utilities.AutoBreakLinePrivate(flattened, maximumLength, 0, string.Empty, true);
+                repaired = Utilities.AutoBreakLinePrivate(flattened, maximumLength, 0, language, true);
             }
         }
 
@@ -80,7 +80,7 @@ internal static class TranslationLineBreaks
         return repairedLines.Count == sourceLines.Count &&
             repairedLines.All(line => StartsWithSpeakerMarker(line) == sourceHasSpeakers) &&
             repairedLines.All(line => !string.IsNullOrWhiteSpace(line) && line.Length <= maximumLength) &&
-            string.Join(" ", repairedLines) == flattened
+            JoinLines(repairedLines) == flattened
             ? repaired
             : translation;
     }
