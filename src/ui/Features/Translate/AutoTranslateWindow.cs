@@ -395,18 +395,73 @@ public class AutoTranslateWindow : Window
         return strip;
     }
 
+    private static Optris.Icons.Avalonia.Icon MakeIcon(string icon, IBrush? brush = null, double size = 12) => new()
+    {
+        Value = icon,
+        FontSize = size,
+        Foreground = brush,
+        VerticalAlignment = VerticalAlignment.Center,
+    };
+
+    /// <summary>A rounded pill with an icon and a bound text, outlined and tinted in <paramref name="brush"/>.</summary>
+    private static Border MakePill(string icon, string textProperty, IBrush brush, string? visibleProperty = null)
+    {
+        var pill = new Border
+        {
+            BorderBrush = brush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(11),
+            Padding = new Thickness(9, 2, 10, 2),
+            VerticalAlignment = VerticalAlignment.Center,
+            Child = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 5,
+                Children =
+                {
+                    MakeIcon(icon, brush, 10.5),
+                    new TextBlock
+                    {
+                        FontSize = EditorChrome.ScaledFont(11.5),
+                        FontWeight = FontWeight.SemiBold,
+                        Foreground = brush,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        [!TextBlock.TextProperty] = new Binding(textProperty),
+                    },
+                },
+            },
+        };
+        if (visibleProperty != null)
+        {
+            pill.Bind(IsVisibleProperty, new Binding(visibleProperty));
+        }
+
+        return pill;
+    }
+
     private static Control BuildDictionaryToolbar(AutoTranslateViewModel vm)
     {
         var language = Se.Language.Translate;
-        var toggle = new ToggleSwitch { OnContent = null, OffContent = null, MinWidth = 0 };
+        var toggle = new ToggleSwitch { OnContent = null, OffContent = null, MinWidth = 0, VerticalAlignment = VerticalAlignment.Center };
         toggle.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.UsePostProcessDictionary)) { Mode = BindingMode.TwoWay });
         toggle.Bind(IsEnabledProperty, new Binding(nameof(vm.IsTranslateEnabled)));
         AutomationProperties.SetName(toggle, language.PostProcessDictionary);
         ToolTip.SetTip(toggle, language.PostProcessDictionaryHint);
 
-        // Clicking the label flips the switch, like a check box caption.
-        var caption = Label(language.PostProcessDictionary);
-        caption.Cursor = new Cursor(StandardCursorType.Hand);
+        // Clicking the icon or label flips the switch, like a check box caption.
+        var caption = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 7,
+            Background = Brushes.Transparent,
+            Cursor = new Cursor(StandardCursorType.Hand),
+            VerticalAlignment = VerticalAlignment.Center,
+            Children =
+            {
+                MakeIcon("fa-solid fa-book-open", EditorChrome.AccentBrush, 13),
+                new TextBlock { Text = language.PostProcessDictionary, FontWeight = FontWeight.SemiBold, VerticalAlignment = VerticalAlignment.Center },
+            },
+        };
         caption.Tapped += (_, _) =>
         {
             if (toggle.IsEffectivelyEnabled)
@@ -416,21 +471,35 @@ public class AutoTranslateWindow : Window
         };
         ToolTip.SetTip(caption, language.PostProcessDictionaryHint);
 
-        var summary = Label(string.Empty);
-        summary.Bind(TextBlock.TextProperty, new Binding(nameof(vm.PostProcessSummary)));
-        summary.Bind(IsVisibleProperty, new Binding(nameof(vm.ShowPostProcessSummary)));
-        var next = UiUtil.MakeButton(language.PostProcessNextMatch, vm.SelectNextDictionaryMatchCommand);
+        var fixedPill = MakePill("fa-solid fa-circle-check", nameof(vm.DictionaryFixedText), EditorChrome.SuccessTextBrush, nameof(vm.HasDictionaryMatches));
+        var checkPill = MakePill("fa-solid fa-triangle-exclamation", nameof(vm.DictionaryToCheckText), EditorChrome.WarningTextBrush, nameof(vm.HasDictionaryToCheck));
+        var noDictionary = new TextBlock
+        {
+            Text = language.PostProcessNoDictionary,
+            Foreground = EditorChrome.DimTextBrush,
+            FontStyle = FontStyle.Italic,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!IsVisibleProperty] = new Binding(nameof(vm.ShowNoDictionaryNote)),
+        };
+
+        var next = EditorChrome.MakeTextToolButton("fa-solid fa-forward-step", language.PostProcessNextMatch, vm.SelectNextDictionaryMatchCommand);
         next.Bind(IsVisibleProperty, new Binding(nameof(vm.HasDictionaryMatches)));
         next.Bind(IsEnabledProperty, new Binding(nameof(vm.IsTranslateEnabled)));
-        var edit = UiUtil.MakeButton(language.PostProcessEditDictionary, vm.EditPostProcessDictionaryCommand);
+        var edit = EditorChrome.MakeTextToolButton("fa-solid fa-pen-to-square", language.PostProcessEditDictionary, vm.EditPostProcessDictionaryCommand);
         edit.Bind(IsEnabledProperty, new Binding(nameof(vm.IsTranslateEnabled)));
 
-        return new WrapPanel
+        var left = new WrapPanel
         {
-            Margin = new Thickness(12, 4),
-            ItemSpacing = 8,
-            Children = { toggle, caption, summary, next, edit },
+            ItemSpacing = 10,
+            LineSpacing = 4,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { toggle, caption, fixedPill, checkPill, noDictionary },
         };
+        var right = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4, Children = { next, edit } };
+        var bar = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto"), ColumnSpacing = 8 };
+        bar.Add(left, 0, 0);
+        bar.Add(right, 0, 1);
+        return new Border { Margin = new Thickness(14, 6, 14, 0), Child = bar };
     }
 
     /// <summary>
@@ -441,43 +510,50 @@ public class AutoTranslateWindow : Window
     {
         var language = Se.Language.Translate;
 
-        var badgeText = new TextBlock
+        var checkBadge = MakePill("fa-solid fa-triangle-exclamation", nameof(vm.SelectedDictionaryBadge), EditorChrome.WarningTextBrush, nameof(vm.SelectedDictionaryMatchNeedsCheck));
+        var fixBadge = MakePill("fa-solid fa-wand-magic-sparkles", nameof(vm.SelectedDictionaryBadge), EditorChrome.SuccessTextBrush, "!" + nameof(vm.SelectedDictionaryMatchNeedsCheck));
+        var note = new StackPanel
         {
-            FontSize = EditorChrome.ScaledFont(11.5),
-            FontWeight = FontWeight.SemiBold,
-            Foreground = EditorChrome.AccentBrush,
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.SelectedDictionaryBadge)),
-        };
-        var badge = new Border
-        {
-            Background = EditorChrome.AccentSoftBrush,
-            CornerRadius = new CornerRadius(10),
-            Padding = new Thickness(9, 2),
+            Orientation = Orientation.Horizontal,
+            Spacing = 6,
+            Margin = new Thickness(12, 0, 0, 0),
             VerticalAlignment = VerticalAlignment.Center,
-            Child = badgeText,
-        };
-        var note = new TextBlock
-        {
-            Foreground = EditorChrome.DimTextBrush,
-            TextWrapping = TextWrapping.Wrap,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 0, 0),
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.DictionaryNote)),
+            Children =
+            {
+                MakeIcon("fa-regular fa-lightbulb", EditorChrome.DimTextBrush, 11.5),
+                new TextBlock
+                {
+                    Foreground = EditorChrome.DimTextBrush,
+                    FontStyle = FontStyle.Italic,
+                    TextWrapping = TextWrapping.Wrap,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    [!TextBlock.TextProperty] = new Binding(nameof(vm.DictionaryNote)),
+                },
+            },
             [!IsVisibleProperty] = new Binding(nameof(vm.DictionaryNote)) { Converter = StringConverters.IsNotNullOrEmpty },
         };
-        var revert = UiUtil.MakeButton(language.PostProcessRevert, vm.RevertDictionaryTextCommand);
-        var header = new DockPanel { Margin = new Thickness(0, 0, 0, 10) };
-        DockPanel.SetDock(revert, Dock.Right);
-        DockPanel.SetDock(badge, Dock.Left);
-        header.Children.Add(revert);
-        header.Children.Add(badge);
-        header.Children.Add(note);
+
+        var accept = EditorChrome.MakeTextToolButton("fa-solid fa-check", language.PostProcessAccept, vm.AcceptDictionaryTextCommand);
+        accept.Bind(IsVisibleProperty, new Binding(nameof(vm.SelectedDictionaryMatchNeedsCheck)));
+        var revert = EditorChrome.MakeTextToolButton("fa-solid fa-rotate-left", language.PostProcessRevert, vm.RevertDictionaryTextCommand);
+        var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4, Children = { accept, revert } };
+
+        var header = new DockPanel { Margin = new Thickness(0, 0, 0, 12) };
+        DockPanel.SetDock(actions, Dock.Right);
+        header.Children.Add(actions);
+        header.Children.Add(new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { checkBadge, fixBadge, note },
+        });
 
         var original = new SelectableTextBlock
         {
             TextWrapping = TextWrapping.Wrap,
             TextDecorations = TextDecorations.Strikethrough,
             Foreground = EditorChrome.DimTextBrush,
+            VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.OriginalDictionaryText)),
         };
         AutomationProperties.SetName(original, language.PostProcessOriginal);
@@ -487,12 +563,13 @@ public class AutoTranslateWindow : Window
             BorderBrush = EditorChrome.FieldBorderBrush,
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(6),
-            Padding = new Thickness(8, 5),
+            Padding = new Thickness(9, 6),
             MinHeight = EditorChrome.FieldHeight,
+            Opacity = 0.85,
             Child = original,
         };
 
-        var current = new TextBox { TextWrapping = TextWrapping.Wrap, MaxHeight = 75, BorderBrush = EditorChrome.AccentBrush };
+        var current = new TextBox { TextWrapping = TextWrapping.Wrap, MaxHeight = 75, BorderBrush = EditorChrome.SuccessTextBrush, BorderThickness = new Thickness(1.5) };
         current.Bind(TextBox.TextProperty, new Binding(nameof(vm.SelectedDictionaryText))
         {
             Mode = BindingMode.TwoWay,
@@ -500,39 +577,66 @@ public class AutoTranslateWindow : Window
         });
         AutomationProperties.SetName(current, language.PostProcessCurrent);
 
-        var arrow = new TextBlock
+        var arrow = new Border
         {
-            Text = "→",
-            FontSize = EditorChrome.ScaledFont(20),
-            Foreground = EditorChrome.AccentBrush,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 16, 0, 0),
+            Width = 30,
+            Height = 30,
+            CornerRadius = new CornerRadius(15),
+            Background = EditorChrome.AccentSoftBrush,
+            VerticalAlignment = VerticalAlignment.Bottom,
+            Margin = new Thickness(0, 0, 0, 2),
+            Child = new Optris.Icons.Avalonia.Icon
+            {
+                Value = "fa-solid fa-arrow-right",
+                FontSize = 13,
+                Foreground = EditorChrome.AccentBrush,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+            },
         };
-        var fixedLabel = Label(language.PostProcessCurrent);
-        fixedLabel.Foreground = EditorChrome.SuccessTextBrush;
-        fixedLabel.FontWeight = FontWeight.SemiBold;
+
+        static StackPanel Heading(string icon, string text, IBrush brush) => new()
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 6,
+            Children =
+            {
+                MakeIcon(icon, brush, 11),
+                new TextBlock { Text = text, FontSize = EditorChrome.ScaledFont(11.5), FontWeight = FontWeight.SemiBold, Foreground = brush },
+            },
+        };
+
         var texts = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto,*"), ColumnSpacing = 12 };
-        texts.Add(new StackPanel { Spacing = 4, Children = { Label(language.PostProcessOriginal), originalBox } }, 0, 0);
+        texts.Add(new StackPanel { Spacing = 5, Children = { Heading("fa-solid fa-robot", language.PostProcessOriginal, EditorChrome.DimTextBrush), originalBox } }, 0, 0);
         texts.Add(arrow, 0, 1);
-        texts.Add(new StackPanel { Spacing = 4, Children = { fixedLabel, current } }, 0, 2);
+        texts.Add(new StackPanel { Spacing = 5, Children = { Heading("fa-solid fa-circle-check", language.PostProcessCurrent, EditorChrome.SuccessTextBrush), current } }, 0, 2);
 
         var choices = new ItemsControl
         {
             ItemsPanel = new FuncTemplate<Panel?>(() => new WrapPanel { ItemSpacing = 6, LineSpacing = 4 }),
             ItemTemplate = new FuncDataTemplate<AutoTranslateViewModel.DictionaryChoice>((choice, _) =>
             {
+                var content = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6 };
+                if (choice?.IsCurrent == true)
+                {
+                    content.Children.Add(MakeIcon("fa-solid fa-check", EditorChrome.AccentBrush, 10.5));
+                }
+
+                content.Children.Add(new TextBlock { Text = choice?.Text ?? string.Empty, VerticalAlignment = VerticalAlignment.Center });
                 var button = new Button
                 {
-                    Content = choice == null ? string.Empty : (choice.IsCurrent ? "✓ " : string.Empty) + choice.Text,
+                    Content = content,
                     Command = vm.UseDictionaryTextCommand,
                     CommandParameter = choice?.Text,
-                    CornerRadius = new CornerRadius(12),
-                    Padding = new Thickness(12, 3),
+                    CornerRadius = new CornerRadius(13),
+                    Padding = new Thickness(12, 4),
                 };
+                AutomationProperties.SetName(button, choice?.Text);
                 if (choice?.IsCurrent == true)
                 {
                     button.Background = EditorChrome.AccentSoftBrush;
                     button.Foreground = EditorChrome.AccentBrush;
+                    button.BorderBrush = EditorChrome.AccentBrush;
                     button.FontWeight = FontWeight.SemiBold;
                 }
 
@@ -544,8 +648,8 @@ public class AutoTranslateWindow : Window
         {
             Orientation = Orientation.Horizontal,
             Spacing = 10,
-            Margin = new Thickness(0, 10, 0, 0),
-            Children = { Label(language.PostProcessAlternatives), choices },
+            Margin = new Thickness(0, 12, 0, 0),
+            Children = { Heading("fa-solid fa-list-check", language.PostProcessAlternatives, EditorChrome.DimTextBrush), choices },
         };
         alternatives.Children[0].VerticalAlignment = VerticalAlignment.Center;
         alternatives.Bind(IsVisibleProperty, new Binding(nameof(vm.SelectedDictionaryMatchHasAlternatives)));
@@ -553,11 +657,12 @@ public class AutoTranslateWindow : Window
         var card = new Border
         {
             Margin = new Thickness(14, 0, 14, 8),
-            Padding = new Thickness(14, 12),
-            CornerRadius = new CornerRadius(8),
+            Padding = new Thickness(16, 14),
+            CornerRadius = new CornerRadius(10),
             Background = EditorChrome.PanelBrush,
             BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(1),
+            BoxShadow = BoxShadows.Parse("0 2 10 0 #22000000"),
             Child = new StackPanel { Children = { header, texts, alternatives } },
         };
         card.Bind(IsVisibleProperty, new Binding(nameof(vm.HasSelectedDictionaryMatch)));
@@ -721,26 +826,39 @@ public class AutoTranslateWindow : Window
         var text = (TextBlock)TableViewExtras.MakeTextCellTemplate(nameof(TranslateRow.TranslatedText)).Build(row)!;
         text.FontWeight = FontWeight.Medium;
 
-        // A line the dictionary changed shows the engine's text struck through under the fix.
+        // A line the dictionary changed shows the engine's text struck through under the fix,
+        // after a wand icon, or a warning icon while the applied suggestion is still to check.
         var original = new TextBlock
         {
             FontSize = EditorChrome.ScaledFont(11.5),
             Foreground = EditorChrome.FaintTextBrush,
             TextDecorations = TextDecorations.Strikethrough,
             TextTrimming = TextTrimming.CharacterEllipsis,
+            VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(TranslateRow.PostProcessOriginal)),
+        };
+        var fixIcon = MakeIcon("fa-solid fa-wand-magic-sparkles", EditorChrome.SuccessTextBrush, 9.5);
+        fixIcon.Bind(IsVisibleProperty, new Binding("!" + nameof(TranslateRow.PostProcessNeedsCheck)));
+        var checkIcon = MakeIcon("fa-solid fa-triangle-exclamation", EditorChrome.WarningTextBrush, 9.5);
+        checkIcon.Bind(IsVisibleProperty, new Binding(nameof(TranslateRow.PostProcessNeedsCheck)));
+        var marker = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            Margin = new Thickness(0, 1, 0, 0),
+            Children = { fixIcon, checkIcon, original },
             [!IsVisibleProperty] = new Binding(nameof(TranslateRow.PostProcessOriginal)) { Converter = StringConverters.IsNotNullOrEmpty },
         };
-        ToolTip.SetTip(original, string.Format(Se.Language.Translate.PostProcessEngineTranslationX, row.PostProcessOriginal));
+        ToolTip.SetTip(marker, string.Format(Se.Language.Translate.PostProcessEngineTranslationX, row.PostProcessOriginal));
         original.PropertyChanged += (_, e) =>
         {
             if (e.Property == TextBlock.TextProperty)
             {
-                ToolTip.SetTip(original, string.Format(Se.Language.Translate.PostProcessEngineTranslationX, original.Text));
+                ToolTip.SetTip(marker, string.Format(Se.Language.Translate.PostProcessEngineTranslationX, original.Text));
             }
         };
 
-        return new StackPanel { VerticalAlignment = VerticalAlignment.Center, Children = { text, original } };
+        return new StackPanel { VerticalAlignment = VerticalAlignment.Center, Children = { text, marker } };
     }
 
     /// <summary>

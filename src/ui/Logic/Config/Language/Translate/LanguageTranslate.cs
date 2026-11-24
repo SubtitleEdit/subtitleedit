@@ -68,6 +68,9 @@ public class LanguageTranslate
     public string PostProcessRevert { get; set; }
     public string PostProcessNextMatch { get; set; }
     public string PostProcessEditDictionary { get; set; }
+    public string PostProcessFixedX { get; set; }
+    public string PostProcessToCheckX { get; set; }
+    public string PostProcessAccept { get; set; }
     public string PostProcessAlternatives { get; set; }
     public string PostProcessFixBadge { get; set; }
     public string PostProcessCheckBadge { get; set; }
@@ -144,6 +147,9 @@ public class LanguageTranslate
         PostProcessRevert = "Revert to engine translation";
         PostProcessNextMatch = "Next dictionary match";
         PostProcessEditDictionary = "Edit dictionary...";
+        PostProcessFixedX = "{0} fixed";
+        PostProcessToCheckX = "{0} to check";
+        PostProcessAccept = "Looks good";
         PostProcessAlternatives = "Alternatives";
         PostProcessFixBadge = "Dictionary fix";
         PostProcessCheckBadge = "Check in context";

@@ -29,14 +29,7 @@ public sealed class TranslationDictionaryWindow : Window
         var target = MakeLanguageSelector(vm, nameof(vm.TargetLanguage), language.TranslationTargetLanguage);
         var rules = new ListBox
         {
-            ItemTemplate = new FuncDataTemplate<TranslationPostProcessDictionary.Entry>((entry, _) => new StackPanel
-            {
-                Children =
-                {
-                    new TextBlock { Text = entry == null ? string.Empty : $"{entry.SourceLanguage} · {entry.Source}", TextTrimming = TextTrimming.CharacterEllipsis },
-                    EditorChrome.MakeDimLabel(entry?.Draft ?? string.Empty, new Thickness(0)),
-                },
-            }),
+            ItemTemplate = new FuncDataTemplate<TranslationPostProcessDictionary.Entry>((entry, _) => MakeRuleItem(entry)),
         };
         AutomationProperties.SetName(rules, language.TranslationRules);
         rules.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(vm.Entries)));
@@ -59,9 +52,9 @@ public sealed class TranslationDictionaryWindow : Window
                     ItemSpacing = 6,
                     Children =
                     {
-                        UiUtil.MakeButton(language.NewRule, vm.NewRuleCommand),
-                        UiUtil.MakeButton(language.SaveTranslationRule, vm.SaveRuleCommand),
-                        UiUtil.MakeButton(language.DeleteRule, vm.RemoveRuleCommand),
+                        EditorChrome.MakeTextToolButton("fa-solid fa-plus", language.NewRule, vm.NewRuleCommand),
+                        EditorChrome.MakeTextToolButton("fa-solid fa-floppy-disk", language.SaveTranslationRule, vm.SaveRuleCommand),
+                        EditorChrome.MakeTextToolButton("fa-solid fa-trash-can", language.DeleteRule, vm.RemoveRuleCommand),
                     },
                 },
             },
@@ -83,6 +76,78 @@ public sealed class TranslationDictionaryWindow : Window
         status.TextWrapping = TextWrapping.Wrap;
         Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(status, UiUtil.MakeButton(Se.Language.General.Close, vm.CloseCommand)));
         UiUtil.FocusOnFirstActivation(this, target);
+    }
+
+    /// <summary>
+    /// A rule in the list: a fix or check icon, the source language tag and cue, then the engine
+    /// text struck through and what the rule turns it into.
+    /// </summary>
+    private static Control MakeRuleItem(TranslationPostProcessDictionary.Entry? entry)
+    {
+        if (entry == null)
+        {
+            return new Border();
+        }
+
+        var isFix = entry.Rule.Replacement != null;
+        var output = entry.Rule.Replacement ?? string.Join("  |  ", entry.Rule.Suggestions);
+        var tag = new Border
+        {
+            BorderBrush = EditorChrome.DimTextBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(4),
+            Padding = new Thickness(4, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+            Child = new TextBlock
+            {
+                Text = entry.SourceLanguage.ToUpperInvariant(),
+                FontSize = EditorChrome.ScaledFont(10),
+                FontWeight = FontWeight.SemiBold,
+                Foreground = EditorChrome.DimTextBrush,
+            },
+        };
+        var first = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 7,
+            Children =
+            {
+                new Optris.Icons.Avalonia.Icon
+                {
+                    Value = isFix ? "fa-solid fa-wand-magic-sparkles" : "fa-solid fa-triangle-exclamation",
+                    FontSize = 11,
+                    Foreground = isFix ? EditorChrome.SuccessTextBrush : EditorChrome.WarningTextBrush,
+                    VerticalAlignment = VerticalAlignment.Center,
+                },
+                tag,
+                new TextBlock { Text = entry.Source, FontWeight = FontWeight.Medium, TextTrimming = TextTrimming.CharacterEllipsis, VerticalAlignment = VerticalAlignment.Center },
+            },
+        };
+        var second = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 6,
+            Margin = new Thickness(18, 2, 0, 0),
+            Children =
+            {
+                new TextBlock
+                {
+                    Text = entry.Draft,
+                    Foreground = EditorChrome.FaintTextBrush,
+                    TextDecorations = TextDecorations.Strikethrough,
+                    FontSize = EditorChrome.ScaledFont(11.5),
+                },
+                new Optris.Icons.Avalonia.Icon { Value = "fa-solid fa-arrow-right", FontSize = 9, Foreground = EditorChrome.AccentBrush, VerticalAlignment = VerticalAlignment.Center },
+                new TextBlock
+                {
+                    Text = output,
+                    Foreground = isFix ? EditorChrome.SuccessTextBrush : EditorChrome.WarningTextBrush,
+                    FontSize = EditorChrome.ScaledFont(11.5),
+                    TextTrimming = TextTrimming.CharacterEllipsis,
+                },
+            },
+        };
+        return new StackPanel { Margin = new Thickness(0, 3), Children = { first, second } };
     }
 
     private static ComboBox MakeLanguageSelector(TranslationDictionaryViewModel vm, string property, string label)

@@ -57,6 +57,15 @@ public partial class AutoTranslateViewModel
         }
     }
 
+    public int DictionaryFixedCount => _dictionaryMatches.Count(pair => pair.Key.TranslatedText != pair.Value.OriginalText);
+    public int DictionaryToCheckCount => _dictionaryMatches.Count(pair => !pair.Value.Checked);
+    public string DictionaryFixedText => string.Format(Se.Language.Translate.PostProcessFixedX, DictionaryFixedCount);
+    public string DictionaryToCheckText => string.Format(Se.Language.Translate.PostProcessToCheckX, DictionaryToCheckCount);
+    public bool HasDictionaryToCheck => DictionaryToCheckCount > 0;
+
+    /// <summary>The "no dictionary" note, shown instead of the counts when nothing matched.</summary>
+    public bool ShowNoDictionaryNote => UsePostProcessDictionary && _dictionaryMatches.Count == 0 && !HasDictionaryForSelectedLanguages();
+
     public string PostProcessSummary
     {
         get
@@ -109,12 +118,12 @@ public partial class AutoTranslateViewModel
     {
         Se.Settings.AutoTranslate.UsePostProcessDictionary = value;
         OnPropertyChanged(nameof(ShowPostProcessSummary));
-        OnPropertyChanged(nameof(PostProcessSummary));
+        RefreshDictionaryCounts();
     }
 
     partial void OnSelectedTranslateRowChanged(TranslateRow? value) => RefreshDictionarySelection();
 
-    partial void OnSelectedSourceLanguageChanged(TranslationPair? value) => OnPropertyChanged(nameof(PostProcessSummary));
+    partial void OnSelectedSourceLanguageChanged(TranslationPair? value) => RefreshDictionaryCounts();
 
     [RelayCommand]
     private void RevertDictionaryText()
@@ -136,7 +145,8 @@ public partial class AutoTranslateViewModel
         // Picking the text the line already holds still confirms it.
         MarkDictionaryMatchChecked(row);
         SelectedDictionaryText = text;
-        OnPropertyChanged(nameof(PostProcessSummary));
+        SyncDictionaryMarker(row);
+        RefreshDictionaryCounts();
         RefreshDictionarySelection();
     }
 
@@ -155,7 +165,29 @@ public partial class AutoTranslateViewModel
 
         // The rules may have changed: the next run reads them again, and the summary asks again.
         _dictionaryAvailability = null;
+        RefreshDictionaryCounts();
+    }
+
+    /// <summary>Keeps the applied text and marks the line as checked.</summary>
+    [RelayCommand]
+    private void AcceptDictionaryText()
+    {
+        if (SelectedTranslateRow is { } row && _dictionaryMatches.ContainsKey(row))
+        {
+            MarkDictionaryMatchChecked(row);
+            SyncDictionaryMarker(row);
+            RefreshDictionaryCounts();
+            RefreshDictionarySelection();
+        }
+    }
+
+    private void RefreshDictionaryCounts()
+    {
         OnPropertyChanged(nameof(PostProcessSummary));
+        OnPropertyChanged(nameof(DictionaryFixedText));
+        OnPropertyChanged(nameof(DictionaryToCheckText));
+        OnPropertyChanged(nameof(HasDictionaryToCheck));
+        OnPropertyChanged(nameof(ShowNoDictionaryNote));
     }
 
     private void MarkDictionaryMatchChecked(TranslateRow row)
@@ -169,9 +201,9 @@ public partial class AutoTranslateViewModel
     /// <summary>Shows the engine's text in the grid under a line the dictionary changed.</summary>
     internal void SyncDictionaryMarker(TranslateRow row)
     {
-        row.PostProcessOriginal = _dictionaryMatches.TryGetValue(row, out var match) && match.OriginalText != row.TranslatedText
-            ? match.OriginalText
-            : null;
+        var found = _dictionaryMatches.TryGetValue(row, out var match);
+        row.PostProcessOriginal = found && match!.OriginalText != row.TranslatedText ? match.OriginalText : null;
+        row.PostProcessNeedsCheck = found && !match!.Checked;
     }
 
     [RelayCommand]
@@ -222,7 +254,7 @@ public partial class AutoTranslateViewModel
 
         OnPropertyChanged(nameof(ShowPostProcessSummary));
         OnPropertyChanged(nameof(HasDictionaryMatches));
-        OnPropertyChanged(nameof(PostProcessSummary));
+        RefreshDictionaryCounts();
         RefreshDictionarySelection();
     }
 

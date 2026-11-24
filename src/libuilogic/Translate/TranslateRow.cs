@@ -17,6 +17,9 @@ public partial class TranslateRow : ObservableObject
     /// </summary>
     [ObservableProperty] private string? _postProcessOriginal;
 
+    /// <summary>True while the dictionary applied a context-dependent suggestion the user has not checked.</summary>
+    [ObservableProperty] private bool _postProcessNeedsCheck;
+
     public double DurationTotalMilliseconds => (Hide - Show).TotalMilliseconds;
 
     public TranslateRow()

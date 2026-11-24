@@ -31,7 +31,7 @@ The shortcut **Auto-translate selected lines (no prompt, use last engine/languag
 
 Turn on **Post-processing dictionary** to check short cues after each translation run. The dictionary matches the source cue and the engine's full draft. A fix is applied straight away. For a cue whose wording depends on the scene, the first suggestion is applied and the line is marked to check.
 
-A changed line shows the engine's text struck through under the fix in the grid. The toolbar counts how many lines were fixed and how many are still to check. Click **Next dictionary match** to go through them: a card under the grid shows the engine translation next to the fixed translation, which you can edit. Pick one of the **Alternatives**, or use **Revert to engine translation**. Turning the switch off affects future translations.
+A changed line shows the engine's text struck through under the fix in the grid. The toolbar counts how many lines were fixed and how many are still to check. Click **Next dictionary match** to go through them: a card under the grid shows the engine translation next to the fixed translation, which you can edit. Pick one of the **Alternatives**, click **Looks good** to keep the applied suggestion, or use **Revert to engine translation**. Turning the switch off affects future translations.
 
 Click **Edit dictionary...** to change the rules for the selected languages. Select a rule to edit or remove, or start a new rule. Enter the exact source cue and engine translation. Use **Suggest for review** for wording that depends on the scene; the first suggestion is the one applied. Saving or deleting a rule updates your personal copy for that target language, and the next run uses it.
 

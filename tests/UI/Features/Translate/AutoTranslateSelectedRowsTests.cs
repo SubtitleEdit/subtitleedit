@@ -80,6 +80,9 @@ public class AutoTranslateSelectedRowsTests
             Assert.Equal("Det er ikke noget stort.", vm.Rows[0].PostProcessOriginal);
             Assert.Null(vm.Rows[1].PostProcessOriginal);
             Assert.Equal("Du har det.", vm.Rows[2].PostProcessOriginal);
+            Assert.True(vm.Rows[2].PostProcessNeedsCheck);
+            Assert.False(vm.Rows[0].PostProcessNeedsCheck);
+            Assert.Equal(string.Format(language.PostProcessToCheckX, 1), vm.DictionaryToCheckText);
 
             vm.SelectedTranslateRow = vm.Rows[0];
             window.UpdateLayout();
@@ -105,6 +108,8 @@ public class AutoTranslateSelectedRowsTests
             Assert.Equal("Lige præcis.", vm.Rows[2].TranslatedText);
             Assert.False(vm.SelectedDictionaryMatchNeedsCheck);
             Assert.Equal(string.Format(language.PostProcessSummary, 1, 0), vm.PostProcessSummary);
+            Assert.False(vm.Rows[2].PostProcessNeedsCheck);
+            Assert.False(vm.HasDictionaryToCheck);
 
             toggle.SetCurrentValue(ToggleSwitch.IsCheckedProperty, false);
             Select(vm, grid, 2);

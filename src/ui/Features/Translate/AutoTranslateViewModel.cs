@@ -772,7 +772,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             // An edit by the user counts as having checked the dictionary's choice.
             MarkDictionaryMatchChecked(row);
             SyncDictionaryMarker(row);
-            OnPropertyChanged(nameof(PostProcessSummary));
+            RefreshDictionaryCounts();
             if (ReferenceEquals(row, SelectedTranslateRow))
             {
                 RefreshDictionarySelection();
@@ -2193,7 +2193,7 @@ public partial class AutoTranslateViewModel : ObservableObject
     partial void OnSelectedTargetLanguageChanged(TranslationPair? value)
     {
         UpdateFormalityVisibility();
-        OnPropertyChanged(nameof(PostProcessSummary));
+        RefreshDictionaryCounts();
     }
 
     partial void OnSelectedFormalityChanged(DeepLFormalityItem? value)
