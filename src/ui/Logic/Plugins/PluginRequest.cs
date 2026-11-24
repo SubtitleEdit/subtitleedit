@@ -37,6 +37,16 @@ public class PluginRequest
     public PluginSubtitle Subtitle { get; set; } = new();
 
     /// <summary>
+    /// The original (source-language) subtitle when one is open next to a translation, in its
+    /// own format. In the ordinary translation view paragraph N is the original of
+    /// <see cref="Subtitle"/> paragraph N; with the original's non-matching lines shown, the
+    /// counts can differ, so match by time code instead. Null when no
+    /// original is loaded, and always null from Batch convert. Read-only: it is not read back
+    /// from the response.
+    /// </summary>
+    public PluginSubtitle? OriginalSubtitle { get; set; }
+
+    /// <summary>
     /// Display name of the encoding the subtitle file was loaded with, e.g. "UTF-8 with BOM".
     /// Empty when unknown. Lets a plugin preserve the original encoding when relevant.
     /// </summary>
