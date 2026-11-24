@@ -48,6 +48,12 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     private string? _pendingLoadFileName;
     private double _pendingLoadStartPositionSeconds;
 
+    /// <summary>
+    /// Whether the core is up (mpv_initialize and the render context done). It only comes up
+    /// with the first render pass of the control that hosts this player.
+    /// </summary>
+    public bool IsCoreInitialized => _coreInitialized;
+
     // Observed-property caches, kept current by the mpv event thread (see StartEventLoop).
     // While _eventLoopActive the pause/speed/duration/eof getters read these instead of
     // doing a synchronous P/Invoke into the core per call. Doubles go through Interlocked

@@ -270,6 +270,10 @@ namespace Nikse.SubtitleEdit
                     .AfterSetup(b => ConfigureApplication(b, lifetime))
                     .SetupWithLifetime(lifetime);
 
+                // Avalonia's OpenGL errors went nowhere - a player that never got a picture left
+                // no trace of why in the error log.
+                AvaloniaOpenGlLogSink.Install();
+
                 // Configure dependency injection
                 SetupDependencyInjection();
 
