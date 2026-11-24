@@ -1,0 +1,23 @@
+{
+  "target_language": "lt",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "Labai ačiū."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "Iki rytojaus."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "Labanakt."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "Su gimtadieniu!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "Iki greito."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "Ačiū."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Kas tu?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "Nežinau."},
+      {"source": "Thank you very much.", "draft": "Labai ačiū", "replacement": "Labai ačiū."},
+      {"source": "See you tomorrow.", "draft": "Iki rytojaus", "replacement": "Iki rytojaus."},
+      {"source": "Good night.", "draft": "Labanakt", "replacement": "Labanakt."},
+      {"source": "Happy birthday!", "draft": "Su gimtadieniu", "replacement": "Su gimtadieniu!"},
+      {"source": "See you soon.", "draft": "Iki greito", "replacement": "Iki greito."},
+      {"source": "Thank you.", "draft": "Ačiū", "replacement": "Ačiū."},
+      {"source": "Who are you?", "draft": "Kas tu", "replacement": "Kas tu?"},
+      {"source": "I don't know.", "draft": "Nežinau", "replacement": "Nežinau."}
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "target_language": "pl",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "Dziękuję bardzo."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "Do jutra."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "Dobranoc."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "Wszystkiego najlepszego z okazji urodzin!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "Do zobaczenia wkrótce."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "Dziękuję."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Kim jesteś?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "Nie wiem."},
+      {"source": "Thank you very much.", "draft": "Dziękuję bardzo", "replacement": "Dziękuję bardzo."},
+      {"source": "See you tomorrow.", "draft": "Do jutra", "replacement": "Do jutra."},
+      {"source": "Good night.", "draft": "Dobranoc", "replacement": "Dobranoc."},
+      {"source": "Happy birthday!", "draft": "Wszystkiego najlepszego z okazji urodzin", "replacement": "Wszystkiego najlepszego z okazji urodzin!"},
+      {"source": "See you soon.", "draft": "Do zobaczenia wkrótce", "replacement": "Do zobaczenia wkrótce."},
+      {"source": "Thank you.", "draft": "Dziękuję", "replacement": "Dziękuję."},
+      {"source": "Who are you?", "draft": "Kim jesteś", "replacement": "Kim jesteś?"},
+      {"source": "I don't know.", "draft": "Nie wiem", "replacement": "Nie wiem."}
+    ]
+  }
+}

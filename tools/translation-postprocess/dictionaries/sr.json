@@ -1,0 +1,23 @@
+{
+  "target_language": "sr",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "Хвала вам пуно."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "Видимо се сутра."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "Лаку ноћ."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "Срећан рођендан!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "Видимо се ускоро."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "Хвала."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Ко си ти?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "Не знам."},
+      {"source": "Thank you very much.", "draft": "Хвала вам пуно", "replacement": "Хвала вам пуно."},
+      {"source": "See you tomorrow.", "draft": "Видимо се сутра", "replacement": "Видимо се сутра."},
+      {"source": "Good night.", "draft": "Лаку ноћ", "replacement": "Лаку ноћ."},
+      {"source": "Happy birthday!", "draft": "Срећан рођендан", "replacement": "Срећан рођендан!"},
+      {"source": "See you soon.", "draft": "Видимо се ускоро", "replacement": "Видимо се ускоро."},
+      {"source": "Thank you.", "draft": "Хвала", "replacement": "Хвала."},
+      {"source": "Who are you?", "draft": "Ко си ти", "replacement": "Ко си ти?"},
+      {"source": "I don't know.", "draft": "Не знам", "replacement": "Не знам."}
+    ]
+  }
+}

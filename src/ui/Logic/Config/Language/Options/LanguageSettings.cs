@@ -97,6 +97,7 @@ public class LanguageSettings
     public string AutoBreakPreferBottomHeavy { get; set; }
     public string AutoBreakPreferBottomPercent { get; set; }
     public string UseDoNotBreakAfterList { get; set; }
+    public string UseTranslationPostProcessDictionary { get; set; }
     public string DoNotBreakAfterListRegionHint { get; set; }
     public string NewEmptyDefaultMs { get; set; }
     public string TimeCodeUpDownStepMs { get; set; }
@@ -500,6 +501,7 @@ public class LanguageSettings
         AutoBreakPreferBottomHeavy = "Auto-break prefer bottom heavy";
         AutoBreakPreferBottomPercent = "Auto-break bottom heavy percentage";
         UseDoNotBreakAfterList = "Use do-not-break-after list";
+        UseTranslationPostProcessDictionary = "Auto-translate: show post-processing dictionary";
         DoNotBreakAfterListRegionHint = "Each list is used for all regions of its language, for example the Portuguese list for both Portugal (pt-PT) and Brazil (pt-BR).";
         NewEmptyDefaultMs = "Default new subtitle duration (ms)";
         TimeCodeUpDownStepMs = "Time up/down increment (ms)";

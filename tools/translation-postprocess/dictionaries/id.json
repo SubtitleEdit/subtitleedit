@@ -1,0 +1,23 @@
+{
+  "target_language": "id",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "Terima kasih banyak."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "Sampai besok."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "Selamat tidur."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "Selamat ulang tahun!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "Sampai jumpa lagi."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "Terima kasih."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Siapa kamu?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "Saya tidak tahu."},
+      {"source": "Thank you very much.", "draft": "Terima kasih banyak", "replacement": "Terima kasih banyak."},
+      {"source": "See you tomorrow.", "draft": "Sampai besok", "replacement": "Sampai besok."},
+      {"source": "Good night.", "draft": "Selamat tidur", "replacement": "Selamat tidur."},
+      {"source": "Happy birthday!", "draft": "Selamat ulang tahun", "replacement": "Selamat ulang tahun!"},
+      {"source": "See you soon.", "draft": "Sampai jumpa lagi", "replacement": "Sampai jumpa lagi."},
+      {"source": "Thank you.", "draft": "Terima kasih", "replacement": "Terima kasih."},
+      {"source": "Who are you?", "draft": "Siapa kamu", "replacement": "Siapa kamu?"},
+      {"source": "I don't know.", "draft": "Saya tidak tahu", "replacement": "Saya tidak tahu."}
+    ]
+  }
+}

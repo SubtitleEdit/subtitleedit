@@ -1,0 +1,23 @@
+{
+  "target_language": "fi",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "Kiitos paljon."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "Nähdään huomenna."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "Hyvää yötä."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "Hyvää syntymäpäivää!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "Nähdään pian."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "Kiitos."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Kuka olet?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "En tiedä."},
+      {"source": "Thank you very much.", "draft": "Kiitos paljon", "replacement": "Kiitos paljon."},
+      {"source": "See you tomorrow.", "draft": "Nähdään huomenna", "replacement": "Nähdään huomenna."},
+      {"source": "Good night.", "draft": "Hyvää yötä", "replacement": "Hyvää yötä."},
+      {"source": "Happy birthday!", "draft": "Hyvää syntymäpäivää", "replacement": "Hyvää syntymäpäivää!"},
+      {"source": "See you soon.", "draft": "Nähdään pian", "replacement": "Nähdään pian."},
+      {"source": "Thank you.", "draft": "Kiitos", "replacement": "Kiitos."},
+      {"source": "Who are you?", "draft": "Kuka olet", "replacement": "Kuka olet?"},
+      {"source": "I don't know.", "draft": "En tiedä", "replacement": "En tiedä."}
+    ]
+  }
+}

@@ -27,6 +27,16 @@ The shortcut **Auto-translate selected lines (no prompt, use last engine/languag
 
 **Find...** and **Replace...** (right-click a line in the grid, Ctrl+F / Ctrl+H, Cmd+F / Cmd+Option+F on macOS) open the same Find and Replace windows as the main window, so a recurring error in the translation can be fixed before you click **OK**. F3 and Shift+F3 repeat the last search. Only the translation column is searched, and text can't be replaced while a translation is running.
 
+### Post-processing dictionary
+
+Turn on **Post-processing dictionary** to check short cues after each translation run. The dictionary matches the source cue and the engine's full draft. A fix is applied straight away. For a cue whose wording depends on the scene, the first suggestion is applied and the line is marked to check.
+
+A changed line shows the engine's text struck through under the fix in the grid. The toolbar counts how many lines were fixed and how many are still to check. Click **Next dictionary match** to go through them: a card under the grid shows the engine translation next to the fixed translation, which you can edit. Pick one of the **Alternatives**, click **Looks good** to keep the applied suggestion, or use **Revert to engine translation**. The switch works live: switching it on fixes the lines already translated, and switching it off puts the engine translation back on every fixed line. A line you edited yourself keeps your edit. To hide the dictionary from the Auto Translate window, turn off **Auto-translate: show post-processing dictionary** in **Options → Settings → Tools**. While it is hidden, no fixes are applied. The setting also has an **Edit dictionary...** button.
+
+Click **Edit dictionary...** to change the rules for the selected languages. Select a rule to edit or remove, or start a new rule. Enter the exact source cue and engine translation. Use **Suggest for review** for wording that depends on the scene; the first suggestion is the one applied. Saving or deleting a rule updates your personal copy for that target language, and the next run uses it.
+
+The dictionary is used only in the Auto Translate window. Batch Convert does not apply it.
+
 ## Supported Engines
 
 - **Google Translate V1 API** — Free Google Translate. When Google answers with its "unusual traffic" block page, Subtitle Edit retries the request through a fallback endpoint (`clients5.google.com`) before giving up; a block is on Google's side and is usually lifted again after minutes to a few hours

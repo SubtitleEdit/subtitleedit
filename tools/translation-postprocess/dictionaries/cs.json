@@ -1,0 +1,23 @@
+{
+  "target_language": "cs",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "Moc děkuju."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "Uvidíme se zítra."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "Dobrou noc."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "Všechno nejlepší k narozeninám!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "Brzy se uvidíme."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "Děkuju."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Kdo jsi?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "Nevím."},
+      {"source": "Thank you very much.", "draft": "Moc děkuju", "replacement": "Moc děkuju."},
+      {"source": "See you tomorrow.", "draft": "Uvidíme se zítra", "replacement": "Uvidíme se zítra."},
+      {"source": "Good night.", "draft": "Dobrou noc", "replacement": "Dobrou noc."},
+      {"source": "Happy birthday!", "draft": "Všechno nejlepší k narozeninám", "replacement": "Všechno nejlepší k narozeninám!"},
+      {"source": "See you soon.", "draft": "Brzy se uvidíme", "replacement": "Brzy se uvidíme."},
+      {"source": "Thank you.", "draft": "Děkuju", "replacement": "Děkuju."},
+      {"source": "Who are you?", "draft": "Kdo jsi", "replacement": "Kdo jsi?"},
+      {"source": "I don't know.", "draft": "Nevím", "replacement": "Nevím."}
+    ]
+  }
+}

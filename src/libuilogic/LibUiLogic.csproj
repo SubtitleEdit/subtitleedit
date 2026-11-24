@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\libse\LibSE.csproj" />
+    <EmbeddedResource Include="../../tools/translation-postprocess/dictionaries/*.json" LogicalName="TranslationPostProcess/%(Filename)%(Extension)" />
   </ItemGroup>
 
 </Project>

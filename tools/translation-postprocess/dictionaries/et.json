@@ -1,0 +1,23 @@
+{
+  "target_language": "et",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "Suur aitäh."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "Homseni."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "Head ööd."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "Palju õnne sünnipäevaks!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "Näeme varsti."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "Aitäh."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Kes sa oled?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "Ma ei tea."},
+      {"source": "Thank you very much.", "draft": "Suur aitäh", "replacement": "Suur aitäh."},
+      {"source": "See you tomorrow.", "draft": "Homseni", "replacement": "Homseni."},
+      {"source": "Good night.", "draft": "Head ööd", "replacement": "Head ööd."},
+      {"source": "Happy birthday!", "draft": "Palju õnne sünnipäevaks", "replacement": "Palju õnne sünnipäevaks!"},
+      {"source": "See you soon.", "draft": "Näeme varsti", "replacement": "Näeme varsti."},
+      {"source": "Thank you.", "draft": "Aitäh", "replacement": "Aitäh."},
+      {"source": "Who are you?", "draft": "Kes sa oled", "replacement": "Kes sa oled?"},
+      {"source": "I don't know.", "draft": "Ma ei tea", "replacement": "Ma ei tea."}
+    ]
+  }
+}

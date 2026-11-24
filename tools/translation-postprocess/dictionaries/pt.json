@@ -1,0 +1,39 @@
+{
+  "target_language": "pt",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "suggestions": ["Muito obrigado.", "Muito obrigada."], "note": "Obrigado for a male speaker, obrigada for a female speaker."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "Até amanhã."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "Boa noite."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "Feliz aniversário!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "Até breve."},
+      {"source": "Thank you.", "draft": "Thank you.", "suggestions": ["Obrigado.", "Obrigada."], "note": "Obrigado for a male speaker, obrigada for a female speaker."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Quem é você?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "Não sei."},
+      {"source": "Thank you very much.", "draft": "Muito obrigado", "replacement": "Muito obrigado."},
+      {"source": "Thank you very much.", "draft": "Muito obrigada", "replacement": "Muito obrigada."},
+      {"source": "See you tomorrow.", "draft": "Até amanhã", "replacement": "Até amanhã."},
+      {"source": "Good night.", "draft": "Boa noite", "replacement": "Boa noite."},
+      {"source": "Happy birthday!", "draft": "Feliz aniversário", "replacement": "Feliz aniversário!"},
+      {"source": "See you soon.", "draft": "Até breve", "replacement": "Até breve."},
+      {"source": "Thank you.", "draft": "Obrigado", "replacement": "Obrigado."},
+      {"source": "Thank you.", "draft": "Obrigada", "replacement": "Obrigada."},
+      {"source": "Who are you?", "draft": "Quem é você", "replacement": "Quem é você?"},
+      {"source": "I don't know.", "draft": "Não sei", "replacement": "Não sei."},
+      {"source": "Get lost!", "draft": "Perde-se!", "replacement": "Some daqui!"},
+      {"source": "Big deal.", "draft": "Grande negócio.", "suggestions": ["E daí?", "Grande coisa."], "note": "Usually sarcastic (so what?); keep the literal meaning if something really is important."},
+      {"source": "Speak of the devil.", "draft": "Falando de você.", "replacement": "Falando no diabo..."},
+      {"source": "Bring it on.", "draft": "Traga-o.", "replacement": "Pode vir!"},
+      {"source": "You wish.", "draft": "Você quer.", "replacement": "Até parece."},
+      {"source": "Rise and shine.", "draft": "Levante-se e brilhe.", "replacement": "Hora de acordar!"},
+      {"source": "Keep the change.", "draft": "Mantenha a mudança.", "replacement": "Fique com o troco."},
+      {"source": "You're telling me.", "draft": "Você está me dizendo.", "replacement": "Nem me fale."},
+      {"source": "Tell me about it.", "draft": "Me conte sobre isso.", "suggestions": ["Nem me fale.", "Me conte sobre isso."], "note": "Usually sarcastic agreement; keep the literal request if the speaker wants to hear more."},
+      {"source": "Says who?", "draft": "Diz quem?", "replacement": "Quem disse?"},
+      {"source": "Watch it.", "draft": "Assista.", "suggestions": ["Cuidado.", "Assista."], "note": "First: a warning. Second: watching a film or show."},
+      {"source": "Help yourself.", "draft": "Ajude-se.", "suggestions": ["Sirva-se.", "Fique à vontade."], "note": "Check the scene: the literal meaning may also fit."},
+      {"source": "Drop it.", "draft": "Deixe-o.", "suggestions": ["Esquece isso.", "Solta isso."], "note": "First: stop talking about it. Second: let go of an object."},
+      {"source": "Cheer up.", "draft": "Fique bem.", "replacement": "Anime-se."}
+    ]
+  }
+}

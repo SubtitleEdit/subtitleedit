@@ -1,0 +1,25 @@
+{
+  "target_language": "pt-PT",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "suggestions": ["Muito obrigado.", "Muito obrigada."], "note": "Obrigado for a male speaker, obrigada for a female speaker."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "Até amanhã."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "Boa noite."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "Feliz aniversário!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "Até breve."},
+      {"source": "Thank you.", "draft": "Thank you.", "suggestions": ["Obrigado.", "Obrigada."], "note": "Obrigado for a male speaker, obrigada for a female speaker."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Quem és tu?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "Não sei."},
+      {"source": "Thank you very much.", "draft": "Muito obrigado", "replacement": "Muito obrigado."},
+      {"source": "Thank you very much.", "draft": "Muito obrigada", "replacement": "Muito obrigada."},
+      {"source": "See you tomorrow.", "draft": "Até amanhã", "replacement": "Até amanhã."},
+      {"source": "Good night.", "draft": "Boa noite", "replacement": "Boa noite."},
+      {"source": "Happy birthday!", "draft": "Feliz aniversário", "replacement": "Feliz aniversário!"},
+      {"source": "See you soon.", "draft": "Até breve", "replacement": "Até breve."},
+      {"source": "Thank you.", "draft": "Obrigado", "replacement": "Obrigado."},
+      {"source": "Thank you.", "draft": "Obrigada", "replacement": "Obrigada."},
+      {"source": "Who are you?", "draft": "Quem és tu", "replacement": "Quem és tu?"},
+      {"source": "I don't know.", "draft": "Não sei", "replacement": "Não sei."}
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "target_language": "bg",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "Много благодаря."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "До утре."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "Лека нощ."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "Честит рожден ден!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "До скоро."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "Благодаря."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Кой си ти?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "Не знам."},
+      {"source": "Thank you very much.", "draft": "Много благодаря", "replacement": "Много благодаря."},
+      {"source": "See you tomorrow.", "draft": "До утре", "replacement": "До утре."},
+      {"source": "Good night.", "draft": "Лека нощ", "replacement": "Лека нощ."},
+      {"source": "Happy birthday!", "draft": "Честит рожден ден", "replacement": "Честит рожден ден!"},
+      {"source": "See you soon.", "draft": "До скоро", "replacement": "До скоро."},
+      {"source": "Thank you.", "draft": "Благодаря", "replacement": "Благодаря."},
+      {"source": "Who are you?", "draft": "Кой си ти", "replacement": "Кой си ти?"},
+      {"source": "I don't know.", "draft": "Не знам", "replacement": "Не знам."}
+    ]
+  }
+}
