@@ -64,8 +64,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
             }
 
-            LoadSubtitle(subtitle, lines, fileName);
-            var detected = subtitle.Paragraphs.Count > _errorCount;
+            var foundMalformedCue = LoadSubtitleCore(subtitle, lines, fileName);
+            var detected = subtitle.Paragraphs.Count > _errorCount ||
+                (foundMalformedCue && subtitle.Paragraphs.Count > 0);
             if (!detected || !keep)
             {
                 Errors = null;
@@ -139,7 +140,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
+            LoadSubtitleCore(subtitle, lines, fileName);
+        }
+
+        private bool LoadSubtitleCore(Subtitle subtitle, List<string> lines, string fileName)
+        {
             var isWsrt = fileName != null && fileName.EndsWith(".wsrt", StringComparison.OrdinalIgnoreCase);
+            var recoverNumberedCues = isWsrt || string.Equals(
+                System.IO.Path.GetExtension(fileName), Extension, StringComparison.OrdinalIgnoreCase);
             var paragraphs = subtitle.Paragraphs;
             paragraphs.Clear();
 
@@ -153,14 +161,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Paragraph current = null; // paragraph whose text lines are still being collected
             var blockStart = 0; // first line after the last time code line
             var renumber = false;
+            var foundMalformedCue = false;
 
             for (var i = 0; i < lineCount; i++)
             {
                 var line = lines[i];
                 if (!TryParseTimeCodeLine(line, out var tc))
                 {
-                    if (tc.LooksLikeTimeCode)
+                    var malformedNumberedCue = recoverNumberedCues && i > 0 &&
+                        (i == 1 || IsBlank(lines[i - 2])) &&
+                        line.IndexOf("-->", StringComparison.Ordinal) >= 0 &&
+                        TryParseNumber(lines[i - 1], out _);
+                    if (tc.LooksLikeTimeCode || malformedNumberedCue)
                     {
+                        foundMalformedCue |= malformedNumberedCue;
                         // Unreadable time code: the text below it belongs to no paragraph
                         // (and is counted as errors), as do its number line above it.
                         CloseBlock(ref state, current, blockStart, i);
@@ -212,6 +226,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             _errorCount = state.ErrorCount;
             Errors = state.Errors?.ToString() ?? string.Empty;
+            return foundMalformedCue;
         }
 
         private static bool IsNotFrames(int msDigits, int ms) => msDigits != 0 && (msDigits != 2 || ms > 30);

@@ -30,36 +30,43 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <returns>Total milliseconds.</returns>
         public static double ParseToMilliseconds(string text)
         {
-            // Shared time-code parse entry for many format importers, called per line while
-            // loading - tokenize with spans instead of Split (string[] + a substring per part
-            // + a PadRight copy for the fraction).
+            return TryParseTimeParts(text, out var hours, out var minutes, out var seconds, out var milliseconds)
+                ? new TimeSpan(0, hours, minutes, seconds, milliseconds).TotalMilliseconds
+                : 0;
+        }
+
+        /// <summary>
+        /// True when the text parses as a time code but is too large for TimeSpan/TimeCode.
+        /// Text that does not parse at all is not out of range.
+        /// </summary>
+        internal static bool IsOutOfRangeTimeCode(string text)
+        {
+            if (!TryParseTimeParts(text, out var hours, out var minutes, out var seconds, out var milliseconds))
+            {
+                return false;
+            }
+
+            var totalMilliseconds = ((hours * 60L + minutes) * 60 + seconds) * 1000 + milliseconds;
+            return Math.Abs(totalMilliseconds) > MaxSupportedTotalMilliseconds;
+        }
+
+        private static bool TryParseTimeParts(string text, out int hours, out int minutes, out int seconds, out int milliseconds)
+        {
+            hours = minutes = seconds = milliseconds = 0;
             Span<int> starts = stackalloc int[MaxTimeParts];
             Span<int> lengths = stackalloc int[MaxTimeParts];
             var count = SplitTimeParts(text, starts, lengths);
             var s = text.AsSpan();
-
-            if (count == 4)
+            if (count == 4 && !int.TryParse(s.Slice(starts[0], lengths[0]), out hours))
             {
-                if (int.TryParse(s.Slice(starts[0], lengths[0]), out var hours) &&
-                    int.TryParse(s.Slice(starts[1], lengths[1]), out var minutes) &&
-                    int.TryParse(s.Slice(starts[2], lengths[2]), out var seconds) &&
-                    TryParsePaddedMilliseconds(s.Slice(starts[3], lengths[3]), out var milliseconds))
-                {
-                    return new TimeSpan(0, hours, minutes, seconds, milliseconds).TotalMilliseconds;
-                }
+                return false;
             }
 
-            if (count == 3)
-            {
-                if (int.TryParse(s.Slice(starts[0], lengths[0]), out var minutes) &&
-                    int.TryParse(s.Slice(starts[1], lengths[1]), out var seconds) &&
-                    TryParsePaddedMilliseconds(s.Slice(starts[2], lengths[2]), out var milliseconds))
-                {
-                    return new TimeSpan(0, 0, minutes, seconds, milliseconds).TotalMilliseconds;
-                }
-            }
-
-            return 0;
+            var offset = count - 3;
+            return (count == 3 || count == 4) &&
+                   int.TryParse(s.Slice(starts[offset], lengths[offset]), out minutes) &&
+                   int.TryParse(s.Slice(starts[offset + 1], lengths[offset + 1]), out seconds) &&
+                   TryParsePaddedMilliseconds(s.Slice(starts[offset + 2], lengths[offset + 2]), out milliseconds);
         }
 
         public static double ParseHHMMSSFFToMilliseconds(string text)
