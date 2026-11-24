@@ -73,7 +73,13 @@
       {"source": "Cheer up.", "draft": "Vær glad.", "replacement": "Op med humøret."},
       {"source": "Spit it out.", "draft": "Sig det.", "replacement": "Ud med sproget."},
       {"source": "It's on me.", "draft": "Det er på mig.", "suggestions": ["Den giver jeg.", "Det er min skyld."], "note": "First: the speaker is paying. Second: the speaker takes the blame."},
-      {"source": "You're on.", "draft": "Du er klar.", "suggestions": ["Så er det en aftale.", "Du er på nu."], "note": "First: accepting a bet or challenge. Second: it is their turn on stage."}
+      {"source": "You're on.", "draft": "Du er klar.", "suggestions": ["Så er det en aftale.", "Du er på nu."], "note": "First: accepting a bet or challenge. Second: it is their turn on stage."},
+      {"source": "Totally understand.", "draft": "Jeg Forstår helt.", "replacement": "Det forstår jeg godt."},
+      {"source": "Totally understand.", "draft": "Jeg forstår helt.", "replacement": "Det forstår jeg godt."},
+      {"source": "I totally understand.", "draft": "Jeg forstår helt.", "replacement": "Det forstår jeg godt."},
+      {"source": "I totally understand.", "draft": "Jeg Forstår helt.", "replacement": "Det forstår jeg godt."},
+      {"source": "I completely understand.", "draft": "Jeg forstår fuldstændig.", "replacement": "Det forstår jeg fuldt ud."},
+      {"source": "I completely understand.", "draft": "Jeg forstår helt.", "replacement": "Det forstår jeg godt."}
     ]
   }
 }
