@@ -26,7 +26,7 @@ With an advanced engine selected, click **Advanced...** in the engine settings r
 - **Previous lines as context** — How many already-translated lines before the batch are sent as history for consistency (default 12)
 - **Lines per batch** — Subtitle lines per request (default 10). If the model returns an invalid reply, the batch is retried and then halved automatically
 - **Formality** — Default, Formal, or Informal; adds an instruction to use e.g. "Sie"/"vous"/"usted" or "du"/"tu"/"tú"
-- **Keep line breaks** — Ask the model to keep the same number of line breaks per line
+- **Keep line breaks** — Ask the model to keep the same number of physical lines per cue. Subtitle Edit also repairs straightforward layout mismatches when it can keep the translated wording and speaker markers
 
 ### Sampling Parameters
 
