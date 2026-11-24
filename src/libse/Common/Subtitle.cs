@@ -196,6 +196,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             return Parse(fileName, useThisEncoding, gate, out _);
         }
 
+        /// <param name="fileName">File name of subtitle to load.</param>
+        /// <param name="useThisEncoding">Encoding to read file with.</param>
+        /// <param name="gate">Runs each format check (IsMine + load), null runs it directly.</param>
         /// <param name="linesRead">The lines of the first read of the file (null if it could not be read) - lets a caller try more formats on an unknown file without reading it again.</param>
         internal static Subtitle Parse(string fileName, Encoding useThisEncoding, IFormatCheckGate gate, out List<string> linesRead)
         {
@@ -272,6 +275,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             return LoadSubtitle(fileName, out encoding, useThisEncoding, batchMode, sourceFrameRate, loadSubtitle, null, out _);
         }
 
+        /// <param name="fileName">File name of subtitle to load.</param>
+        /// <param name="encoding">The encoding the file was read with.</param>
+        /// <param name="useThisEncoding">Encoding to read file with, null to auto-detect.</param>
+        /// <param name="batchMode">True when loading in batch mode.</param>
+        /// <param name="sourceFrameRate">Frame rate for frame based formats, null to use the current one.</param>
+        /// <param name="loadSubtitle">False to only detect the format.</param>
         /// <param name="gate">
         /// Runs each format check (IsMine + load) - lets <see cref="ConcurrentSubtitleParser"/> pick
         /// the format instance and lock. Null runs the check directly on the shared instance.
