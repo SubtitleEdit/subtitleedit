@@ -54,6 +54,32 @@ public class FuzzFindingsTest
         }
     }
 
+    [Fact]
+    public void TimedText_RepairedXml_StripsInvalidControlCharacters()
+    {
+        const string xml = "<?xml version=\"1.0\"?>" +
+            "<tt xmlns=\"http://www.w3.org/ns/ttml\"><body><div>" +
+            "<p begin=\"00:00:01.000\" end=\"00:00:03.\u001C000\">Tom & Jerry</p>" +
+            "</div></body></tt>";
+        var fileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".ttml");
+        File.WriteAllText(fileName, xml);
+        try
+        {
+            var subtitle = new Subtitle();
+            var format = subtitle.LoadSubtitle(fileName, out _, null);
+
+            Assert.IsType<TimedText10>(format);
+            var paragraph = Assert.Single(subtitle.Paragraphs);
+            Assert.Equal("Tom & Jerry", paragraph.Text);
+            Assert.Equal(1000, paragraph.StartTime.TotalMilliseconds);
+            Assert.Equal(3000, paragraph.EndTime.TotalMilliseconds);
+        }
+        finally
+        {
+            File.Delete(fileName);
+        }
+    }
+
     private static async Task<T> RunWithTimeout<T>(Func<T> action)
     {
         var task = Task.Run(action, TestContext.Current.CancellationToken);
