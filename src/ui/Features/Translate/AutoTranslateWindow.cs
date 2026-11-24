@@ -499,7 +499,9 @@ public class AutoTranslateWindow : Window
         var bar = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto"), ColumnSpacing = 8 };
         bar.Add(left, 0, 0);
         bar.Add(right, 0, 1);
-        return new Border { Margin = new Thickness(14, 6, 14, 0), Child = bar };
+        var toolbar = new Border { Margin = new Thickness(14, 6, 14, 0), Child = bar };
+        toolbar.Bind(IsVisibleProperty, new Binding(nameof(vm.ShowPostProcessDictionary)));
+        return toolbar;
     }
 
     /// <summary>

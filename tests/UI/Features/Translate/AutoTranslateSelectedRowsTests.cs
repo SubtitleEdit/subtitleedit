@@ -49,6 +49,36 @@ public class AutoTranslateSelectedRowsTests
     }
 
     [AvaloniaFact]
+    public async Task DictionaryHiddenInOptions_HidesToolbar_AndAppliesNoFixes()
+    {
+        var originalShow = Se.Settings.AutoTranslate.ShowPostProcessDictionary;
+        var originalUse = Se.Settings.AutoTranslate.UsePostProcessDictionary;
+        Se.Settings.AutoTranslate.ShowPostProcessDictionary = false;
+        Se.Settings.AutoTranslate.UsePostProcessDictionary = true;
+        var (vm, window, grid, translator) = OpenWindow("It's no big deal.", "Thank you.", "You got it.");
+        try
+        {
+            var language = Se.Language.Translate;
+            var toggle = window.GetVisualDescendants().OfType<ToggleSwitch>()
+                .Single(control => AutomationProperties.GetName(control) == language.PostProcessDictionary);
+            Assert.False(toggle.IsEffectivelyVisible);
+
+            translator.TranslateText = text => text is "It's no big deal." or "It is no big deal." ? "Det er ikke noget stort." : text;
+            Select(vm, grid, 0);
+            await vm.TranslateRowsCommand.ExecuteAsync(null);
+            await WaitUntilDone(vm);
+            Assert.Equal("Det er ikke noget stort.", vm.Rows[0].TranslatedText);
+            Assert.False(vm.HasDictionaryMatches);
+        }
+        finally
+        {
+            Se.Settings.AutoTranslate.ShowPostProcessDictionary = originalShow;
+            Se.Settings.AutoTranslate.UsePostProcessDictionary = originalUse;
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public async Task DictionarySwitch_IsLive_AppliesAndRevertsFixesOnExistingTranslations()
     {
         var (vm, window, grid, translator) = OpenWindow("It's no big deal.", "You got it.", "Fair enough, Major.");

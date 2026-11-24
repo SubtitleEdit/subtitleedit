@@ -213,6 +213,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         _dictionaryMatches.Clear();
         _dictionaryAvailability = null;
         _loadingDictionarySetting = true;
+        ShowPostProcessDictionary = Se.Settings.AutoTranslate.ShowPostProcessDictionary;
         UsePostProcessDictionary = Se.Settings.AutoTranslate.UsePostProcessDictionary;
         _loadingDictionarySetting = false;
         RefreshDictionaryRows();
@@ -1701,7 +1702,7 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         // do translation in background
 #pragma warning disable CS4014
-        var dictionary = UsePostProcessDictionary
+        var dictionary = IsPostProcessDictionaryActive
             ? TranslationPostProcessDictionary.Get(sourceLanguage, targetLanguage, Se.TranslationPostProcessDictionariesFolder)
             : null;
         var completedRows = dictionary != null || HasDictionaryMatches ? new List<TranslateRow>() : null;

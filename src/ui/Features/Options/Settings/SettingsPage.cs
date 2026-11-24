@@ -1038,7 +1038,7 @@ public class SettingsPage : UserControl
                 IsSwitch = true,
                 TrailingFactory = () => UiUtil.MakeButton(Se.Language.General.Edit, _vm.EditDoNotBreakAfterListCommand),
             },
-            new SettingsItem(Se.Language.Options.Settings.UseTranslationPostProcessDictionary, () => EditorChrome.MakeSwitch(nameof(_vm.UsePostProcessDictionary), null, _vm))
+            new SettingsItem(Se.Language.Options.Settings.UseTranslationPostProcessDictionary, () => EditorChrome.MakeSwitch(nameof(_vm.ShowPostProcessDictionary), null, _vm))
             {
                 IsSwitch = true,
                 TrailingFactory = () => UiUtil.MakeButton(Se.Language.Translate.PostProcessEditDictionary, _vm.EditPostProcessDictionaryCommand),

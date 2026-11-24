@@ -27,12 +27,18 @@ public partial class AutoTranslateViewModel
 
     [ObservableProperty] private bool _usePostProcessDictionary;
 
+    /// <summary>The Options switch: false hides the dictionary in this window and turns it off.</summary>
+    [ObservableProperty] private bool _showPostProcessDictionary = true;
+
+    /// <summary>The dictionary is used only when it is shown and switched on.</summary>
+    private bool IsPostProcessDictionaryActive => ShowPostProcessDictionary && UsePostProcessDictionary;
+
     private DictionaryMatch? SelectedDictionaryMatch =>
         SelectedTranslateRow == null ? null : _dictionaryMatches.GetValueOrDefault(SelectedTranslateRow);
 
     public bool HasSelectedDictionaryMatch => SelectedDictionaryMatch != null;
     public bool HasDictionaryMatches => _dictionaryMatches.Count > 0;
-    public bool ShowPostProcessSummary => UsePostProcessDictionary || _dictionaryMatches.Count > 0;
+    public bool ShowPostProcessSummary => IsPostProcessDictionaryActive || _dictionaryMatches.Count > 0;
     public string? OriginalDictionaryText => SelectedDictionaryMatch?.OriginalText;
     public string? DictionaryNote => SelectedDictionaryMatch?.Rule.Note;
     public bool SelectedDictionaryMatchNeedsCheck => SelectedDictionaryMatch is { Checked: false };
@@ -64,7 +70,7 @@ public partial class AutoTranslateViewModel
     public bool HasDictionaryToCheck => DictionaryToCheckCount > 0;
 
     /// <summary>The "no dictionary" note, shown instead of the counts when nothing matched.</summary>
-    public bool ShowNoDictionaryNote => UsePostProcessDictionary && _dictionaryMatches.Count == 0 && !HasDictionaryForSelectedLanguages();
+    public bool ShowNoDictionaryNote => IsPostProcessDictionaryActive && _dictionaryMatches.Count == 0 && !HasDictionaryForSelectedLanguages();
 
     public string PostProcessSummary
     {
@@ -72,7 +78,7 @@ public partial class AutoTranslateViewModel
         {
             var changed = _dictionaryMatches.Count(pair => pair.Key.TranslatedText != pair.Value.OriginalText);
             var review = _dictionaryMatches.Count(pair => !pair.Value.Checked);
-            if (UsePostProcessDictionary && _dictionaryMatches.Count == 0 && !HasDictionaryForSelectedLanguages())
+            if (IsPostProcessDictionaryActive && _dictionaryMatches.Count == 0 && !HasDictionaryForSelectedLanguages())
             {
                 return Se.Language.Translate.PostProcessNoDictionary;
             }
@@ -117,7 +123,7 @@ public partial class AutoTranslateViewModel
     partial void OnUsePostProcessDictionaryChanged(bool value)
     {
         Se.Settings.AutoTranslate.UsePostProcessDictionary = value;
-        if (!_loadingDictionarySetting && IsTranslateEnabled)
+        if (!_loadingDictionarySetting && IsTranslateEnabled && ShowPostProcessDictionary)
         {
             // Live: switching on fixes the lines already translated, switching off undoes the fixes.
             if (value)

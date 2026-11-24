@@ -89,7 +89,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _autoBreakPreferBottomHeavy;
     [ObservableProperty] private int _autoBreakPreferBottomPercent;
     [ObservableProperty] private bool _useNoLineBreakAfter;
-    [ObservableProperty] private bool _usePostProcessDictionary;
+    [ObservableProperty] private bool _showPostProcessDictionary;
 
     // "Color text if more than N lines" must track the live "Max number of lines"
     // value instead of a hardcoded "2" (#12028), including while typing (nullable/
@@ -884,7 +884,7 @@ public partial class SettingsViewModel : ObservableObject
         AutoBreakPreferBottomHeavy = Se.Settings.Tools.AutoBreakPreferBottomHeavy;
         AutoBreakPreferBottomPercent = (int)Math.Round(Se.Settings.Tools.AutoBreakPreferBottomPercent, MidpointRounding.AwayFromZero);
         UseNoLineBreakAfter = Se.Settings.Tools.UseNoLineBreakAfter;
-        UsePostProcessDictionary = Se.Settings.AutoTranslate.UsePostProcessDictionary;
+        ShowPostProcessDictionary = Se.Settings.AutoTranslate.ShowPostProcessDictionary;
         DialogStyle = DialogStyles.FirstOrDefault(p => p.Code == general.DialogStyle) ?? DialogStyles.First();
         ContinuationStyle = ContinuationStyles.FirstOrDefault(p => p.Code == general.ContinuationStyle) ?? ContinuationStyles.First();
         IsEditCustomContinuationStyleVisible = ContinuationStyle?.Code == nameof(Core.Enums.ContinuationStyle.Custom);
@@ -1836,7 +1836,7 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Tools.AutoBreakPreferBottomHeavy = AutoBreakPreferBottomHeavy;
         Se.Settings.Tools.AutoBreakPreferBottomPercent = AutoBreakPreferBottomPercent;
         Se.Settings.Tools.UseNoLineBreakAfter = UseNoLineBreakAfter;
-        Se.Settings.AutoTranslate.UsePostProcessDictionary = UsePostProcessDictionary;
+        Se.Settings.AutoTranslate.ShowPostProcessDictionary = ShowPostProcessDictionary;
         general.DialogStyle = DialogStyle.Code;
         general.ContinuationStyle = ContinuationStyle.Code;
         general.CpsLineLengthStrategy = CpsLineLengthStrategy.Code;
