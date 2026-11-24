@@ -60,6 +60,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var csvLines = ReadCsvLines(headers, lines, separator);
+            csvLines.RemoveAll(line => !IsSupportedTime(line.Start) ||
+                                       !IsSupportedTime(line.End) ||
+                                       !IsSupportedTime(line.Duration));
             ConvertPlainNumberTimes(csvLines);
 
             var subtitle = MakeSubtitle(csvLines);
@@ -68,6 +71,21 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         private static readonly Regex PlainNumberRegex = new Regex(@"^\d+([.,]\d+)?$", RegexOptions.Compiled);
+
+        private static bool IsSupportedTime(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return true;
+            }
+
+            if (PlainNumberRegex.IsMatch(value.Trim()))
+            {
+                return TryParseNumber(value, out var number) && number <= TimeCode.MaxSupportedTotalMilliseconds;
+            }
+
+            return TimeCode.IsSupportedTimeCode(value);
+        }
 
         /// <summary>
         /// Start/end/duration given as plain numbers ("1.5", "1,5", "1500") instead of time codes.
@@ -105,12 +123,20 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
+            csvLines.RemoveAll(l => ExceedsTimeLimit(l.Start, factor) ||
+                                    ExceedsTimeLimit(l.End, factor) ||
+                                    ExceedsTimeLimit(l.Duration, factor));
             foreach (var l in csvLines)
             {
                 l.Start = ConvertNumber(l.Start, factor);
                 l.End = ConvertNumber(l.End, factor);
                 l.Duration = ConvertNumber(l.Duration, factor);
             }
+        }
+
+        private static bool ExceedsTimeLimit(string value, double factor)
+        {
+            return TryParseNumber(value, out var number) && number * factor > TimeCode.MaxSupportedTotalMilliseconds;
         }
 
         private static bool TryParseNumber(string value, out double number)
@@ -312,7 +338,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         !csvLine.Start.Contains('.') &&
                         !csvLine.Start.Contains(':') &&
                         !csvLine.Start.Contains(';') &&
-                        double.TryParse(csvLine.Start, out var n))
+                        TryParseNumber(csvLine.Start, out var n) && Math.Abs(n) <= TimeCode.MaxSupportedTotalMilliseconds)
                     {
                         var msNames = new List<string> { "startmillis", "start_millis", "startms", "start_ms", "startms", "startmilliseconds", "start_millisesonds", "startmilliseconds", "from_ms", "fromms", "frommilliseconds", "from_milliseconds" };
                         if (msNames.Contains(headers[startIndex].ToLowerInvariant()))
@@ -330,7 +356,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         !csvLine.End.Contains('.') &&
                         !csvLine.End.Contains(':') &&
                         !csvLine.End.Contains(';') &&
-                        double.TryParse(csvLine.End, out var n))
+                        TryParseNumber(csvLine.End, out var n) && Math.Abs(n) <= TimeCode.MaxSupportedTotalMilliseconds)
                     {
                         var msNames = new List<string> { "endmillis", "end_millis", "endms", "end_ms", "endmilliseconds", "end_millisesonds", "endmilliseconds", "to_ms", "toms", "tomilliseconds", "to_milliseconds" };
                         if (msNames.Contains(headers[endIndex].ToLowerInvariant()))
@@ -348,7 +374,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         !csvLine.Duration.Contains('.') &&
                         !csvLine.Duration.Contains(':') &&
                         !csvLine.Duration.Contains(';') &&
-                        double.TryParse(csvLine.Duration, out var n))
+                        TryParseNumber(csvLine.Duration, out var n) && Math.Abs(n) <= TimeCode.MaxSupportedTotalMilliseconds)
                     {
                         var msNames = new List<string> { "durationms" };
                         if (msNames.Contains(headers[durationIndex].ToLowerInvariant()))

@@ -112,6 +112,52 @@ public class FuzzFindingsTest
         }
     }
 
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void SubRip_LoadsValidCuesAroundMalformedNumberedCue(bool malformedFirst)
+    {
+        const string malformed = "44\nNaN --> NaN\n123\n\n";
+        const string firstCue = "1\n00:00:01,234 --> 00:00:03,456\nFirst\n\n";
+        const string lastCue = "2\n00:00:04,567 --> 00:00:06,789\nLast\n";
+        var fileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".srt");
+        File.WriteAllText(fileName, malformedFirst ? malformed + firstCue + lastCue : firstCue + malformed + lastCue);
+        try
+        {
+            var subtitle = new Subtitle();
+            Assert.IsType<SubRip>(subtitle.LoadSubtitle(fileName, out _, null));
+            Assert.Equal(new[] { "First", "Last" }, subtitle.Paragraphs.Select(p => p.Text));
+            Assert.Equal(1234, subtitle.Paragraphs[0].StartTime.TotalMilliseconds);
+            Assert.Equal(6789, subtitle.Paragraphs[1].EndTime.TotalMilliseconds);
+        }
+        finally
+        {
+            File.Delete(fileName);
+        }
+    }
+
+    [Theory]
+    [InlineData("NaN")]
+    [InlineData("999999999:59:59,999")]
+    [InlineData("1e309")]
+    public void GenericCsv_InvalidTimeDoesNotAffectValidRows(string invalidTime)
+    {
+        var lines = new List<string>
+        {
+            "start,end,text",
+            $"\"{invalidTime}\",\"{invalidTime}\",Bad row",
+            "1.234,3.456,First",
+            "4.567,6.789,Second",
+            "7.890,9.999,Last",
+        };
+
+        var subtitle = new UnknownFormatImporter().AutoGuessImport(lines, "test.csv");
+
+        Assert.Equal(new[] { "First", "Second", "Last" }, subtitle.Paragraphs.Select(p => p.Text));
+        Assert.Equal(new double[] { 1234, 4567, 7890 }, subtitle.Paragraphs.Select(p => p.StartTime.TotalMilliseconds));
+        Assert.Equal(new double[] { 3456, 6789, 9999 }, subtitle.Paragraphs.Select(p => p.EndTime.TotalMilliseconds));
+    }
+
     private static async Task<T> RunWithTimeout<T>(Func<T> action)
     {
         var task = Task.Run(action, TestContext.Current.CancellationToken);
