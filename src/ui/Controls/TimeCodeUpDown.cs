@@ -241,6 +241,8 @@ namespace Nikse.SubtitleEdit.Controls
                     CaretIndex = control.LastPartCaretIndex,
                 };
 
+                CompactSpinner.MakeInnerTextBoxBorderless(textBox);
+
                 var grid = new Grid
                 {
                     ColumnDefinitions = new ColumnDefinitions("*,Auto"),
