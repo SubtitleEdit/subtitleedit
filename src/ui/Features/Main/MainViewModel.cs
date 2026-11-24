@@ -8296,13 +8296,23 @@ public partial class MainViewModel :
             return;
         }
 
+        CopyOriginalTextIntoRows(selectedItems);
+    }
+
+    /// <summary>
+    /// Copies the original text into the text column of the given rows. Reference-only rows (lines
+    /// that exist only in the original) are promoted to ordinary working lines, so the context menu
+    /// and the "Copy text from original (selected lines)" shortcut both fill in missing lines (#17160).
+    /// </summary>
+    private void CopyOriginalTextIntoRows(List<SubtitleLineViewModel> rows)
+    {
         _undoRedoManager.StopChangeDetection();
-        foreach (var selectedItem in selectedItems)
+        foreach (var row in rows)
         {
-            selectedItem.Text = selectedItem.OriginalText;
-            if (selectedItem.IsReferenceOnly && !string.IsNullOrEmpty(selectedItem.Text))
+            row.Text = row.OriginalText;
+            if (row.IsReferenceOnly && !string.IsNullOrEmpty(row.Text))
             {
-                PromoteReferenceOnlyRow(selectedItem);
+                PromoteReferenceOnlyRow(row);
             }
         }
 
@@ -9193,7 +9203,9 @@ public partial class MainViewModel :
     [RelayCommand]
     private void CopyTextFromOriginalToTranslation()
     {
-        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        // Include reference-only rows: on a line that exists only in the original the selection
+        // without them is empty, so the shortcut silently did nothing (#17160).
+        var selectedItems = SubtitleGridSelectedItemsWithReference;
         if (Window == null || selectedItems.Count == 0 || !ShowColumnOriginalText)
         {
             return;
@@ -9205,10 +9217,7 @@ public partial class MainViewModel :
             return;
         }
 
-        foreach (var subtitle in selectedItems)
-        {
-            subtitle.Text = subtitle.OriginalText;
-        }
+        CopyOriginalTextIntoRows(selectedItems);
 
         _shortcutManager.ClearKeys();
         var msg = string.Format(Se.Language.Main.XLinesCopiedFromOriginal, selectedItems.Count);

@@ -481,6 +481,38 @@ public class MainReadOnlyOriginalTests
     }
 
     /// <summary>
+    /// The "Copy text from original (selected lines)" shortcut must adopt a display-only row like
+    /// the context menu does - it used to skip reference-only rows and silently do nothing (#17160).
+    /// </summary>
+    [AvaloniaFact]
+    public void CopyTextFromOriginalShortcut_OnReferenceOnlyRow_PromotesItToAWorkingLine()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            ImportSampleReference(vm);
+            var referenceRow = vm.Subtitles.Single(p => p.IsReferenceOnly);
+
+            vm.SubtitleGrid.SelectedItems!.Clear();
+            vm.SubtitleGrid.SelectedItems!.Add(referenceRow);
+
+            vm.CopyTextFromOriginalToTranslationCommand.Execute(null);
+
+            Assert.False(referenceRow.IsReferenceOnly);
+            Assert.Equal(2, referenceRow.Number);
+            Assert.Equal("Reference only - no translation", referenceRow.Text);
+
+            var saved = vm.GetUpdateSubtitle();
+            Assert.Equal(3, saved.Paragraphs.Count);
+            Assert.Equal("Reference only - no translation", saved.Paragraphs[1].Text);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
     /// Typing into a display-only row adopts the missing line: the row becomes an ordinary,
     /// numbered, saveable working line at the reference line's timings (#13594).
     /// </summary>
