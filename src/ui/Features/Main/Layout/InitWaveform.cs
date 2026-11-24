@@ -176,6 +176,7 @@ public class InitWaveform
             vm.AudioVisualizer.SelectOriginalRow = vm.SelectAndScrollToSubtitle;
 
             vm.AudioVisualizer.GetIsVideoPlaying = () => vm.GetVideoPlayerControl()?.IsPlaying == true;
+            vm.AudioVisualizer.GetFrameGridOffsetSeconds = () => vm.FrameGridOffsetSeconds;
             vm.AudioVisualizer.OnNewSelectionInsert += vm.AudioVisualizerOnNewSelectionInsert;
             vm.AudioVisualizer.OnVideoPositionChanged += vm.AudioVisualizerOnVideoPositionChanged;
             vm.AudioVisualizer.OnDragEnded += vm.AudioVisualizerOnDragEnded;

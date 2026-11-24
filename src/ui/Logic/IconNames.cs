@@ -127,6 +127,7 @@ internal class IconNames
     public const string Undo = "mdi-undo";
     public const string ViewGrid = "mdi-view-grid";
     public const string ViewList = "mdi-view-list";
+    public const string WrapDisabled = "mdi-wrap-disabled";
     public const string ViewSplitVertical = "mdi-view-split-vertical";
     public const string Waveform = "mdi-waveform";
     public const string Web = "mdi-web";

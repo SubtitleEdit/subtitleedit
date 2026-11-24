@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Controls.SyntaxTextEditorControl;
 /// This is one file on purpose - the declarative-UI source generator emits one registration per
 /// declaration of a Control, so a partial control class breaks the build.
 /// </summary>
-public class SyntaxTextView : Control
+public partial class SyntaxTextView : Control
 {
     public static readonly StyledProperty<IBrush?> ForegroundProperty =
         TextElement.ForegroundProperty.AddOwner<SyntaxTextView>();
@@ -40,18 +40,6 @@ public class SyntaxTextView : Control
 
     public static readonly StyledProperty<double> FontSizeProperty =
         TextElement.FontSizeProperty.AddOwner<SyntaxTextView>();
-
-    public static readonly StyledProperty<bool> IsReadOnlyProperty =
-        AvaloniaProperty.Register<SyntaxTextView, bool>(nameof(IsReadOnly));
-
-    public static readonly StyledProperty<IBrush?> SelectionBrushProperty =
-        AvaloniaProperty.Register<SyntaxTextView, IBrush?>(nameof(SelectionBrush));
-
-    public static readonly StyledProperty<IBrush?> CaretBrushProperty =
-        AvaloniaProperty.Register<SyntaxTextView, IBrush?>(nameof(CaretBrush));
-
-    public static readonly StyledProperty<IBrush?> CurrentLineBrushProperty =
-        AvaloniaProperty.Register<SyntaxTextView, IBrush?>(nameof(CurrentLineBrush));
 
     private const double PaddingLeft = 4;
     private const int MaxCachedLayouts = 512;
@@ -180,11 +168,8 @@ public class SyntaxTextView : Control
         }
     }
 
-    public bool IsReadOnly
-    {
-        get => GetValue(IsReadOnlyProperty);
-        set => SetValue(IsReadOnlyProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial bool IsReadOnly { get; set; }
 
     public IBrush? Foreground
     {
@@ -204,24 +189,15 @@ public class SyntaxTextView : Control
         set => SetValue(FontSizeProperty, value);
     }
 
-    public IBrush? SelectionBrush
-    {
-        get => GetValue(SelectionBrushProperty);
-        set => SetValue(SelectionBrushProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial IBrush? SelectionBrush { get; set; }
 
-    public IBrush? CaretBrush
-    {
-        get => GetValue(CaretBrushProperty);
-        set => SetValue(CaretBrushProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial IBrush? CaretBrush { get; set; }
 
     /// <summary>Highlight behind the caret's line; null draws none.</summary>
-    public IBrush? CurrentLineBrush
-    {
-        get => GetValue(CurrentLineBrushProperty);
-        set => SetValue(CurrentLineBrushProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial IBrush? CurrentLineBrush { get; set; }
 
     public string Text
     {

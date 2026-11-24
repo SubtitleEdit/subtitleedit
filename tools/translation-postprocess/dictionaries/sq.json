@@ -1,0 +1,23 @@
+{
+  "target_language": "sq",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "Faleminderit shumë."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "Shihemi nesër."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "Natën e mirë."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "Gëzuar ditëlindjen!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "Shihemi së shpejti."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "Faleminderit."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Kush je?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "Nuk e di."},
+      {"source": "Thank you very much.", "draft": "Faleminderit shumë", "replacement": "Faleminderit shumë."},
+      {"source": "See you tomorrow.", "draft": "Shihemi nesër", "replacement": "Shihemi nesër."},
+      {"source": "Good night.", "draft": "Natën e mirë", "replacement": "Natën e mirë."},
+      {"source": "Happy birthday!", "draft": "Gëzuar ditëlindjen", "replacement": "Gëzuar ditëlindjen!"},
+      {"source": "See you soon.", "draft": "Shihemi së shpejti", "replacement": "Shihemi së shpejti."},
+      {"source": "Thank you.", "draft": "Faleminderit", "replacement": "Faleminderit."},
+      {"source": "Who are you?", "draft": "Kush je", "replacement": "Kush je?"},
+      {"source": "I don't know.", "draft": "Nuk e di", "replacement": "Nuk e di."}
+    ]
+  }
+}

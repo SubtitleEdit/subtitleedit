@@ -100,12 +100,24 @@ public partial class AdjustDurationViewModel : ObservableObject
                 {
                     subtitle.EndTime = cappedEndTime;
                 }
+                else if (newEndTime < subtitle.EndTime)
+                {
+                    // Already overlapping the next line: a negative adjustment still applies, as it
+                    // only shrinks the overlap (it used to be dropped, leaving the end time as is).
+                    subtitle.EndTime = newEndTime;
+                }
             }
         }
     }
 
     private void DoAdjustViaFixed(ObservableCollection<SubtitleLineViewModel> subtitles)
     {
+        if (AdjustFixed <= 0)
+        {
+            // A zero or negative fixed duration would end lines at or before their start.
+            return;
+        }
+
         for (int i = 0; i < subtitles.Count; i++)
         {
             var subtitle = subtitles[i];

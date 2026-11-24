@@ -501,6 +501,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<HearingImpairedRuleSettingsViewModel>();
         collection.AddTransient<ImageBasedPreviewViewModel>();
         collection.AddTransient<ImageBasedProfileViewModel>();
+        collection.AddTransient<CustomResolutionViewModel>();
         collection.AddTransient<ImportCsvXlsxCustomColumnsViewModel>();
         collection.AddTransient<ImportDvdViewModel>();
         collection.AddTransient<ImportImagesViewModel>();
@@ -672,6 +673,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<SpeechToTextQualityReportViewModel>();
         collection.AddTransient<WordListsViewModel>();
         collection.AddTransient<RegexRulesViewModel>();
+        collection.AddTransient<TranslationDictionaryViewModel>();
     }
 
     /// <summary>

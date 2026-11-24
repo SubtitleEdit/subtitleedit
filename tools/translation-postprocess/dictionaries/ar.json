@@ -1,0 +1,23 @@
+{
+  "target_language": "ar",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "شكرًا جزيلًا."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "أراك غدًا."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "ليلة سعيدة."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "عيد ميلاد سعيد!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "أراك قريبًا."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "شكرًا."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "من أنت؟"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "لا أعرف."},
+      {"source": "Thank you very much.", "draft": "شكرًا جزيلًا", "replacement": "شكرًا جزيلًا."},
+      {"source": "See you tomorrow.", "draft": "أراك غدًا", "replacement": "أراك غدًا."},
+      {"source": "Good night.", "draft": "ليلة سعيدة", "replacement": "ليلة سعيدة."},
+      {"source": "Happy birthday!", "draft": "عيد ميلاد سعيد", "replacement": "عيد ميلاد سعيد!"},
+      {"source": "See you soon.", "draft": "أراك قريبًا", "replacement": "أراك قريبًا."},
+      {"source": "Thank you.", "draft": "شكرًا", "replacement": "شكرًا."},
+      {"source": "Who are you?", "draft": "من أنت", "replacement": "من أنت؟"},
+      {"source": "I don't know.", "draft": "لا أعرف", "replacement": "لا أعرف."}
+    ]
+  }
+}

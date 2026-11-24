@@ -80,12 +80,13 @@ public class WordListsWindow : Window
         var buttonOpenFolder = EditorChrome.MakeTextToolButton(IconNames.FolderOpen, Se.Language.General.OpenDictionaryFolder, vm.OpenDictionariesFolderCommand);
         var buttonUseAlwaysList = EditorChrome.MakeTextToolButton(IconNames.FormatListChecks, Se.Language.SpellCheck.EditUseAlwaysList, vm.EditUseAlwaysListCommand);
         var buttonRegexRules = EditorChrome.MakeTextToolButton(IconNames.Regex, Se.Language.Options.WordLists.RegexRulesDotDotDot, vm.EditRegexRulesCommand);
+        var buttonDoNotBreakAfter = EditorChrome.MakeTextToolButton(IconNames.WrapDisabled, Se.Language.Options.WordLists.DoNotBreakAfterListDotDotDot, vm.EditDoNotBreakAfterListCommand);
         var panelLinks = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 4,
             VerticalAlignment = VerticalAlignment.Center,
-            Children = { buttonOpenFolder, buttonUseAlwaysList, buttonRegexRules },
+            Children = { buttonOpenFolder, buttonUseAlwaysList, buttonRegexRules, buttonDoNotBreakAfter },
         };
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);

@@ -41,6 +41,23 @@ public class YouTubeTimedTextTest
         Assert.Contains(".srv3", format.AlternateExtensions);
     }
 
+    [Theory]
+    [InlineData("1000", "NaN")]
+    [InlineData("Infinity", "2000")]
+    [InlineData("1e308", "1e308")]
+    public void SkipsCueWithNonFiniteTimestamp(string start, string duration)
+    {
+        var xml = "<timedtext format=\"3\"><body>" +
+            $"<p t=\"{start}\" d=\"{duration}\">Invalid cue</p>" +
+            "<p t=\"4000\" d=\"2000\">Valid cue</p></body></timedtext>";
+        var subtitle = Load(xml, out _);
+
+        var cue = Assert.Single(subtitle.Paragraphs);
+        Assert.Equal("Valid cue", cue.Text);
+        Assert.Equal(4000, cue.StartTime.TotalMilliseconds);
+        Assert.Equal(6000, cue.EndTime.TotalMilliseconds);
+    }
+
     [Fact]
     public void ReadsHeadLinePensAndSpans()
     {

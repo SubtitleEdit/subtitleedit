@@ -83,7 +83,7 @@ public class TableViewScrollAnchorTests : IDisposable
         window.Show();
         Settle(window);
 
-        var scrollViewer = grid.GetVisualDescendants().OfType<ScrollViewer>().First();
+        var scrollViewer = grid.GetRowsScrollViewer()!;
 
         grid.ScrollIntoView(StartIndex);
         Settle(window);
@@ -275,7 +275,7 @@ public class TableViewScrollAnchorTests : IDisposable
         _windows.Add(window);
         window.Show();
         Settle(window);
-        var scrollViewer = grid.GetVisualDescendants().OfType<ScrollViewer>().First();
+        var scrollViewer = grid.GetRowsScrollViewer()!;
 
         // The way the video playhead brings a line into view.
         TableViewExtras.PrePositionScroll(grid, edited);
@@ -381,7 +381,7 @@ public class TableViewScrollAnchorTests : IDisposable
         window.Show();
         Settle(window);
 
-        var scrollViewer = grid.GetVisualDescendants().OfType<ScrollViewer>().First();
+        var scrollViewer = grid.GetRowsScrollViewer()!;
 
         wrapper.BarForTest.Value = 400;
         wrapper.ApplyPendingForTest();

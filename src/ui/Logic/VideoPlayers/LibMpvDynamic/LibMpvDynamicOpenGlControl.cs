@@ -43,28 +43,50 @@ public class LibMpvDynamicOpenGlControl : OpenGlControlBase
 
         if (!_isInitialized)
         {
-            // Set up the GetProcAddress delegate for OpenGL
-            _mpvPlayer?.InitializeWithOpenGL((ctx, name) =>
+            // An exception escaping here faults Avalonia's one-time initialization for good:
+            // every later RequestNextFrameRendering is ignored, the mpv core never comes up and
+            // each video open is parked forever with no picture. Log it instead of losing it.
+            try
             {
-                try
+                // Set up the GetProcAddress delegate for OpenGL
+                _mpvPlayer?.InitializeWithOpenGL((ctx, name) =>
                 {
-                    return gl.GetProcAddress(name);
-                }
-                catch
-                {
-                    return IntPtr.Zero;
-                }
-            });
+                    try
+                    {
+                        return gl.GetProcAddress(name);
+                    }
+                    catch
+                    {
+                        return IntPtr.Zero;
+                    }
+                });
 
-            // Subscribe to render requests
-            if (_mpvPlayer != null)
-            {
-                _mpvPlayer.RequestRender += OnMpvRequestRender;
-                _mpvPlayer.PlayerSubName = OpenGlRendererInfo.GetPlayerSubName(gl.Renderer);
-                OpenGlRendererInfo.LogIfSoftwareRenderer("libmpv", gl.Vendor, gl.Renderer, gl.Version);
+                // Subscribe to render requests
+                if (_mpvPlayer != null)
+                {
+                    _mpvPlayer.RequestRender += OnMpvRequestRender;
+                    _mpvPlayer.PlayerSubName = OpenGlRendererInfo.GetPlayerSubName(gl.Renderer);
+                    OpenGlRendererInfo.LogIfSoftwareRenderer("libmpv", gl.Vendor, gl.Renderer, gl.Version);
+                }
+
+                _isInitialized = true;
             }
+            catch (Exception exception)
+            {
+                Se.LogError(exception, "LibMpvDynamicOpenGlControl OnOpenGlInit");
+            }
+        }
+    }
 
-            _isInitialized = true;
+    /// <summary>
+    /// Asks Avalonia for a frame, which is what runs <see cref="OnOpenGlInit"/> - and with it
+    /// brings the mpv core up - the first time. A no-op once initialized.
+    /// </summary>
+    public void RequestInitialization()
+    {
+        if (!_isInitialized)
+        {
+            RequestNextFrameRendering();
         }
     }
 

@@ -1,0 +1,23 @@
+{
+  "target_language": "zh-Hans",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "非常感谢。"},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "明天见。"},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "晚安。"},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "生日快乐！"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "回头见。"},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "谢谢。"},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "你是谁？"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "我不知道。"},
+      {"source": "Thank you very much.", "draft": "非常感谢", "replacement": "非常感谢。"},
+      {"source": "See you tomorrow.", "draft": "明天见", "replacement": "明天见。"},
+      {"source": "Good night.", "draft": "晚安", "replacement": "晚安。"},
+      {"source": "Happy birthday!", "draft": "生日快乐", "replacement": "生日快乐！"},
+      {"source": "See you soon.", "draft": "回头见", "replacement": "回头见。"},
+      {"source": "Thank you.", "draft": "谢谢", "replacement": "谢谢。"},
+      {"source": "Who are you?", "draft": "你是谁", "replacement": "你是谁？"},
+      {"source": "I don't know.", "draft": "我不知道", "replacement": "我不知道。"}
+    ]
+  }
+}

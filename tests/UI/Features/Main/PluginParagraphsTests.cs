@@ -59,6 +59,58 @@ public class PluginParagraphsTests : IDisposable
     }
 
     [AvaloniaFact]
+    public void BuildPluginRequest_NoOriginal_OmitsOriginalSubtitle()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            AddLine(vm, "Hello", 1_000, 3_000, string.Empty);
+
+            var request = InvokeBuildPluginRequest(vm);
+
+            Assert.Null(request.OriginalSubtitle);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    [AvaloniaFact]
+    public void BuildPluginRequest_WithOriginal_SendsOriginalSubtitle()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            vm.SelectedSubtitleFormat = vm.SubtitleFormats.First(f => f is SubRip);
+            AddLine(vm, "Hej verden", 1_000, 3_000, string.Empty);
+            AddLine(vm, "Farvel", 4_000, 6_000, string.Empty);
+            vm.Subtitles[0].OriginalText = "Hello world";
+            vm.Subtitles[1].OriginalText = "Goodbye";
+            vm.ShowColumnOriginalText = true;
+
+            var request = InvokeBuildPluginRequest(vm);
+
+            Assert.NotNull(request.OriginalSubtitle);
+            Assert.Equal(new[] { "Hej verden", "Farvel" }, request.Subtitle.Paragraphs!.Select(p => p.Text));
+            Assert.Equal(new[] { "Hello world", "Goodbye" }, request.OriginalSubtitle!.Paragraphs!.Select(p => p.Text));
+            Assert.Contains("Goodbye", request.OriginalSubtitle.SubRip);
+            Assert.Equal(new SubRip().Name, request.OriginalSubtitle.Format);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    private static PluginRequest InvokeBuildPluginRequest(MainViewModel vm)
+    {
+        return (PluginRequest)typeof(MainViewModel)
+            .GetMethod("BuildPluginRequest", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .Invoke(vm, new object[] { CreatePlugin(), new List<int>() })!;
+    }
+
+    [AvaloniaFact]
     public async Task ApplyPluginSubtitle_Paragraphs_KeepRowsAndReplaceHeader()
     {
         var (window, vm) = CreateMainViewModel();

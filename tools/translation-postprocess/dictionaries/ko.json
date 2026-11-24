@@ -1,0 +1,23 @@
+{
+  "target_language": "ko",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "정말 감사합니다."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "내일 봐요."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "잘 자요."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "생일 축하해요!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "곧 봐요."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "감사합니다."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "누구세요?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "모르겠어요."},
+      {"source": "Thank you very much.", "draft": "정말 감사합니다", "replacement": "정말 감사합니다."},
+      {"source": "See you tomorrow.", "draft": "내일 봐요", "replacement": "내일 봐요."},
+      {"source": "Good night.", "draft": "잘 자요", "replacement": "잘 자요."},
+      {"source": "Happy birthday!", "draft": "생일 축하해요", "replacement": "생일 축하해요!"},
+      {"source": "See you soon.", "draft": "곧 봐요", "replacement": "곧 봐요."},
+      {"source": "Thank you.", "draft": "감사합니다", "replacement": "감사합니다."},
+      {"source": "Who are you?", "draft": "누구세요", "replacement": "누구세요?"},
+      {"source": "I don't know.", "draft": "모르겠어요", "replacement": "모르겠어요."}
+    ]
+  }
+}

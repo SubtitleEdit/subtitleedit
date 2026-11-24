@@ -814,14 +814,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             ResetLoadFrameRate();
 
+            var xmlText = JoinLines(lines).RemoveControlCharactersButWhiteSpace().Trim();
             var xml = new XmlDocument { XmlResolver = null, PreserveWhitespace = true };
             try
             {
-                xml.LoadXml(JoinLines(lines).RemoveControlCharactersButWhiteSpace().Trim());
+                xml.LoadXml(xmlText);
             }
-            catch
+            catch (XmlException)
             {
-                xml.LoadXml(FixBadXml(JoinLines(lines)));
+                xml.LoadXml(FixBadXml(xmlText));
             }
 
             const string ns = "http://www.w3.org/ns/ttml";
@@ -1040,7 +1041,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
+        /// <param name="paragraph">The TTML paragraph node.</param>
+        /// <param name="subtitle">The subtitle being loaded.</param>
         /// <param name="frameRate">Frame rate for frame based time codes (the file's declared one while loading).</param>
+        /// <param name="begin">The paragraph start time.</param>
+        /// <param name="end">The paragraph end time.</param>
         internal static void ExtractTimeCodes(XmlNode paragraph, Subtitle subtitle, double frameRate, out TimeCode begin, out TimeCode end)
         {
             var beginAttr = TryGetAttribute(paragraph, "begin", TtmlNamespace);

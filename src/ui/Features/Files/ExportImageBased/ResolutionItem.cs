@@ -21,6 +21,11 @@ public partial class ResolutionItem : ObservableObject
 
     public double PixelAspectRatio => ExportPixelAspect.Parse(PixelAspect);
 
+    /// <summary>
+    /// The "Custom resolution..." entry: picking it prompts for a width and height (#17132).
+    /// </summary>
+    public bool IsCustom { get; set; }
+
     public ResolutionItem(string name)
     {
         DisplayName = string.Empty;
@@ -70,7 +75,8 @@ public partial class ResolutionItem : ObservableObject
     public static IEnumerable<ResolutionItem> GetResolutions()
     {
         yield return new ResolutionItem(Se.Language.General.PickResolutionFromVideoDotDotDot, 0, 0);
-        
+        yield return new ResolutionItem(Se.Language.General.CustomResolutionDotDotDot, 0, 0) { IsCustom = true };
+
         yield return new ResolutionItem("4K DCI", 4096, 2160);
         yield return new ResolutionItem("4K UHD", 3840, 2160);
         yield return new ResolutionItem("2K WQHD", 2560, 1440);

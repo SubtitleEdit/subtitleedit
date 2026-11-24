@@ -48,6 +48,12 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     private string? _pendingLoadFileName;
     private double _pendingLoadStartPositionSeconds;
 
+    /// <summary>
+    /// Whether the core is up (mpv_initialize and the render context done). It only comes up
+    /// with the first render pass of the control that hosts this player.
+    /// </summary>
+    public bool IsCoreInitialized => _coreInitialized;
+
     // Observed-property caches, kept current by the mpv event thread (see StartEventLoop).
     // While _eventLoopActive the pause/speed/duration/eof getters read these instead of
     // doing a synchronous P/Invoke into the core per call. Doubles go through Interlocked
@@ -1501,14 +1507,17 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
         // Initialize mpv first
         var err = _mpvInitialize(_mpv);
-        if (err < 0)
+        var coreInitialized = err >= 0;
+        if (!coreInitialized)
         {
             Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer InitializeWithOpenGL mpv_initialize");
         }
-        else
-        {
-            MarkCoreInitialized();
-        }
+
+        // Not yet: flipping the core to initialized releases a LoadFile waiting on another
+        // thread, and a loadfile issued before mpv_render_context_create fails the vo with
+        // "No render context set" - the file plays with no picture. The mpv Metal player renders
+        // on its own thread, so that LoadFile won the race most of the time (fullscreen lost its
+        // video 3 out of 4 times). Marked below, once the render context exists.
 
         // Create OpenGL init params
         var initParams = new MpvOpenGlInitParams
@@ -1567,6 +1576,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         finally
         {
             Marshal.FreeHGlobal(initParamsPtr);
+
+            if (coreInitialized)
+            {
+                MarkCoreInitialized();
+            }
         }
     }
 
@@ -1606,14 +1620,13 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         SetClipboardBackendsOption();
 
         var err = _mpvInitialize(_mpv);
-        if (err < 0)
+        var coreInitialized = err >= 0;
+        if (!coreInitialized)
         {
             Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer InitializeWithMetal mpv_initialize");
         }
-        else
-        {
-            MarkCoreInitialized();
-        }
+
+        // Marked once the render context exists - see InitializeWithOpenGL.
 
         // Build mpv_metal_init_params: device (required) + layer (optional).
         // With a layer set, mpv handles nextDrawable / presentDrawable internally.
@@ -1668,6 +1681,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         finally
         {
             Marshal.FreeHGlobal(initParamsPtr);
+
+            if (coreInitialized)
+            {
+                MarkCoreInitialized();
+            }
         }
     }
 
@@ -3086,7 +3104,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             throw new InvalidOperationException(GetErrorString(err));
         }
 
-        MarkCoreInitialized();
+        // Marked once the render context exists - see InitializeWithOpenGL.
 
         // Build render context params for software rendering
         var apiTypeBytes = Encoding.UTF8.GetBytes(MPV_RENDER_API_TYPE_SW + "\0");
@@ -3132,6 +3150,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         finally
         {
             Marshal.FreeHGlobal(apiTypePtr);
+            MarkCoreInitialized();
         }
     }
 

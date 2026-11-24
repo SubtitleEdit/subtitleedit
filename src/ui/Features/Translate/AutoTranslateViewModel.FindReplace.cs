@@ -419,6 +419,7 @@ public partial class AutoTranslateViewModel : IFindResult
         }
 
         HasTranslatedSomething = HasUsableTranslation;
+        RefreshDictionaryRows();
     }
 
     /// <summary>F3 / Shift+F3 in the window: repeat the last search without a dialog.</summary>

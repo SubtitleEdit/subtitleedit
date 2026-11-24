@@ -9,17 +9,8 @@ namespace Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect;
 /// Animated effect preview (see <see cref="EffectPreviewRenderer"/>). While not animating it
 /// shows a still "poster" frame, so a gallery full of tiles costs nothing until hovered.
 /// </summary>
-public class EffectPreviewControl : Control
+public partial class EffectPreviewControl : Control
 {
-    public static readonly StyledProperty<IAdvancedEffectDisplay?> AdvancedEffectProperty =
-        AvaloniaProperty.Register<EffectPreviewControl, IAdvancedEffectDisplay?>(nameof(AdvancedEffect));
-
-    public static readonly StyledProperty<string> PreviewTextProperty =
-        AvaloniaProperty.Register<EffectPreviewControl, string>(nameof(PreviewText), "Subtitle Edit");
-
-    public static readonly StyledProperty<bool> IsPlayingProperty =
-        AvaloniaProperty.Register<EffectPreviewControl, bool>(nameof(IsPlaying));
-
     private readonly Stopwatch _clock = new();
     private bool _frameRequested;
 
@@ -29,23 +20,14 @@ public class EffectPreviewControl : Control
         ClipToBoundsProperty.OverrideDefaultValue<EffectPreviewControl>(true);
     }
 
-    public IAdvancedEffectDisplay? AdvancedEffect
-    {
-        get => GetValue(AdvancedEffectProperty);
-        set => SetValue(AdvancedEffectProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial IAdvancedEffectDisplay? AdvancedEffect { get; set; }
 
-    public string PreviewText
-    {
-        get => GetValue(PreviewTextProperty);
-        set => SetValue(PreviewTextProperty, value);
-    }
+    [GeneratedStyledProperty(DefaultValue = "Subtitle Edit")]
+    public partial string PreviewText { get; set; }
 
-    public bool IsPlaying
-    {
-        get => GetValue(IsPlayingProperty);
-        set => SetValue(IsPlayingProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial bool IsPlaying { get; set; }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {

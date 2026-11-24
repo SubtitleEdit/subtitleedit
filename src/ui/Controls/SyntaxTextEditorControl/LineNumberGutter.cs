@@ -17,21 +17,8 @@ namespace Nikse.SubtitleEdit.Controls.SyntaxTextEditorControl;
 /// current <see cref="VerticalOffset"/> and it draws itself - <see cref="SyntaxTextEditor"/> keeps
 /// those in sync with its view.
 /// </summary>
-public class LineNumberGutter : Control
+public partial class LineNumberGutter : Control
 {
-    public static readonly StyledProperty<int> LineCountProperty =
-        AvaloniaProperty.Register<LineNumberGutter, int>(nameof(LineCount), 1);
-
-    public static readonly StyledProperty<double> LineHeightProperty =
-        AvaloniaProperty.Register<LineNumberGutter, double>(nameof(LineHeight), 16);
-
-    public static readonly StyledProperty<double> VerticalOffsetProperty =
-        AvaloniaProperty.Register<LineNumberGutter, double>(nameof(VerticalOffset));
-
-    /// <summary>The caret's line, drawn brighter - zero based, negative for "none".</summary>
-    public static readonly StyledProperty<int> CurrentLineProperty =
-        AvaloniaProperty.Register<LineNumberGutter, int>(nameof(CurrentLine), -1);
-
     public static readonly StyledProperty<IBrush?> ForegroundProperty =
         TextElement.ForegroundProperty.AddOwner<LineNumberGutter>();
 
@@ -76,29 +63,18 @@ public class LineNumberGutter : Control
         AffectsMeasure<LineNumberGutter>(LineCountProperty, FontFamilyProperty, FontSizeProperty);
     }
 
-    public int LineCount
-    {
-        get => GetValue(LineCountProperty);
-        set => SetValue(LineCountProperty, value);
-    }
+    [GeneratedStyledProperty(DefaultValue = 1)]
+    public partial int LineCount { get; set; }
 
-    public double LineHeight
-    {
-        get => GetValue(LineHeightProperty);
-        set => SetValue(LineHeightProperty, value);
-    }
+    [GeneratedStyledProperty(DefaultValue = 16.0)]
+    public partial double LineHeight { get; set; }
 
-    public double VerticalOffset
-    {
-        get => GetValue(VerticalOffsetProperty);
-        set => SetValue(VerticalOffsetProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial double VerticalOffset { get; set; }
 
-    public int CurrentLine
-    {
-        get => GetValue(CurrentLineProperty);
-        set => SetValue(CurrentLineProperty, value);
-    }
+    /// <summary>The caret's line, drawn brighter - zero based, negative for "none".</summary>
+    [GeneratedStyledProperty(DefaultValue = -1)]
+    public partial int CurrentLine { get; set; }
 
     public IBrush? Foreground
     {

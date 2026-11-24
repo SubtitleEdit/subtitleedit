@@ -15,6 +15,80 @@ namespace Nikse.SubtitleEdit.Core.Common
     public static class FileUtil
     {
         /// <summary>
+        /// Reads a text file in read/write shared mode, with the same result as
+        /// <c>new StreamReader(path, encoding, true).ReadToEnd()</c> - the encoding's own
+        /// preamble is skipped, a UTF-8/UTF-16/UTF-32 byte order mark switches the encoding, and
+        /// <paramref name="currentEncoding"/> is what the reader's CurrentEncoding would be.
+        /// Decoding the whole byte array at once skips the reader's StringBuilder growth and
+        /// final copy (less memory and several times faster on large files).
+        /// </summary>
+        public static string ReadAllTextShared(string path, Encoding encoding, out Encoding currentEncoding)
+        {
+            var bytes = ReadAllBytesShared(path);
+            var length = bytes.Length;
+            var skip = 0;
+            currentEncoding = encoding;
+
+            var preamble = encoding.GetPreamble();
+            var detect = true;
+            if (preamble.Length > 0)
+            {
+                var compare = Math.Min(length, preamble.Length);
+                var matches = true;
+                for (var i = 0; i < compare; i++)
+                {
+                    if (bytes[i] != preamble[i])
+                    {
+                        matches = false;
+                        break;
+                    }
+                }
+
+                if (matches)
+                {
+                    // A file shorter than the preamble that matches as far as it goes is decoded
+                    // as is, without byte order mark detection - StreamReader does the same.
+                    skip = length >= preamble.Length ? preamble.Length : 0;
+                    detect = false;
+                }
+            }
+
+            if (detect && length >= 2)
+            {
+                if (bytes[0] == 0xFE && bytes[1] == 0xFF)
+                {
+                    currentEncoding = Encoding.BigEndianUnicode;
+                    skip = 2;
+                }
+                else if (bytes[0] == 0xFF && bytes[1] == 0xFE)
+                {
+                    if (length < 4 || bytes[2] != 0 || bytes[3] != 0)
+                    {
+                        currentEncoding = Encoding.Unicode;
+                        skip = 2;
+                    }
+                    else
+                    {
+                        currentEncoding = Encoding.UTF32;
+                        skip = 4;
+                    }
+                }
+                else if (length >= 3 && bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF)
+                {
+                    currentEncoding = Encoding.UTF8;
+                    skip = 3;
+                }
+                else if (length >= 4 && bytes[0] == 0 && bytes[1] == 0 && bytes[2] == 0xFE && bytes[3] == 0xFF)
+                {
+                    currentEncoding = new UTF32Encoding(bigEndian: true, byteOrderMark: true);
+                    skip = 4;
+                }
+            }
+
+            return currentEncoding.GetString(bytes, skip, length - skip);
+        }
+
+        /// <summary>
         /// Opens a binary file in read/write shared mode, reads the contents of the file into a
         /// byte array, and then closes the file.
         /// </summary>

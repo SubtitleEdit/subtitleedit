@@ -12,17 +12,34 @@ namespace Nikse.SubtitleEdit.Core.Forms
         private readonly Subtitle _subtitle;
         private readonly double _frameRate;
         private readonly List<double> _timeCodes;
+        private readonly double _timelineOffsetMs;
         private readonly List<int> _shotChangesFrames;
 
         public ProgressChangedDelegate ProgressChanged { get; set; }
 
         public TimeCodesBeautifier(Subtitle subtitle, double frameRate, List<double> timeCodes, List<double> shotChanges)
+            : this(subtitle, frameRate, timeCodes, shotChanges, 0)
+        {
+        }
+
+        /// <param name="subtitle">Subtitle to beautify in place.</param>
+        /// <param name="frameRate">Video frame rate, used when there are no exact time codes.</param>
+        /// <param name="timeCodes">Exact frame times in seconds, counted from the first frame (may be empty).</param>
+        /// <param name="shotChanges">Shot changes in seconds on the player's timeline.</param>
+        /// <param name="timelineOffsetMs">
+        /// Where the video's first frame sits on the player's timeline (the container start time).
+        /// Subtitle times and shot changes are on that timeline, but the frame grid - n/fps, or
+        /// exact time codes from ffmpeg - counts from 0. A 25 fps file starting at 0.02 s put every
+        /// snapped cue half a frame (20 ms) off its shot change.
+        /// </param>
+        public TimeCodesBeautifier(Subtitle subtitle, double frameRate, List<double> timeCodes, List<double> shotChanges, double timelineOffsetMs)
         {
             _subtitle = subtitle;
             _frameRate = frameRate;
+            _timelineOffsetMs = timelineOffsetMs > 0 ? timelineOffsetMs : 0;
 
-            // Convert time codes to milliseconds
-            _timeCodes = timeCodes.Select(d => d * 1000).ToList();
+            // Convert time codes to milliseconds on the player's timeline
+            _timeCodes = timeCodes.Select(d => d * 1000 + _timelineOffsetMs).ToList();
 
             // Convert shot changes to frame numbers
             _shotChangesFrames = shotChanges.Select(d => MillisecondsToFrames(d * 1000)).ToList();
@@ -1120,6 +1137,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return _timeCodes.ClosestIndexTo(milliseconds);
             }
 
+            if (_timelineOffsetMs > 0)
+            {
+                // Frame 0 is the first frame - nothing is shown before it.
+                return Math.Max(0, SubtitleFormat.MillisecondsToFrames(milliseconds - _timelineOffsetMs, _frameRate));
+            }
+
             return SubtitleFormat.MillisecondsToFrames(milliseconds, _frameRate);
         }
 
@@ -1133,7 +1156,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 }
             }
 
-            return SubtitleFormat.FramesToMilliseconds(frames, _frameRate);
+            return SubtitleFormat.FramesToMilliseconds(frames, _frameRate) + _timelineOffsetMs;
         }
 
         private int? GetFirstShotChangeFrameInBetween(int leftCueFrame, int rightCueFrame)

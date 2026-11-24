@@ -89,7 +89,7 @@ public class TtsEngineCatalogTests
             Assert.False(VoiceFileRename.CanRename(voice));
         }
 
-        var imogen = Assert.Single(voices, v => ((ZonosTtsVoice)v.EngineVoice).PresetStem == "Imogen_en-British_F_1");
+        var imogen = Assert.Single(voices, v => v.EngineVoice is ZonosTtsVoice { PresetStem: "Imogen_en-British_F_1" });
         Assert.Equal("English - Imogen (British, female)", imogen.Name);
     }
 

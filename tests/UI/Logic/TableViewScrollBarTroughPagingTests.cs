@@ -79,7 +79,7 @@ public class TableViewScrollBarTroughPagingTests : IDisposable
         AvaloniaHeadlessPlatform.ForceRenderTimerTick();
         Avalonia.Threading.Dispatcher.UIThread.RunJobs();
 
-        var scrollBar = grid.GetVisualDescendants().OfType<ScrollBar>()
+        var scrollBar = grid.GetRowsScrollViewer()!.GetVisualDescendants().OfType<ScrollBar>()
             .First(s => s.Orientation == Orientation.Vertical);
         return (window, grid, scrollBar);
     }
@@ -159,7 +159,7 @@ public class TableViewScrollBarTroughPagingTests : IDisposable
 
         // The rows follow: the scroll bar's Value is bound two-way to the scroll offset
         // (the old DataGrid needed its internal scroll processing invoked by reflection).
-        var scrollViewer = grid.GetVisualDescendants().OfType<ScrollViewer>().First();
+        var scrollViewer = grid.GetRowsScrollViewer()!;
         Assert.Equal(scrollBar.Value, scrollViewer.Offset.Y, 3);
 
         window.MouseUp(point, MouseButton.Left);

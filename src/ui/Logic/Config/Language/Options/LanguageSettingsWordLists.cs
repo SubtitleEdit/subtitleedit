@@ -9,9 +9,18 @@ public class LanguageSettingsWordLists
     public string RemovedWords { get; set; }
     public string AddRemovedWord { get; set; }
     public string OcrFixList { get; set; }
+    public string TranslationTargetLanguage { get; set; }
+    public string TranslationSourceLanguage { get; set; }
+    public string TranslationSourceCue { get; set; }
+    public string TranslationReviewOnly { get; set; }
+    public string TranslationRuleOutput { get; set; }
+    public string TranslationRuleNote { get; set; }
+    public string TranslationRules { get; set; }
+    public string SaveTranslationRule { get; set; }
     public string UnableToAddItem { get; set; }
     public string UnableToRemoveItem { get; set; }
     public string RegexRulesDotDotDot { get; set; }
+    public string DoNotBreakAfterListDotDotDot { get; set; }
     public string RegexRulesTitle { get; set; }
     public string RegexRulesDescription { get; set; }
     public string RegexRules { get; set; }
@@ -72,9 +81,18 @@ public class LanguageSettingsWordLists
         RemovedWords = "Removed from dictionary";
         AddRemovedWord = "Add removed word";
         OcrFixList = "OCR fix list";
+        TranslationTargetLanguage = "Target language";
+        TranslationSourceLanguage = "Source language";
+        TranslationSourceCue = "Exact source cue";
+        TranslationReviewOnly = "Suggest for review";
+        TranslationRuleOutput = "Replacement or one suggestion per line";
+        TranslationRuleNote = "Review note (optional)";
+        TranslationRules = "Translation rules";
+        SaveTranslationRule = "Save rule";
         UnableToAddItem = "Unable to add item, it probably already exists!";
         UnableToRemoveItem = "Unable to remove item!";
         RegexRulesDotDotDot = "Regex rules...";
+        DoNotBreakAfterListDotDotDot = "Do-not-break-after list...";
         RegexRulesTitle = "OCR regex rules - {0}";
         RegexRulesDescription = "Regular expressions used by \"Fix common OCR errors\" in Fix common errors. Turn a rule off to stop it, or add your own.";
         RegexRules = "Rules";

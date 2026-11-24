@@ -37,6 +37,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
     private static readonly List<double> NoTimeCodes = new List<double>();
     private double _frameRate = 25.0;
     private double _videoDurationSeconds;
+    private double _timelineOffsetMs;
     private string _videoFileName = string.Empty;
     private CancellationTokenSource? _extractCancellation;
     private volatile bool _disposed;
@@ -133,7 +134,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
         // beautifier — it reads the profile directly from Configuration.Settings.BeautifyTimeCodes.
         var subtitle = BuildSubtitleFromRows();
 
-        var beautifier = new Core.Forms.TimeCodesBeautifier(subtitle, _frameRate, ActiveTimeCodes(), _shotChanges);
+        var beautifier = new Core.Forms.TimeCodesBeautifier(subtitle, _frameRate, ActiveTimeCodes(), _shotChanges, _timelineOffsetMs);
         beautifier.Beautify();
 
         Avalonia.Threading.Dispatcher.UIThread.Post(() =>
@@ -514,10 +515,14 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
 
         _frameRate = 25.0;
         _videoDurationSeconds = 0;
+        _timelineOffsetMs = 0;
         _videoFileName = string.Empty;
         if (!string.IsNullOrEmpty(videoFileName) && System.IO.File.Exists(videoFileName))
         {
             _videoFileName = videoFileName;
+
+            // Shot changes and the player count from the file's start time; the frame grid must too.
+            _timelineOffsetMs = Logic.Media.WaveFileExtractor.GetTimelineOffsetMilliseconds(videoFileName);
             try
             {
                 var mediaInfo = Logic.Media.FfmpegMediaInfo2.Parse(videoFileName);
@@ -801,7 +806,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
         StopPositionTimer();
         _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
 
-        CommitBeautifiedTimes(_allSubtitles, _frameRate, _shotChanges, ActiveTimeCodes());
+        CommitBeautifiedTimes(_allSubtitles, _frameRate, _shotChanges, ActiveTimeCodes(), _timelineOffsetMs);
 
         OkPressed = true;
         Window?.Close();
@@ -812,7 +817,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
     /// start time, as the beautifier expects). The rows keep all their view-model-only state -
     /// the previous rebuild from Paragraphs silently dropped OriginalText, Id and the ASSA style.
     /// </summary>
-    internal static void CommitBeautifiedTimes(List<SubtitleLineViewModel> rows, double frameRate, List<double> shotChanges, List<double>? timeCodes = null)
+    internal static void CommitBeautifiedTimes(List<SubtitleLineViewModel> rows, double frameRate, List<double> shotChanges, List<double>? timeCodes = null, double timelineOffsetMs = 0)
     {
         var ordered = rows.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
         var subtitle = new Subtitle();
@@ -821,7 +826,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
             subtitle.Paragraphs.Add(vm.ToParagraph());
         }
 
-        var beautifier = new Core.Forms.TimeCodesBeautifier(subtitle, frameRate, timeCodes ?? new List<double>(), shotChanges);
+        var beautifier = new Core.Forms.TimeCodesBeautifier(subtitle, frameRate, timeCodes ?? new List<double>(), shotChanges, timelineOffsetMs);
         beautifier.Beautify();
 
         // Beautify adjusts cue boundaries only, so the paragraphs still line up with the rows.

@@ -145,6 +145,7 @@ public class LanguageSettingsShortcuts
     public string TextBoxCut2 { get; set; }
     public string TextBoxPaste { get; set; }
     public string TextBoxPaste2 { get; set; }
+    public string TextBoxPasteAndAutoBreak { get; set; }
     public string TextBoxCopy { get; set; }
     public string TextBoxCopy2 { get; set; }
     public string TextBoxSelectAll { get; set; }
@@ -508,6 +509,7 @@ public class LanguageSettingsShortcuts
         TextBoxCut2 = "Text box: Cut (alternative)";
         TextBoxPaste = "Text box: Paste";
         TextBoxPaste2 = "Text box: Paste (alternative)";
+        TextBoxPasteAndAutoBreak = "Text box: Paste and auto-break";
         TextBoxCopy = "Text box: Copy";
         TextBoxCopy2 = "Text box: Copy (alternative)";
         TextBoxSelectAll = "Text box: Select all";

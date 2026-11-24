@@ -321,6 +321,30 @@ public sealed class TableViewColumnManager
 public static class TableViewExtras
 {
     /// <summary>
+    /// The ScrollViewer that scrolls the rows (template part PART_ScrollViewer). Not simply the
+    /// first ScrollViewer: the Fluent 2 template puts the header row in a ScrollViewer of its
+    /// own (PART_HeaderScroller) ahead of it in the visual tree.
+    /// </summary>
+    public static ScrollViewer? GetRowsScrollViewer(this TableView tableView)
+    {
+        ScrollViewer? first = null;
+        foreach (var scrollViewer in tableView.GetVisualDescendants().OfType<ScrollViewer>())
+        {
+            if (scrollViewer.Name == "PART_ScrollViewer")
+            {
+                return scrollViewer;
+            }
+
+            if (first == null && scrollViewer.Name != "PART_HeaderScroller")
+            {
+                first = scrollViewer;
+            }
+        }
+
+        return first;
+    }
+
+    /// <summary>
     /// Fits the given columns to their header and cell text each time <paramref name="items"/>
     /// changes (batched into one pass after the fill), so fixed-width columns such as number
     /// and time take only the room they need and the star column gets the rest. TableView
@@ -915,7 +939,7 @@ public static class TableViewExtras
         currentIndex = Math.Clamp(currentIndex, 0, count - 1);
         var fallback = Math.Clamp(currentIndex + (down ? GetPageSize(tableView) : -GetPageSize(tableView)), 0, count - 1);
 
-        var scrollViewer = tableView.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+        var scrollViewer = tableView.GetRowsScrollViewer();
         if (scrollViewer == null || scrollViewer.Viewport.Height <= 0)
         {
             return fallback;
@@ -1017,7 +1041,7 @@ public static class TableViewExtras
     /// </summary>
     public static void PrePositionScroll(TableView tableView, int index)
     {
-        var scrollViewer = tableView.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+        var scrollViewer = tableView.GetRowsScrollViewer();
         if (scrollViewer == null || scrollViewer.Viewport.Height <= 0)
         {
             return;
@@ -1132,7 +1156,7 @@ public static class TableViewExtras
     /// </summary>
     public static double? GetRowViewportTop(TableView tableView, object item)
     {
-        var scrollViewer = tableView.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+        var scrollViewer = tableView.GetRowsScrollViewer();
         if (scrollViewer == null || scrollViewer.Viewport.Height <= 0)
         {
             return null;
@@ -1168,7 +1192,7 @@ public static class TableViewExtras
     /// </summary>
     public static bool IsRowFullyVisible(TableView tableView, object item)
     {
-        var scrollViewer = tableView.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+        var scrollViewer = tableView.GetRowsScrollViewer();
         if (scrollViewer == null || scrollViewer.Viewport.Height <= 0)
         {
             return false;
@@ -1192,7 +1216,7 @@ public static class TableViewExtras
     {
         Dispatcher.UIThread.Post(() =>
         {
-            var scrollViewer = tableView.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+            var scrollViewer = tableView.GetRowsScrollViewer();
             if (scrollViewer == null || scrollViewer.Viewport.Height <= 0)
             {
                 return;

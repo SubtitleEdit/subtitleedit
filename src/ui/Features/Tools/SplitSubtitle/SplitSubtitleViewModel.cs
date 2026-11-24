@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -211,6 +212,30 @@ public partial class SplitSubtitleViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
+        // The output defaults to the source file's folder and the part names are fixed, so a second
+        // split would silently replace parts the user already edited - ask first.
+        var existingFiles = SplitItems
+            .Select(item => Path.Combine(OutputFolder, item.FileName))
+            .Where(File.Exists)
+            .ToList();
+        if (existingFiles.Count > 0)
+        {
+            var message = existingFiles.Count == 1
+                ? string.Format(Se.Language.General.FileXAlreadyExists, existingFiles[0])
+                : string.Format(Se.Language.General.OverwriteFilesInFolderX, OutputFolder) + Environment.NewLine + Environment.NewLine +
+                  string.Join(Environment.NewLine, existingFiles.Select(Path.GetFileName));
+            var answer = await MessageBox.Show(
+                Window,
+                Se.Language.General.OverwriteQuestion,
+                message,
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+            if (answer != MessageBoxResult.Yes)
+            {
+                return;
+            }
+        }
+
         SaveSettings();
 
         // Save parts. _parts and SplitItems are built together in UpdateSplit, so they stay aligned.
@@ -263,7 +288,7 @@ public partial class SplitSubtitleViewModel : ObservableObject, IClosingCleanup
             {
                 total += HtmlUtil.RemoveHtmlTags(p.Text, true).Length;
             }
-            PartsMax = Math.Max(1, total);
+            PartsMax = Math.Max(1, Math.Min(total, _subtitle.Paragraphs.Count));
         }
         else if (SplitByTime)
         {
@@ -272,7 +297,7 @@ public partial class SplitSubtitleViewModel : ObservableObject, IClosingCleanup
             {
                 totalSeconds = _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds - _subtitle.Paragraphs[0].StartTime.TotalSeconds;
             }
-            PartsMax = Math.Max(1, (int)(totalSeconds / 5));
+            PartsMax = Math.Max(1, Math.Min((int)(totalSeconds / 5), _subtitle.Paragraphs.Count));
         }
 
         if (_loading)

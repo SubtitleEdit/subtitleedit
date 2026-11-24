@@ -23,34 +23,10 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 
-public class AudioVisualizer : Control
+public partial class AudioVisualizer : Control
 {
-    public static readonly StyledProperty<WavePeakData2?> WavePeaksProperty =
-        AvaloniaProperty.Register<AudioVisualizer, WavePeakData2?>(nameof(WavePeaks));
-
     public static readonly StyledProperty<double> StartPositionSecondsProperty =
         AvaloniaProperty.Register<AudioVisualizer, double>(nameof(StartPositionSeconds));
-
-    public static readonly StyledProperty<double> ZoomFactorProperty =
-        AvaloniaProperty.Register<AudioVisualizer, double>(nameof(ZoomFactor), 1.0);
-
-    public static readonly StyledProperty<double> VerticalZoomFactorProperty =
-        AvaloniaProperty.Register<AudioVisualizer, double>(nameof(VerticalZoomFactor), 1.0);
-
-    public static readonly StyledProperty<double> CurrentVideoPositionSecondsProperty =
-        AvaloniaProperty.Register<AudioVisualizer, double>(nameof(CurrentVideoPositionSeconds));
-
-    public static readonly StyledProperty<bool> DrawGridLinesProperty =
-        AvaloniaProperty.Register<AudioVisualizer, bool>(nameof(DrawGridLines));
-
-    public static readonly StyledProperty<bool> IsReadOnlyProperty =
-        AvaloniaProperty.Register<AudioVisualizer, bool>(nameof(IsReadOnly));
-
-    public static readonly StyledProperty<bool> InvertMouseWheelProperty =
-        AvaloniaProperty.Register<AudioVisualizer, bool>(nameof(InvertMouseWheel));
-
-    public static readonly StyledProperty<List<SubtitleLineViewModel>> AllSelectedParagraphsProperty =
-        AvaloniaProperty.Register<AudioVisualizer, List<SubtitleLineViewModel>>(nameof(AllSelectedParagraphs));
 
     public static readonly StyledProperty<Color> WaveformColorProperty =
         AvaloniaProperty.Register<AudioVisualizer, Color>(nameof(WaveformColor));
@@ -76,11 +52,8 @@ public class AudioVisualizer : Control
     public static readonly StyledProperty<Color> WaveformParagraphRightColorProperty =
         AvaloniaProperty.Register<AudioVisualizer, Color>(nameof(WaveformParagraphRightColor));
 
-    public WavePeakData2? WavePeaks
-    {
-        get => GetValue(WavePeaksProperty);
-        set => SetValue(WavePeaksProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial WavePeakData2? WavePeaks { get; set; }
 
     public double StartPositionSeconds
     {
@@ -88,47 +61,26 @@ public class AudioVisualizer : Control
         set => SetValue(StartPositionSecondsProperty, Math.Clamp(value, 0, MaxStartPositionSeconds));
     }
 
-    public double ZoomFactor
-    {
-        get => GetValue(ZoomFactorProperty);
-        set => SetValue(ZoomFactorProperty, value);
-    }
+    [GeneratedStyledProperty(DefaultValue = 1.0)]
+    public partial double ZoomFactor { get; set; }
 
-    public double VerticalZoomFactor
-    {
-        get => GetValue(VerticalZoomFactorProperty);
-        set => SetValue(VerticalZoomFactorProperty, value);
-    }
+    [GeneratedStyledProperty(DefaultValue = 1.0)]
+    public partial double VerticalZoomFactor { get; set; }
 
-    public double CurrentVideoPositionSeconds
-    {
-        get => GetValue(CurrentVideoPositionSecondsProperty);
-        set => SetValue(CurrentVideoPositionSecondsProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial double CurrentVideoPositionSeconds { get; set; }
 
-    public bool InvertMouseWheel
-    {
-        get => GetValue(InvertMouseWheelProperty);
-        set => SetValue(InvertMouseWheelProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial bool InvertMouseWheel { get; set; }
 
-    public bool DrawGridLines
-    {
-        get => GetValue(DrawGridLinesProperty);
-        set => SetValue(DrawGridLinesProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial bool DrawGridLines { get; set; }
 
-    public bool IsReadOnly
-    {
-        get => GetValue(IsReadOnlyProperty);
-        set => SetValue(IsReadOnlyProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial bool IsReadOnly { get; set; }
 
-    public List<SubtitleLineViewModel> AllSelectedParagraphs
-    {
-        get => GetValue(AllSelectedParagraphsProperty);
-        set => SetValue(AllSelectedParagraphsProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial List<SubtitleLineViewModel> AllSelectedParagraphs { get; set; }
 
     public Color WaveformColor
     {
@@ -445,6 +397,16 @@ public class AudioVisualizer : Control
     // "center video position" mode can turn into a seek that keeps the play-head centered
     // (#12864). Hosts without a video player (or that never set this) keep plain scrolling.
     public Func<bool>? GetIsVideoPlaying { get; set; }
+
+    /// <summary>
+    /// Where the host's video's first frame sits on the timeline, for "Snap to frames" (#17149).
+    /// Per waveform: each editor window has its own video, and dialogs that never set this keep a
+    /// grid starting at 0.
+    /// </summary>
+    public Func<double>? GetFrameGridOffsetSeconds { get; set; }
+
+    private double FrameGridOffsetSeconds => FrameGrid.NormalizeOffset(GetFrameGridOffsetSeconds?.Invoke() ?? 0);
+
     private Color _waveformFancyHighColor = Colors.Orange;
 
     public Color WaveformFancyHighColor
@@ -713,7 +675,9 @@ public class AudioVisualizer : Control
     private long _lastMouseWheelScroll = -1;
     private readonly Lock _lock = new();
     public SubtitleLineViewModel? NewSelectionParagraph { get; set; }
+
     public double _newSelectionSeconds { get; set; }
+
     private SubtitleLineViewModel? _activeParagraph;
     private SubtitleLineViewModel? _activeParagraphPrevious;
     private SubtitleLineViewModel? _activeParagraphNext;
@@ -821,12 +785,14 @@ public class AudioVisualizer : Control
     public class PositionEventArgs : EventArgs
     {
         public double PositionInSeconds { get; set; }
+
         public bool IsCtrlShift { get; set; }
     }
 
     public class ContextEventArgs : EventArgs
     {
         public double PositionInSeconds { get; set; }
+
         public SubtitleLineViewModel? NewParagraph { get; set; }
     }
 
@@ -2367,14 +2333,14 @@ public class AudioVisualizer : Control
         InvalidateVisual();
     }
 
-    private static double SnapToFrame(double seconds)
+    private double SnapToFrame(double seconds)
     {
         if (!TryGetFrameDuration(out var frameDur))
         {
             return seconds;
         }
 
-        return Math.Round(seconds / frameDur, MidpointRounding.AwayFromZero) * frameDur;
+        return FrameGrid.Snap(seconds, frameDur, FrameGridOffsetSeconds);
     }
 
     /// <summary>
@@ -2388,57 +2354,59 @@ public class AudioVisualizer : Control
     /// frames' whole-ms times against the whole-ms bound keeps it on frame 101.
     /// </para>
     /// </summary>
-    private static double SnapToFrameCeil(double seconds)
+    private double SnapToFrameCeil(double seconds)
     {
         if (!TryGetFrameDuration(out var frameDur))
         {
             return seconds;
         }
 
+        var offset = FrameGridOffsetSeconds;
         var boundMs = Math.Round(seconds * TimeCode.BaseUnit, MidpointRounding.AwayFromZero);
-        var frame = Math.Ceiling(seconds / frameDur);
-        if (FrameToWholeMs(frame - 1, frameDur) >= boundMs)
+        var frame = Math.Max(0, Math.Ceiling((seconds - offset) / frameDur));
+        if (frame > 0 && FrameToWholeMs(frame - 1, frameDur, offset) >= boundMs)
         {
             frame--;
         }
-        else if (FrameToWholeMs(frame, frameDur) < boundMs)
+        else if (FrameToWholeMs(frame, frameDur, offset) < boundMs)
         {
             frame++;
         }
 
-        return frame * frameDur;
+        return frame * frameDur + offset;
     }
 
     /// <summary>
     /// Latest frame time at or before <paramref name="seconds"/>, compared in whole milliseconds -
     /// the mirror of <see cref="SnapToFrameCeil"/>.
     /// </summary>
-    private static double SnapToFrameFloor(double seconds)
+    private double SnapToFrameFloor(double seconds)
     {
         if (!TryGetFrameDuration(out var frameDur))
         {
             return seconds;
         }
 
+        var offset = FrameGridOffsetSeconds;
         var boundMs = Math.Round(seconds * TimeCode.BaseUnit, MidpointRounding.AwayFromZero);
-        var frame = Math.Floor(seconds / frameDur);
-        if (FrameToWholeMs(frame + 1, frameDur) <= boundMs)
+        var frame = Math.Floor((seconds - offset) / frameDur);
+        if (FrameToWholeMs(frame + 1, frameDur, offset) <= boundMs)
         {
             frame++;
         }
-        else if (FrameToWholeMs(frame, frameDur) > boundMs)
+        else if (FrameToWholeMs(frame, frameDur, offset) > boundMs)
         {
             frame--;
         }
 
-        return frame * frameDur;
+        return Math.Max(0, frame * frameDur + offset);
     }
 
     /// <summary>The whole-millisecond time a frame is stored at (the same rounding as
     /// <see cref="TimeSpanExtensions.FromSecondsWholeMilliseconds"/>).</summary>
-    private static double FrameToWholeMs(double frame, double frameDur)
+    private static double FrameToWholeMs(double frame, double frameDur, double offsetSeconds)
     {
-        return Math.Round(frame * frameDur * TimeCode.BaseUnit, MidpointRounding.AwayFromZero);
+        return Math.Round((frame * frameDur + offsetSeconds) * TimeCode.BaseUnit, MidpointRounding.AwayFromZero);
     }
 
     private static bool TryGetFrameDuration(out double frameDur)

@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -195,6 +196,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             return Parse(fileName, useThisEncoding, gate, out _);
         }
 
+        /// <param name="fileName">File name of subtitle to load.</param>
+        /// <param name="useThisEncoding">Encoding to read file with.</param>
+        /// <param name="gate">Runs each format check (IsMine + load), null runs it directly.</param>
         /// <param name="linesRead">The lines of the first read of the file (null if it could not be read) - lets a caller try more formats on an unknown file without reading it again.</param>
         internal static Subtitle Parse(string fileName, Encoding useThisEncoding, IFormatCheckGate gate, out List<string> linesRead)
         {
@@ -249,17 +253,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return null;
             }
 
-            var ext = Path.GetExtension(fileName).ToLowerInvariant();
-            foreach (var subtitleFormat in formatsToLookFor.Where(p => p.Extension.Equals(ext, StringComparison.OrdinalIgnoreCase) && !p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
-            {
-                if (subtitleFormat.IsMine(lines, fileName))
-                {
-                    subtitle.FinalizeFormat(fileName, false, null, lines, subtitleFormat, true);
-                    return subtitle;
-                }
-            }
-
-            foreach (var subtitleFormat in formatsToLookFor.Where(p => !p.Extension.Equals(ext, StringComparison.OrdinalIgnoreCase) || p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
+            foreach (var subtitleFormat in GetFormatsInDetectionOrder(formatsToLookFor, fileName))
             {
                 if (subtitleFormat.IsMine(lines, fileName))
                 {
@@ -281,6 +275,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             return LoadSubtitle(fileName, out encoding, useThisEncoding, batchMode, sourceFrameRate, loadSubtitle, null, out _);
         }
 
+        /// <param name="fileName">File name of subtitle to load.</param>
+        /// <param name="encoding">The encoding the file was read with.</param>
+        /// <param name="useThisEncoding">Encoding to read file with, null to auto-detect.</param>
+        /// <param name="batchMode">True when loading in batch mode.</param>
+        /// <param name="sourceFrameRate">Frame rate for frame based formats, null to use the current one.</param>
+        /// <param name="loadSubtitle">False to only detect the format.</param>
         /// <param name="gate">
         /// Runs each format check (IsMine + load) - lets <see cref="ConcurrentSubtitleParser"/> pick
         /// the format instance and lock. Null runs the check directly on the shared instance.
@@ -307,22 +307,18 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             SubtitleFormat TryFormat(SubtitleFormat format)
             {
-                return IsFormatMine(format, lines, fileName)
-                    ? FinalizeFormat(fileName, batchMode, sourceFrameRate, lines, format, loadSubtitle)
+                // These readers already parse the whole file to detect their format. Retain
+                // the result only if detection succeeds, so fallback formats see a clean target.
+                var parsed = loadSubtitle && FormatsThatLoadToDetect.Contains(format.GetType())
+                    ? new Subtitle { Header = null, Footer = null }
+                    : null;
+
+                return IsFormatMine(format, lines, fileName, parsed)
+                    ? FinalizeFormat(fileName, batchMode, sourceFrameRate, lines, format, loadSubtitle, parsed)
                     : null;
             }
 
-            var ext = Path.GetExtension(fileName).ToLowerInvariant();
-            foreach (var subtitleFormat in SubtitleFormat.AllSubtitleFormats.Where(p => p.Extension.Equals(ext, StringComparison.OrdinalIgnoreCase) && !p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
-            {
-                var found = gate == null ? TryFormat(subtitleFormat) : gate.Run(subtitleFormat, TryFormat);
-                if (found != null)
-                {
-                    return found;
-                }
-            }
-
-            foreach (var subtitleFormat in SubtitleFormat.AllSubtitleFormats.Where(p => !p.Extension.Equals(ext, StringComparison.OrdinalIgnoreCase) || p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
+            foreach (var subtitleFormat in GetFormatsInDetectionOrder(SubtitleFormat.AllSubtitleFormats, fileName))
             {
                 var found = gate == null ? TryFormat(subtitleFormat) : gate.Run(subtitleFormat, TryFormat);
                 if (found != null)
@@ -337,6 +333,83 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// The order formats are asked about a file: those whose own extension matches it, then
+        /// those that list it as an alternate extension (e.g. ".ttml" for Timed Text 1.0, whose
+        /// extension is ".xml"), then all the rest. "Unknown" formats always go last. Without
+        /// the middle group a .ttml file was checked by some 200 other formats first.
+        /// </summary>
+        internal static IEnumerable<SubtitleFormat> GetFormatsInDetectionOrder(IEnumerable<SubtitleFormat> allFormats, string fileName)
+        {
+            var formats = allFormats as IReadOnlyList<SubtitleFormat> ?? allFormats.ToList();
+            var ext = Path.GetExtension(fileName ?? string.Empty);
+            for (var i = 0; i < formats.Count; i++)
+            {
+                if (GetDetectionGroup(formats[i], ext) == 0)
+                {
+                    yield return formats[i];
+                }
+            }
+
+            for (var i = 0; i < formats.Count; i++)
+            {
+                if (GetDetectionGroup(formats[i], ext) == 1)
+                {
+                    yield return formats[i];
+                }
+            }
+
+            for (var i = 0; i < formats.Count; i++)
+            {
+                if (GetDetectionGroup(formats[i], ext) == 2)
+                {
+                    yield return formats[i];
+                }
+            }
+        }
+
+        /// <summary>0: own extension matches, 1: an alternate extension matches, 2: the rest.</summary>
+        private static int GetDetectionGroup(SubtitleFormat format, string ext)
+        {
+            if (ext.Length == 0 || format.Name.StartsWith("Unknown", StringComparison.Ordinal))
+            {
+                return 2;
+            }
+
+            if (format.Extension.Equals(ext, StringComparison.OrdinalIgnoreCase))
+            {
+                return 0;
+            }
+
+            foreach (var alternate in GetAlternateExtensions(format))
+            {
+                if (alternate.Equals(ext, StringComparison.OrdinalIgnoreCase))
+                {
+                    return 1;
+                }
+            }
+
+            return 2;
+        }
+
+        /// <summary>
+        /// <see cref="SubtitleFormat.AlternateExtensions"/> builds a new list on every call, and
+        /// detection asks every format on every open - cache them per format type.
+        /// </summary>
+        private static readonly ConcurrentDictionary<Type, string[]> AlternateExtensionsByType = new ConcurrentDictionary<Type, string[]>();
+
+        private static string[] GetAlternateExtensions(SubtitleFormat format)
+        {
+            var type = format.GetType();
+            if (!AlternateExtensionsByType.TryGetValue(type, out var alternates))
+            {
+                alternates = format.AlternateExtensions?.ToArray() ?? Array.Empty<string>();
+                AlternateExtensionsByType[type] = alternates;
+            }
+
+            return alternates;
         }
 
         /// <summary>
@@ -367,16 +440,34 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         /// <summary>
+        /// Formats whose <see cref="SubtitleFormat.IsMine"/> is a full load (<see cref="SubtitleFormat.TryLoadAndDetect"/>),
+        /// so opening a file keeps that parse instead of loading again. Exact types only: a
+        /// subclass may detect or load differently.
+        /// </summary>
+        private static readonly HashSet<Type> FormatsThatLoadToDetect = new HashSet<Type>
+        {
+            typeof(SubRip),
+            typeof(AdvancedSubStationAlpha),
+            typeof(SubStationAlpha),
+            typeof(WebVTT),
+            typeof(Sami),
+            typeof(YouTubeSbv),
+            typeof(Json),
+        };
+
+        /// <summary>
         /// Asks one format whether the lines are its own. A damaged or truncated file can make a
         /// reader throw (an unclosed xml element, a json string with no end quote, ...), and this
         /// runs for EVERY format when a file is opened - so a throw here used to take down the
         /// whole open instead of moving on to the next format.
         /// </summary>
-        private static bool IsFormatMine(SubtitleFormat subtitleFormat, List<string> lines, string fileName)
+        private static bool IsFormatMine(SubtitleFormat subtitleFormat, List<string> lines, string fileName, Subtitle parsed)
         {
             try
             {
-                return subtitleFormat.IsMine(lines, fileName);
+                return parsed != null
+                    ? subtitleFormat.TryLoadAndDetect(parsed, lines, fileName, keep: true)
+                    : subtitleFormat.IsMine(lines, fileName);
             }
             catch (Exception exception)
             {
@@ -387,37 +478,37 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static List<string> ReadLinesFromFile(string fileName, Encoding useThisEncoding, out Encoding encoding)
         {
-            StreamReader sr;
+            string text;
             if (useThisEncoding != null)
             {
-                sr = new StreamReader(fileName, useThisEncoding);
+                text = FileUtil.ReadAllTextShared(fileName, useThisEncoding, out encoding);
             }
             else
             {
                 try
                 {
-                    sr = new StreamReader(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName), true);
+                    text = FileUtil.ReadAllTextShared(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName), out encoding);
                 }
                 catch
                 {
-                    var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                    sr = new StreamReader(fs);
+                    text = FileUtil.ReadAllTextShared(fileName, new UTF8Encoding(false, true), out encoding);
                 }
             }
 
-            encoding = sr.CurrentEncoding;
-            var lines = sr.ReadToEnd().SplitToLines();
-            sr.Close();
-            sr.Dispose();
-            return lines;
+            return text.SplitToLines();
         }
 
-        private SubtitleFormat FinalizeFormat(string fileName, bool batchMode, double? sourceFrameRate, List<string> lines, SubtitleFormat subtitleFormat, bool loadSubtitle)
+        private SubtitleFormat FinalizeFormat(string fileName, bool batchMode, double? sourceFrameRate, List<string> lines, SubtitleFormat subtitleFormat, bool loadSubtitle, Subtitle parsed = null)
         {
-            Header = null;
+            Header = parsed?.Header;
             subtitleFormat.BatchMode = batchMode;
             subtitleFormat.BatchSourceFrameRate = sourceFrameRate;
-            if (loadSubtitle)
+            if (parsed != null)
+            {
+                Paragraphs = parsed.Paragraphs;
+                Footer = parsed.Footer ?? Footer;
+            }
+            else if (loadSubtitle)
             {
                 subtitleFormat.LoadSubtitle(this, lines, fileName);
             }

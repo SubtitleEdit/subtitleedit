@@ -131,4 +131,69 @@ public class AdjustDurationViewModelTests
         Assert.Equal(TimeSpan.FromSeconds(4), second.EndTime);
         Assert.Equal(TimeSpan.FromSeconds(26), third.EndTime);
     }
+
+    [Fact]
+    public void AdjustDuration_NegativeSeconds_ShrinksExistingOverlap()
+    {
+        // First line ends at 5 s, next starts at 4 s. -0.5 s was dropped because the new end
+        // (4.5 s) still overlapped and the overlap branch only ever extended the end time.
+        var vm = new AdjustDurationViewModel
+        {
+            SelectedAdjustType = new AdjustDurationDisplay { Type = AdjustDurationType.Seconds },
+            AdjustSeconds = -0.5,
+        };
+        var subtitles = new ObservableCollection<SubtitleLineViewModel>
+        {
+            new() { Text = "First", StartTime = TimeSpan.FromSeconds(1), EndTime = TimeSpan.FromSeconds(5) },
+            new() { Text = "Second", StartTime = TimeSpan.FromSeconds(4), EndTime = TimeSpan.FromSeconds(7) },
+        };
+
+        vm.AdjustDuration(subtitles);
+
+        Assert.Equal(TimeSpan.FromMilliseconds(4500), subtitles[0].EndTime);
+    }
+
+    [Fact]
+    public void AdjustDuration_PositiveSeconds_DoesNotGrowExistingOverlap()
+    {
+        var vm = new AdjustDurationViewModel
+        {
+            SelectedAdjustType = new AdjustDurationDisplay { Type = AdjustDurationType.Seconds },
+            AdjustSeconds = 0.5,
+        };
+        var subtitles = new ObservableCollection<SubtitleLineViewModel>
+        {
+            new() { Text = "First", StartTime = TimeSpan.FromSeconds(1), EndTime = TimeSpan.FromSeconds(5) },
+            new() { Text = "Second", StartTime = TimeSpan.FromSeconds(4), EndTime = TimeSpan.FromSeconds(7) },
+        };
+
+        vm.AdjustDuration(subtitles);
+
+        Assert.Equal(TimeSpan.FromSeconds(5), subtitles[0].EndTime);
+    }
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(0)]
+    public void AdjustDuration_FixedNotPositive_LeavesLinesAlone(double fixedSeconds)
+    {
+        var vm = new AdjustDurationViewModel
+        {
+            SelectedAdjustType = new AdjustDurationDisplay { Type = AdjustDurationType.Fixed },
+            AdjustFixed = fixedSeconds,
+        };
+        var subtitles = new ObservableCollection<SubtitleLineViewModel>
+        {
+            new()
+            {
+                Text = "First",
+                StartTime = TimeSpan.FromSeconds(5),
+                EndTime = TimeSpan.FromSeconds(7),
+            },
+        };
+
+        vm.AdjustDuration(subtitles);
+
+        Assert.Equal(TimeSpan.FromSeconds(7), subtitles[0].EndTime);
+    }
 }

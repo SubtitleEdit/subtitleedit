@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Dictionaries;
+using Nikse.SubtitleEdit.Features.Options.DoNotBreakAfterList;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.SpellCheck.UseAlwaysList;
 using Nikse.SubtitleEdit.Logic;
@@ -423,6 +424,21 @@ public partial class WordListsViewModel : ObservableObject
         await _windowService.ShowDialogAsync<RegexRulesWindow, RegexRulesViewModel>(Window, vm =>
         {
             vm.Initialize(fileName, lang.Name);
+        });
+    }
+
+    [RelayCommand]
+    private async Task EditDoNotBreakAfterList()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var twoLetterCode = SelectedLanguage?.TwoLetterISOLanguageName;
+        await _windowService.ShowDialogAsync<DoNotBreakAfterListWindow, DoNotBreakAfterListViewModel>(Window, vm =>
+        {
+            vm.Initialize(twoLetterCode);
         });
     }
 

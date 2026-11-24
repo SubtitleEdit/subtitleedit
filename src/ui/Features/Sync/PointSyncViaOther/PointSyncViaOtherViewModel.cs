@@ -379,7 +379,9 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
     /// </summary>
     private void AddSyncPoint(SyncPoint syncPoint)
     {
-        var existing = SyncPoints.FirstOrDefault(p => p.LeftIndex == syncPoint.LeftIndex);
+        // Two points on lines with the same start time cannot define a speed factor - PointSyncer
+        // would silently apply only the first offset - so the new one re-points the old one.
+        var existing = SyncPoints.FirstOrDefault(p => p.LeftIndex == syncPoint.LeftIndex || p.LeftStartTime == syncPoint.LeftStartTime);
         if (existing != null)
         {
             SyncPoints.Remove(existing);

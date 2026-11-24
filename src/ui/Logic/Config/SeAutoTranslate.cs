@@ -12,6 +12,13 @@ public class SeAutoTranslate
     public string AutoTranslateLastSource { get; set; } = string.Empty;
     public string AutoTranslateLastTarget { get; set; } = string.Empty;
     public bool TranslateSelectedLinesInPlace { get; set; }
+    public bool UsePostProcessDictionary { get; set; }
+
+    /// <summary>
+    /// Shows the post-processing dictionary in the Auto Translate window (Options > Settings > Tools).
+    /// Off hides it there and no dictionary fixes are applied.
+    /// </summary>
+    public bool ShowPostProcessDictionary { get; set; } = true;
     public string ChatGptUrl { get; set; }
     public string ChatGptPrompt { get; set; }
     public string ChatGptApiKey { get; set; }

@@ -150,7 +150,7 @@ public sealed class TableViewIndexScrollBar : Grid
             return;
         }
 
-        _scrollViewer = _tableView.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+        _scrollViewer = _tableView.GetRowsScrollViewer();
         if (_scrollViewer == null)
         {
             // Template not applied yet - try again after the layout pass that applies it.

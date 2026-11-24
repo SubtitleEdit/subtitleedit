@@ -328,10 +328,8 @@ internal static class AssaDrawAnimationPanel
 /// <summary>
 /// A small looping preview of an in or out effect on a badge (circle with a star).
 /// </summary>
-internal sealed class AnimationThumbnail : Control
+internal sealed partial class AnimationThumbnail : Control
 {
-    public static readonly StyledProperty<bool> IsOutProperty = AvaloniaProperty.Register<AnimationThumbnail, bool>(nameof(IsOut));
-
     private const int LineMs = 1300;
     private const int EffectMs = 450;
     private const int LoopMs = LineMs + 500;
@@ -351,11 +349,8 @@ internal sealed class AnimationThumbnail : Control
     /// </summary>
     public DrawLoopEffect? LoopEffect { get; set; }
 
-    public bool IsOut
-    {
-        get => GetValue(IsOutProperty);
-        set => SetValue(IsOutProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial bool IsOut { get; set; }
 
     public AnimationThumbnail()
     {

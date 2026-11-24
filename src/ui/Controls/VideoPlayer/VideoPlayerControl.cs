@@ -25,76 +25,19 @@ using System.Windows.Input;
 
 namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 {
-    public class VideoPlayerControl : UserControl
+    public partial class VideoPlayerControl : UserControl
     {
-        public static readonly StyledProperty<Control?> PlayerContentProperty =
-            AvaloniaProperty.Register<VideoPlayerControl, Control?>(nameof(PlayerContent));
-
         public static readonly StyledProperty<double> VolumeProperty =
             AvaloniaProperty.Register<VideoPlayerControl, double>(nameof(Volume), 100);
-
-        /// <summary>
-        /// Video position in seconds.
-        /// </summary>
-        public static readonly StyledProperty<double> PositionProperty =
-            AvaloniaProperty.Register<VideoPlayerControl, double>(nameof(Position));
-
-        public static readonly StyledProperty<double> DurationProperty =
-            AvaloniaProperty.Register<VideoPlayerControl, double>(nameof(Duration));
 
         public static readonly StyledProperty<string> ProgressTextProperty =
             AvaloniaProperty.Register<VideoPlayerControl, string>(nameof(ProgressText), default!);
 
-        public static readonly StyledProperty<ICommand> PlayCommandProperty =
-            AvaloniaProperty.Register<VideoPlayerControl, ICommand>(nameof(PlayCommand));
-
-        public static readonly StyledProperty<ICommand> StopCommandProperty =
-            AvaloniaProperty.Register<VideoPlayerControl, ICommand>(nameof(StopCommand));
-
-        public static readonly StyledProperty<ICommand> FullScreenCommandProperty =
-            AvaloniaProperty.Register<VideoPlayerControl, ICommand>(nameof(FullScreenCommand));
-
-        public static readonly StyledProperty<ICommand?> PreviousSubtitleCommandProperty =
-            AvaloniaProperty.Register<VideoPlayerControl, ICommand?>(nameof(PreviousSubtitleCommand));
-
-        public static readonly StyledProperty<ICommand?> NextSubtitleCommandProperty =
-            AvaloniaProperty.Register<VideoPlayerControl, ICommand?>(nameof(NextSubtitleCommand));
-
-        public static readonly StyledProperty<ICommand?> ToggleSubtitlesCommandProperty =
-            AvaloniaProperty.Register<VideoPlayerControl, ICommand?>(nameof(ToggleSubtitlesCommand));
-
-        public static readonly StyledProperty<ICommand?> CycleVideoFlipCommandProperty =
-            AvaloniaProperty.Register<VideoPlayerControl, ICommand?>(nameof(CycleVideoFlipCommand));
-
-        public static readonly StyledProperty<bool> SubtitlesOnVideoIsVisibleProperty =
-            AvaloniaProperty.Register<VideoPlayerControl, bool>(nameof(SubtitlesOnVideoIsVisible), true);
-
-        public static readonly StyledProperty<bool> SubtitleButtonsIsVisibleProperty =
-            AvaloniaProperty.Register<VideoPlayerControl, bool>(nameof(SubtitleButtonsIsVisible));
-
-        public static readonly StyledProperty<ICommand?> PlaybackSpeedCommandProperty =
-            AvaloniaProperty.Register<VideoPlayerControl, ICommand?>(nameof(PlaybackSpeedCommand));
-
         public static readonly StyledProperty<IReadOnlyList<string>?> PlaybackSpeedsProperty =
             AvaloniaProperty.Register<VideoPlayerControl, IReadOnlyList<string>?>(nameof(PlaybackSpeeds));
 
-        public static readonly StyledProperty<string> PlaybackSpeedTextProperty =
-            AvaloniaProperty.Register<VideoPlayerControl, string>(nameof(PlaybackSpeedText), "1.0x");
-
-        public static readonly StyledProperty<bool> PlaybackSpeedIsVisibleProperty =
-            AvaloniaProperty.Register<VideoPlayerControl, bool>(nameof(PlaybackSpeedIsVisible));
-
-        public static readonly StyledProperty<bool> StopIsVisibleProperty =
-            AvaloniaProperty.Register<VideoPlayerControl, bool>(nameof(StopIsVisible));
-
-        public static readonly StyledProperty<bool> FullScreenIsVisibleProperty =
-            AvaloniaProperty.Register<VideoPlayerControl, bool>(nameof(FullScreenIsVisible));
-
-        public Control? PlayerContent
-        {
-            get => GetValue(PlayerContentProperty);
-            set => SetValue(PlayerContentProperty, value);
-        }
+        [GeneratedStyledProperty]
+        public partial Control? PlayerContent { get; set; }
 
         /// <summary>
         /// Theme art shown in the video area while no video is loaded.
@@ -153,17 +96,11 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         /// <summary>
         /// Video position in seconds.
         /// </summary>
-        public double Position
-        {
-            get => GetValue(PositionProperty);
-            set => SetValue(PositionProperty, value);
-        }
+        [GeneratedStyledProperty]
+        public partial double Position { get; set; }
 
-        public double Duration
-        {
-            get => GetValue(DurationProperty);
-            set => SetValue(DurationProperty, value);
-        }
+        [GeneratedStyledProperty]
+        public partial double Duration { get; set; }
 
         public string ProgressText
         {
@@ -175,78 +112,48 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         private readonly TextBlock _textBlockPlayerName;
         private readonly TextBlock _textBlockProgress;
 
-        public ICommand PlayCommand
-        {
-            get => GetValue(PlayCommandProperty);
-            set => SetValue(PlayCommandProperty, value);
-        }
+        [GeneratedStyledProperty]
+        public partial ICommand PlayCommand { get; set; }
 
-        public ICommand StopCommand
-        {
-            get => GetValue(StopCommandProperty);
-            set => SetValue(StopCommandProperty, value);
-        }
+        [GeneratedStyledProperty]
+        public partial ICommand StopCommand { get; set; }
 
-        public ICommand FullScreenCommand
-        {
-            get => GetValue(FullScreenCommandProperty);
-            set => SetValue(FullScreenCommandProperty, value);
-        }
+        [GeneratedStyledProperty]
+        public partial ICommand FullScreenCommand { get; set; }
 
-        public ICommand? PreviousSubtitleCommand
-        {
-            get => GetValue(PreviousSubtitleCommandProperty);
-            set => SetValue(PreviousSubtitleCommandProperty, value);
-        }
+        [GeneratedStyledProperty]
+        public partial ICommand? PreviousSubtitleCommand { get; set; }
 
-        public ICommand? NextSubtitleCommand
-        {
-            get => GetValue(NextSubtitleCommandProperty);
-            set => SetValue(NextSubtitleCommandProperty, value);
-        }
+        [GeneratedStyledProperty]
+        public partial ICommand? NextSubtitleCommand { get; set; }
 
-        public ICommand? ToggleSubtitlesCommand
-        {
-            get => GetValue(ToggleSubtitlesCommandProperty);
-            set => SetValue(ToggleSubtitlesCommandProperty, value);
-        }
+        [GeneratedStyledProperty]
+        public partial ICommand? ToggleSubtitlesCommand { get; set; }
 
-        public ICommand? CycleVideoFlipCommand
-        {
-            get => GetValue(CycleVideoFlipCommandProperty);
-            set => SetValue(CycleVideoFlipCommandProperty, value);
-        }
+        [GeneratedStyledProperty]
+        public partial ICommand? CycleVideoFlipCommand { get; set; }
 
         /// <summary>
         /// Whether the subtitles are shown on the video - the checked state of the toggle
         /// subtitles button. Set by the owner after <see cref="ToggleSubtitlesCommand"/> runs.
         /// </summary>
-        public bool SubtitlesOnVideoIsVisible
-        {
-            get => GetValue(SubtitlesOnVideoIsVisibleProperty);
-            set => SetValue(SubtitlesOnVideoIsVisibleProperty, value);
-        }
+        [GeneratedStyledProperty(DefaultValue = true)]
+        public partial bool SubtitlesOnVideoIsVisible { get; set; }
 
         /// <summary>
         /// The previous/next subtitle and toggle subtitles buttons need the main window's
         /// subtitle, so only its players (and the controls preview) show them - when the
         /// controls layout does (#16047).
         /// </summary>
-        public bool SubtitleButtonsIsVisible
-        {
-            get => GetValue(SubtitleButtonsIsVisibleProperty);
-            set => SetValue(SubtitleButtonsIsVisibleProperty, value);
-        }
+        [GeneratedStyledProperty]
+        public partial bool SubtitleButtonsIsVisible { get; set; }
 
         /// <summary>
         /// Runs with the picked speed (e.g. "1.4x") from the playback speed button's menu (#16306).
         /// The owner keeps the speed, and sets <see cref="PlaybackSpeedText"/> when it changes.
         /// </summary>
-        public ICommand? PlaybackSpeedCommand
-        {
-            get => GetValue(PlaybackSpeedCommandProperty);
-            set => SetValue(PlaybackSpeedCommandProperty, value);
-        }
+        [GeneratedStyledProperty]
+        public partial ICommand? PlaybackSpeedCommand { get; set; }
 
         /// <summary>
         /// The speeds offered in the playback speed button's menu, e.g. "0.2x" ... "3.0x".
@@ -261,32 +168,20 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         /// The playback speed button needs an owner that keeps the speed (the main window's
         /// players and the controls preview) - shown when the controls layout does too (#16306).
         /// </summary>
-        public bool PlaybackSpeedIsVisible
-        {
-            get => GetValue(PlaybackSpeedIsVisibleProperty);
-            set => SetValue(PlaybackSpeedIsVisibleProperty, value);
-        }
+        [GeneratedStyledProperty]
+        public partial bool PlaybackSpeedIsVisible { get; set; }
 
         /// <summary>
         /// The current speed shown on the playback speed button - set by the owner.
         /// </summary>
-        public string PlaybackSpeedText
-        {
-            get => GetValue(PlaybackSpeedTextProperty);
-            set => SetValue(PlaybackSpeedTextProperty, value);
-        }
+        [GeneratedStyledProperty(DefaultValue = "1.0x")]
+        public partial string PlaybackSpeedText { get; set; }
 
-        public bool StopIsVisible
-        {
-            get => GetValue(StopIsVisibleProperty);
-            set => SetValue(StopIsVisibleProperty, value);
-        }
+        [GeneratedStyledProperty]
+        public partial bool StopIsVisible { get; set; }
 
-        public bool FullScreenIsVisible
-        {
-            get => GetValue(FullScreenIsVisibleProperty);
-            set => SetValue(FullScreenIsVisibleProperty, value);
-        }
+        [GeneratedStyledProperty]
+        public partial bool FullScreenIsVisible { get; set; }
 
         private bool _isFullScreen = false;
 
@@ -999,6 +894,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         // Mouse wheel / trackpad scroll over the video seeks (default on)
         public bool WheelToSeek { get; set; } = true;
         public bool IsSmpteTimingEnabled { get; set; }
+
         private bool _surfaceLeftButtonDown;
 
         private void OnMainGridPointerPressed(object? sender, PointerPressedEventArgs e)
@@ -1208,6 +1104,10 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             Duration = 0;
             StartDurationProbe(videoFileName);
 
+            // The mpv core only comes up with the OpenGL control's first frame - ask for one in
+            // case the request made when it was attached never ran.
+            (PlayerContent as LibMpvDynamicOpenGlControl)?.RequestInitialization();
+
             await _videoPlayerInstance.LoadFile(videoFileName, UiToPlayerSeconds(startPositionSeconds));
 
             // The control may have been torn down while LoadFile was awaiting (fullscreen
@@ -1217,6 +1117,8 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             {
                 return;
             }
+
+            RecoverOpenGlInitialization();
 
             _videoPlayerInstance.Volume = Volume;
             _positionTimer?.Stop();
@@ -1238,6 +1140,28 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
             _textBlockVideoFileName.Text = System.IO.Path.GetFileName(videoFileName);
             UpdateVideoFileNameMaxWidth();
+        }
+
+        /// <summary>
+        /// LoadFile waited for the mpv core and gave up: the load is parked until the OpenGL
+        /// control's first frame initializes the core. If Avalonia's one-time OpenGL
+        /// initialization failed (or the request for that first frame was lost), that frame never
+        /// comes - Avalonia ignores every later frame request - and the video stays unplayable for
+        /// the rest of the session. Detaching and re-attaching the control resets Avalonia's
+        /// initialization, so the next frame retries it and the parked load is replayed.
+        /// </summary>
+        private void RecoverOpenGlInitialization()
+        {
+            if (PlayerContent is not LibMpvDynamicOpenGlControl glControl ||
+                glControl.Player is not { IsCoreInitialized: false } ||
+                TopLevel.GetTopLevel(glControl) == null)
+            {
+                return;
+            }
+
+            Se.LogError("VideoPlayerControl: mpv OpenGL control never initialized - re-attaching it to retry");
+            PlayerContent = null;
+            PlayerContent = glControl;
         }
 
         /// <summary>

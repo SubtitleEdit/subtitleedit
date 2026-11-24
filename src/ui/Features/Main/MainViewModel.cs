@@ -836,6 +836,9 @@ public partial class MainViewModel :
     private UiTickPump _positionTimer = new(TimeSpan.FromMilliseconds(50)); // posted ticks, not a DispatcherTimer - see UiTickPump
     private DispatcherTimer _slowTimer = new();
     private UiTickPump? _cursorTimer; // ~60 fps; drives only the waveform/video playhead cursor (a posted tick, not a DispatcherTimer - see UiTickPump)
+    private static int _startupAssetUpdateStarted;
+    private readonly TaskCompletionSource _startupLayoutReady = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    private readonly Task _startupFfmpeg;
     private volatile bool _backgroundWorkRunning; // between StartBackgroundWork and StopBackgroundWork; the tick pumps also need a video
 
     // Playhead interpolation state. When mpv resumes after a paused seek its time-pos stalls
@@ -1218,7 +1221,7 @@ public partial class MainViewModel :
         ShowUpDownDuration = Se.Settings.Appearance.ShowUpDownDuration;
         ShowUpDownLabels = Se.Settings.Appearance.ShowUpDownLabels;
         ShowTimeCodeModeInStatusBar = Se.Settings.Appearance.ShowTimeCodeModeInStatusBar;
-        IsVideoOffsetButtonVisible = Se.Settings.Appearance.ShowVideoOffsetInStatusBar || Se.Settings.General.CurrentVideoOffsetInMs != 0;
+        UpdateVideoOffsetButtonVisible();
         SelectCurrentSubtitleWhilePlaying = Se.Settings.General.SelectCurrentSubtitleWhilePlaying;
         WaveformCenter = Se.Settings.Waveform.CenterVideoPosition;
         EditTextBoxOriginal = new TextBoxWrapper(new TextBox());
@@ -1270,26 +1273,31 @@ public partial class MainViewModel :
         _ = themeInitializer.UpdateThemesIfNeeded().ContinueWith(
             t => Se.LogError(t.Exception!, "Could not unpack themes"),
             TaskContinuationOptions.OnlyOnFaulted);
-        Dispatcher.UIThread.Post(async void () =>
+        // Archive checks and extraction are process-wide disk work. Extra editor windows
+        // share the same folders and must not start another extraction while one is running.
+        if (Interlocked.Exchange(ref _startupAssetUpdateStarted, 1) == 0)
         {
-            try
+            _ = Task.Run(async () =>
             {
-                await languageInitializer.UpdateLanguagesIfNeeded();
-                await dictionaryInitializer.UpdateDictionariesIfNeeded();
-                await ocrInitializer.UpdateOcrDictionariesIfNeeded();
-            }
-            catch (Exception e)
-            {
-                Se.LogError(e);
-            }
-        }, DispatcherPriority.Loaded);
+                try
+                {
+                    await languageInitializer.UpdateLanguagesIfNeeded();
+                    await dictionaryInitializer.UpdateDictionariesIfNeeded();
+                    await ocrInitializer.UpdateOcrDictionariesIfNeeded();
+                }
+                catch (Exception e)
+                {
+                    Se.LogError(e);
+                }
+            });
+        }
 
         if (!File.Exists(Se.GetSettingsFilePath()))
         {
             FirstLoad();
         }
 
-        InitializeFfmpeg();
+        _startupFfmpeg = InitializeFfmpegAsync();
         InitializeLibMpv();
         LibVlcDynamicPlayer.LibVlcPath = Se.VlcFolder;
         Logic.VideoPlayers.Ffmpeg.FfmpegLibraries.LibraryPath = Se.FfmpegLibFolder;
@@ -1467,27 +1475,59 @@ public partial class MainViewModel :
         Configuration.Settings.SubtitleSettings.DCinemaAutoGenerateSubtitleId = Se.Settings.File.DCinemaSmpte.DCinemaAutoGenerateSubtitleId;
     }
 
+    private static bool TryUseConfiguredFfmpeg()
+    {
+        if (File.Exists(Se.Settings.General.FfmpegPath))
+        {
+            return true;
+        }
+
+        var bundledPath = DownloadFfmpegViewModel.GetFfmpegFileName();
+        if (!File.Exists(bundledPath))
+        {
+            return false;
+        }
+
+        FfmpegHelper.SetFfmpegPath(bundledPath);
+        return true;
+    }
+
     private static void InitializeFfmpeg()
     {
-        if (!string.IsNullOrEmpty(Se.Settings.General.FfmpegPath) &&
-            File.Exists(Se.Settings.General.FfmpegPath))
+        if (TryUseConfiguredFfmpeg())
         {
             return;
         }
 
-        var ffmpegFileName = DownloadFfmpegViewModel.GetFfmpegFileName();
-        if (!string.IsNullOrEmpty(ffmpegFileName) && File.Exists(ffmpegFileName))
-        {
-            FfmpegHelper.SetFfmpegPath(ffmpegFileName);
-            return;
-        }
-
-        // Fall back to an ffmpeg already on the system PATH (e.g. after a failed download), so SE
-        // does not get stuck on actions that need ffmpeg on the next start - issue #11760.
         var systemFfmpeg = FfmpegHelper.GetSystemFfmpegPath();
         if (!string.IsNullOrEmpty(systemFfmpeg))
         {
             FfmpegHelper.SetFfmpegPath(systemFfmpeg);
+        }
+    }
+
+    private static async Task InitializeFfmpegAsync()
+    {
+        if (TryUseConfiguredFfmpeg())
+        {
+            return;
+        }
+
+        try
+        {
+            var general = Se.Settings.General;
+            var configuredPath = general.FfmpegPath;
+            var systemFfmpeg = await Task.Run(FfmpegHelper.GetSystemFfmpegPath);
+            // Settings or an FFmpeg download can replace the path during the probe.
+            if (!string.IsNullOrEmpty(systemFfmpeg) &&
+                ReferenceEquals(general, Se.Settings.General) && general.FfmpegPath == configuredPath)
+            {
+                FfmpegHelper.SetFfmpegPath(systemFfmpeg);
+            }
+        }
+        catch (Exception e)
+        {
+            Se.LogError(e, "Could not discover system FFmpeg");
         }
     }
 
@@ -4101,6 +4141,29 @@ public partial class MainViewModel :
             last++;
         }
 
+        // The single-row commands reach one working line past the selection (merge with the line
+        // before/after), and a merge then reads the row after the merged lines to cap the end time.
+        // Stopping at that neighbour left the reference run behind it in the grid, so "merge with
+        // line below" capped the merged end time at a reference row's start (#17121). Take one more
+        // working line on each side and the reference run beyond it.
+        if (first > 0)
+        {
+            first--;
+            while (first > 0 && Subtitles[first - 1].IsReferenceOnly)
+            {
+                first--;
+            }
+        }
+
+        if (last + 1 < Subtitles.Count)
+        {
+            last++;
+            while (last + 1 < Subtitles.Count && Subtitles[last + 1].IsReferenceOnly)
+            {
+                last++;
+            }
+        }
+
         return (first, last);
     }
 
@@ -6621,9 +6684,13 @@ public partial class MainViewModel :
             return;
         }
 
-        if (subtitle.Paragraphs.Count != Subtitles.Count)
+        // Only the working lines: with the original's non-matching lines shown, the grid also holds
+        // display-only reference rows, which counted as lines and took imported times by grid
+        // position - every working line after one got the time code meant for the line before it.
+        var workingRows = Subtitles.Where(p => !p.IsReferenceOnly).ToList();
+        if (subtitle.Paragraphs.Count != workingRows.Count)
         {
-            var message = string.Format(Se.Language.File.Import.TimeCodesDifferentNumberOfLinesXY, subtitle.Paragraphs.Count, Subtitles.Count);
+            var message = string.Format(Se.Language.File.Import.TimeCodesDifferentNumberOfLinesXY, subtitle.Paragraphs.Count, workingRows.Count);
             var answer = await MessageBox.Show(Window, Se.Language.General.Import, message, MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
 
@@ -6635,10 +6702,10 @@ public partial class MainViewModel :
         }
 
         var count = 0;
-        for (var i = 0; i < Subtitles.Count && i < subtitle.Paragraphs.Count; i++)
+        for (var i = 0; i < workingRows.Count && i < subtitle.Paragraphs.Count; i++)
         {
-            Subtitles[i].SetStartTimeOnly(subtitle.Paragraphs[i].StartTime.TimeSpan);
-            Subtitles[i].EndTime = subtitle.Paragraphs[i].EndTime.TimeSpan;
+            workingRows[i].SetStartTimeOnly(subtitle.Paragraphs[i].StartTime.TimeSpan);
+            workingRows[i].EndTime = subtitle.Paragraphs[i].EndTime.TimeSpan;
             count++;
         }
 
@@ -8229,13 +8296,23 @@ public partial class MainViewModel :
             return;
         }
 
+        CopyOriginalTextIntoRows(selectedItems);
+    }
+
+    /// <summary>
+    /// Copies the original text into the text column of the given rows. Reference-only rows (lines
+    /// that exist only in the original) are promoted to ordinary working lines, so the context menu
+    /// and the "Copy text from original (selected lines)" shortcut both fill in missing lines (#17160).
+    /// </summary>
+    private void CopyOriginalTextIntoRows(List<SubtitleLineViewModel> rows)
+    {
         _undoRedoManager.StopChangeDetection();
-        foreach (var selectedItem in selectedItems)
+        foreach (var row in rows)
         {
-            selectedItem.Text = selectedItem.OriginalText;
-            if (selectedItem.IsReferenceOnly && !string.IsNullOrEmpty(selectedItem.Text))
+            row.Text = row.OriginalText;
+            if (row.IsReferenceOnly && !string.IsNullOrEmpty(row.Text))
             {
-                PromoteReferenceOnlyRow(selectedItem);
+                PromoteReferenceOnlyRow(row);
             }
         }
 
@@ -9126,7 +9203,9 @@ public partial class MainViewModel :
     [RelayCommand]
     private void CopyTextFromOriginalToTranslation()
     {
-        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        // Include reference-only rows: on a line that exists only in the original the selection
+        // without them is empty, so the shortcut silently did nothing (#17160).
+        var selectedItems = SubtitleGridSelectedItemsWithReference;
         if (Window == null || selectedItems.Count == 0 || !ShowColumnOriginalText)
         {
             return;
@@ -9138,10 +9217,7 @@ public partial class MainViewModel :
             return;
         }
 
-        foreach (var subtitle in selectedItems)
-        {
-            subtitle.Text = subtitle.OriginalText;
-        }
+        CopyOriginalTextIntoRows(selectedItems);
 
         _shortcutManager.ClearKeys();
         var msg = string.Format(Se.Language.Main.XLinesCopiedFromOriginal, selectedItems.Count);
@@ -10005,6 +10081,12 @@ public partial class MainViewModel :
     {
         var request = PluginRequestHelper.CreateRequest(plugin, PluginConstants.RequestTypeRun);
         request.Subtitle = PluginRequestHelper.ToPluginSubtitle(GetUpdateSubtitle(), SelectedSubtitleFormat, _subtitleFileName ?? string.Empty);
+        if (ShowColumnOriginalText)
+        {
+            var original = GetUpdateSubtitleOriginal();
+            request.OriginalSubtitle = PluginRequestHelper.ToPluginSubtitle(original, original.OriginalFormat ?? SelectedSubtitleFormat, _subtitleFileNameOriginal ?? string.Empty);
+        }
+
         request.SubtitleEncoding = SelectedEncoding?.DisplayName ?? string.Empty;
         request.SelectedIndices = selectedIndices;
         request.VideoFileName = _videoFileName ?? string.Empty;
@@ -16883,6 +16965,15 @@ public partial class MainViewModel :
         Se.Settings.General.ShowColumnGap = !Se.Settings.General.ShowColumnGap;
         ShowColumnGap = Se.Settings.General.ShowColumnGap;
         AutoFitColumns();
+        // Gap errors move between the Gap cell and the Show/Hide cells with the column's
+        // visibility - post the refresh after the layout pass (see ToggleShowColumnCps).
+        Dispatcher.UIThread.Post(() =>
+        {
+            foreach (var row in Subtitles)
+            {
+                row.RefreshAfterSettingsChanged();
+            }
+        });
     }
 
     [RelayCommand]
@@ -18154,7 +18245,7 @@ public partial class MainViewModel :
     /// is enabled, so the playhead lands exactly on a frame. Returns the value unchanged when the
     /// setting is off or no usable frame rate is available.
     /// </summary>
-    private static double SnapSecondsToFrame(double seconds)
+    private double SnapSecondsToFrame(double seconds)
     {
         if (!Se.Settings.Waveform.SnapToFrames)
         {
@@ -18167,8 +18258,7 @@ public partial class MainViewModel :
             return seconds;
         }
 
-        var frameDur = 1.0 / frameRate;
-        return Math.Round(seconds / frameDur, MidpointRounding.AwayFromZero) * frameDur;
+        return FrameGrid.Snap(seconds, 1.0 / frameRate, FrameGridOffsetSeconds);
     }
 
     [RelayCommand]
@@ -18831,7 +18921,43 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
-    private async Task ShowColorPicker()
+    private Task ShowColorPicker()
+    {
+        return ShowColorPickerAndApply(ColorTextBoxIfSelected);
+    }
+
+    /// <summary>
+    /// Color picker for the button under the text box: when a single line is selected and the
+    /// text box has a text selection, only that text is colored (#17141). The selection is
+    /// captured before the dialog opens, as clicking the button moves focus away from the text box.
+    /// </summary>
+    [RelayCommand]
+    private Task ShowColorPickerOrSelectedText()
+    {
+        var selectedItems = GetSelectedEditableSubtitles();
+        var tb = GetFormattingTextBox();
+        var selectionStart = Math.Min(tb.SelectionStart, tb.SelectionEnd);
+        var selectionEnd = Math.Max(tb.SelectionStart, tb.SelectionEnd);
+        if (selectedItems.Count != 1 || selectionEnd <= selectionStart)
+        {
+            return ShowColorPickerAndApply(ColorTextBoxIfSelected);
+        }
+
+        return ShowColorPickerAndApply(color =>
+        {
+            if (tb.Text == null || selectionEnd > tb.Text.Length)
+            {
+                return false;
+            }
+
+            tb.SelectionStart = selectionStart;
+            tb.SelectionEnd = selectionEnd;
+            SetTextBoxColor(tb, color);
+            return true;
+        });
+    }
+
+    private async Task ShowColorPickerAndApply(Func<Color, bool> colorTextBoxSelection)
     {
         var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
@@ -18841,7 +18967,7 @@ public partial class MainViewModel :
 
         if (IsFormatTeletext)
         {
-            await ShowTeletextColorPicker(selectedItems);
+            await ShowTeletextColorPicker(selectedItems, colorTextBoxSelection);
             return;
         }
 
@@ -18851,7 +18977,7 @@ public partial class MainViewModel :
             return;
         }
 
-        if (ColorTextBoxIfSelected(result.SelectedColor))
+        if (colorTextBoxSelection(result.SelectedColor))
         {
             return;
         }
@@ -18867,7 +18993,7 @@ public partial class MainViewModel :
     /// DVB teletext gets the Level 2.5 additions on top: the half intensity CLUT 1
     /// colors and a free color choice via a redefinable colour map entry.
     /// </summary>
-    private async Task ShowTeletextColorPicker(List<SubtitleLineViewModel> selectedItems)
+    private async Task ShowTeletextColorPicker(List<SubtitleLineViewModel> selectedItems, Func<Color, bool> colorTextBoxSelection)
     {
         var isLevel25 = SelectedSubtitleFormat is DvbTeletext;
         var result = await ShowDialogAsync<PickTeletextColorWindow, PickTeletextColorViewModel>(
@@ -18893,7 +19019,7 @@ public partial class MainViewModel :
                 return;
             }
 
-            if (ColorTextBoxIfSelected(customResult.SelectedColor))
+            if (colorTextBoxSelection(customResult.SelectedColor))
             {
                 return;
             }
@@ -18903,7 +19029,7 @@ public partial class MainViewModel :
             return;
         }
 
-        if (ColorTextBoxIfSelected(result.SelectedColor))
+        if (colorTextBoxSelection(result.SelectedColor))
         {
             return;
         }
@@ -22182,7 +22308,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var result = await ShowDialogAsync<ColorPickerWindow, ColorPickerViewModel>();
+        var result = await ShowDialogAsync<ColorPickerWindow, ColorPickerViewModel>(vm => vm.Initialize(Se.Settings.Tools.LastColorPickerColor.FromHexToColor()));
         if (!result.OkPressed)
         {
             return;
@@ -24492,6 +24618,38 @@ public partial class MainViewModel :
     {
         var textBox = EditTextBoxOriginal.IsFocused ? EditTextBoxOriginal : EditTextBox;
         textBox.Paste();
+    }
+
+    /// <summary>
+    /// Pastes the clipboard text as one line and then auto-breaks the whole paragraph again.
+    /// Text copied from a PDF keeps the PDF's own line breaks - often without a space between the
+    /// last word of a line and the first word of the next - so a plain paste needs an unbreak +
+    /// auto-break afterwards (#17137).
+    /// </summary>
+    [RelayCommand]
+    private async Task TextBoxPasteAndAutoBreak()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var textBox = EditTextBoxOriginal.IsFocused ? EditTextBoxOriginal : EditTextBox;
+        if (textBox.IsReadOnly)
+        {
+            return;
+        }
+
+        var clipboardText = await ClipboardHelper.GetTextAsync(Window);
+        if (string.IsNullOrWhiteSpace(clipboardText))
+        {
+            return;
+        }
+
+        textBox.Text = TextBoxPasteNormalizer.ComposePasteAndAutoBreak(
+            textBox.Text ?? string.Empty, textBox.SelectionStart, textBox.SelectionEnd, clipboardText, GetDetectedLanguageCode());
+        textBox.CaretIndex = textBox.Text.Length;
+        _updateAudioVisualizer = true;
     }
 
     /// <summary>
@@ -30833,8 +30991,9 @@ public partial class MainViewModel :
     /// <see cref="Program.PendingVideoToOpen"/> (CLI arguments, or a macOS File activation
     /// from a Finder launch) into this window, restoring the saved layout first.
     /// </summary>
-    private async Task OpenPendingStartupFilesAsync(bool delayForLayout)
+    private async Task OpenPendingStartupFilesAsync()
     {
+        await _startupLayoutReady.Task;
         if (Se.Settings.General.RememberPositionAndSize)
         {
             if (Se.Settings.General.UndockVideoControls)
@@ -30843,11 +31002,6 @@ public partial class MainViewModel :
             }
 
             InitLayout.RestoreLayoutPositions(Se.Settings.Appearance.CurrentLayoutPositions, ContentGrid.Children.FirstOrDefault() as Grid);
-        }
-
-        if (delayForLayout)
-        {
-            await Task.Delay(100);
         }
 
         var hasCliVideo = !string.IsNullOrEmpty(Program.PendingVideoToOpen);
@@ -30889,7 +31043,7 @@ public partial class MainViewModel :
                 if (!string.IsNullOrEmpty(Program.PendingFileToOpen) ||
                     !string.IsNullOrEmpty(Program.PendingVideoToOpen))
                 {
-                    await OpenPendingStartupFilesAsync(delayForLayout: false);
+                    await OpenPendingStartupFilesAsync();
                 }
             }
             catch (Exception e)
@@ -30898,6 +31052,8 @@ public partial class MainViewModel :
             }
         });
     }
+
+    internal void MarkStartupLayoutReady() => _startupLayoutReady.TrySetResult();
 
     internal void OnLoaded()
     {
@@ -30956,7 +31112,7 @@ public partial class MainViewModel :
             Program.StartupFileDecisionDone = true;
             Dispatcher.UIThread.Post(async void () =>
             {
-                await OpenPendingStartupFilesAsync(delayForLayout: true);
+                await OpenPendingStartupFilesAsync();
             });
         }
         else if (Se.Settings.File.OpenLastFileOnStart && Se.Settings.File.ShowRecentFiles)
@@ -30970,7 +31126,12 @@ public partial class MainViewModel :
                     {
                         // Delay to allow Activated event to set FileOpenedViaActivation flag, the Activated event fires asynchronously during startup
                         // and may not have completed by the time OnLoaded runs so wait and recheck the flag
-                        await Task.Delay(100);
+                        if (OperatingSystem.IsMacOS())
+                        {
+                            await Task.Delay(100);
+                        }
+
+                        await _startupLayoutReady.Task;
                         Program.StartupFileDecisionDone = true;
 
                         if (!string.IsNullOrEmpty(Program.PendingFileToOpen) ||
@@ -30979,7 +31140,7 @@ public partial class MainViewModel :
                             // A macOS File activation landed during the grace delay (cold
                             // launch via a Finder double-click): open that file in this
                             // still-empty window instead of the last-used one.
-                            await OpenPendingStartupFilesAsync(delayForLayout: false);
+                            await OpenPendingStartupFilesAsync();
                             return;
                         }
 
@@ -30991,7 +31152,6 @@ public partial class MainViewModel :
 
                         bool skipLoadVideo = false;
                         _videoFileName = first.VideoFileName;
-                        await Task.Delay(25);
 
                         if (Se.Settings.General.RememberPositionAndSize)
                         {
@@ -31211,6 +31371,7 @@ public partial class MainViewModel :
 
     private async Task VideoOpenFile(string videoFileName, int desiredAudioTrackId = -1, double startPositionSeconds = 0) // OpenVideoFile
     {
+        await _startupFfmpeg;
         var vp = GetVideoPlayerControl();
         if (vp == null)
         {
@@ -31240,6 +31401,7 @@ public partial class MainViewModel :
         ClearSubtitleEndPreview();
         await vp.Open(videoFileName, startPositionSeconds);
         _videoFileName = videoFileName;
+        UpdateFrameGridOffset(videoFileName);
         RefreshSubtitlePreview();
 
         if (IsValidUrl(videoFileName))
@@ -32522,12 +32684,39 @@ public partial class MainViewModel :
         }
     }
 
+    /// <summary>
+    /// This window's video's first frame time in seconds (0 with no video). Per window, not
+    /// app-wide: File &gt; New window opens editor windows with videos of their own.
+    /// </summary>
+    internal double FrameGridOffsetSeconds { get; private set; }
+
+    /// <summary>
+    /// Frame snapping counts frames from the video's first frame, which sits at the file's start
+    /// time on the player's timeline (#17149). Looking it up runs ffmpeg, so it is done off the UI thread.
+    /// </summary>
+    private void UpdateFrameGridOffset(string videoFileName)
+    {
+        FrameGridOffsetSeconds = 0;
+        _ = Task.Run(() =>
+        {
+            var offsetSeconds = WaveFileExtractor.GetTimelineOffsetMilliseconds(videoFileName) / 1000.0;
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (string.Equals(_videoFileName, videoFileName, StringComparison.Ordinal))
+                {
+                    FrameGridOffsetSeconds = FrameGrid.NormalizeOffset(offsetSeconds);
+                }
+            });
+        });
+    }
+
     private void VideoCloseFile()
     {
         _videoOpenTokenSource?.Cancel();
         ClearSubtitleEndPreview();
         GetVideoPlayerControl()?.Close();
         _videoFileName = string.Empty;
+        FrameGridOffsetSeconds = 0;
         IsVideoLoaded = false;
         _mediaInfo = null;
 
@@ -35160,6 +35349,16 @@ public partial class MainViewModel :
                         return;
                     }
 
+                    // Bare Delete/Backspace always edit text in a text input, like SE 4 - with
+                    // "allow single-letter shortcuts in text box" on, a General-scope binding such
+                    // as "Delete selection (everywhere)" on Delete removed the whole subtitle line
+                    // instead of one character (#17117). Modified chords (Shift+Delete cut, etc.)
+                    // still reach shortcuts.
+                    if (NonTypingEditKeys.Contains(key) && keyEventArgs.KeyModifiers == KeyModifiers.None)
+                    {
+                        return;
+                    }
+
                     if (!Se.Settings.Tools.AllowSingleLetterShortcutsInTextbox && !AlwaysAllowedSingleKeyShortcuts.Contains(key) && isBareKeyChord)
                     {
                         return; // allow single key shortcuts in text input if enabled in settings, or if it's not an allowed single key shortcut
@@ -37024,7 +37223,22 @@ public partial class MainViewModel :
 
     // Both tick bodies are no-ops without an open video, yet their pumps woke the UI thread
     // ~80 times a second for the whole session - so they only run while a video is loaded.
-    partial void OnIsVideoLoadedChanged(bool value) => UpdateVideoTickPumps();
+    partial void OnIsVideoLoadedChanged(bool value)
+    {
+        UpdateVideoTickPumps();
+        UpdateVideoOffsetButtonVisible();
+    }
+
+    /// <summary>
+    /// The status bar offset button shows while an offset is set (so it can always be changed
+    /// or reset), and - when opted in - also with no offset, but then only with a video loaded,
+    /// like the Video > More menu item (#17080).
+    /// </summary>
+    private void UpdateVideoOffsetButtonVisible()
+    {
+        IsVideoOffsetButtonVisible = Se.Settings.General.CurrentVideoOffsetInMs != 0 ||
+                                     (Se.Settings.Appearance.ShowVideoOffsetInStatusBar && IsVideoLoaded);
+    }
 
     private void UpdateVideoTickPumps()
     {
@@ -38714,7 +38928,7 @@ public partial class MainViewModel :
     private void UpdateVideoOffsetText()
     {
         IsVideoOffsetVisible = Se.Settings.General.CurrentVideoOffsetInMs != 0;
-        IsVideoOffsetButtonVisible = IsVideoOffsetVisible || Se.Settings.Appearance.ShowVideoOffsetInStatusBar;
+        UpdateVideoOffsetButtonVisible();
         VideoOffsetButtonToolTip = IsVideoOffsetVisible ? Se.Language.General.OffsetTimeCodes : Se.Language.General.SetVideoOffset;
         if (IsVideoOffsetVisible)
         {

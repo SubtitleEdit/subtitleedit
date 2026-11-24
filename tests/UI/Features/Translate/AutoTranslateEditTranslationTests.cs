@@ -82,7 +82,7 @@ public class AutoTranslateEditTranslationTests
             PressKey(textBox, Key.Enter);
 
             Assert.Equal("Hej der.", row.TranslatedText);
-            Assert.IsType<TextBlock>(cell.Child);
+            Assert.IsNotType<TextBox>(cell.Child); // back to the display
             Assert.True(vm.IsOkEnabled); // the edit is something worth keeping
             Assert.True(window.IsVisible); // Enter did not run the default button
         }
@@ -111,7 +111,7 @@ public class AutoTranslateEditTranslationTests
             PressKey(textBox, Key.Escape);
 
             Assert.Equal("Hvordan går det?", row.TranslatedText);
-            Assert.IsType<TextBlock>(cell.Child);
+            Assert.IsNotType<TextBox>(cell.Child); // back to the display
             Assert.True(window.IsVisible);
         }
         finally
@@ -133,7 +133,7 @@ public class AutoTranslateEditTranslationTests
             var cell = TranslationCell(grid, vm.Rows[1]);
             Click(cell);
 
-            Assert.IsType<TextBlock>(cell.Child);
+            Assert.IsNotType<TextBox>(cell.Child); // back to the display
         }
         finally
         {

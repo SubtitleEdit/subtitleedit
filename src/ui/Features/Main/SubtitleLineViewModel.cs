@@ -872,10 +872,20 @@ public partial class SubtitleLineViewModel : ObservableObject
     }
 
     public IBrush EndTimeBackgroundBrush =>
-        Se.Settings.General.ColorTimeCodeOverlap && Gap < 0 ? _errorBrush : _transparentBrush;
+        HasTimeCodeGapError(Se.Settings.General, Gap) ? _errorBrush : _transparentBrush;
 
     public IBrush StartTimeBackgroundBrush =>
-        Se.Settings.General.ColorTimeCodeOverlap && PreviousGap < 0 ? _errorBrush : _transparentBrush;
+        HasTimeCodeGapError(Se.Settings.General, PreviousGap) ? _errorBrush : _transparentBrush;
+
+    /// <summary>
+    /// Show/Hide cell tint for a gap: overlaps always, and - when the Gap column is hidden
+    /// (it is by default) - "gap too short"/"gap in range" too, so those rules are visible
+    /// without the Gap column (same idea as CPS falling back to the Duration cell).
+    /// </summary>
+    private static bool HasTimeCodeGapError(SeGeneral general, double gapMs)
+        => gapMs < 0
+            ? general.ColorTimeCodeOverlap
+            : !general.ShowColumnGap && HasGapError(general, gapMs);
 
     public IBrush CpsBackgroundBrush
     {
@@ -1303,6 +1313,8 @@ public partial class SubtitleLineViewModel : ObservableObject
         OnPropertyChanged(nameof(CpsBackgroundBrush));
         OnPropertyChanged(nameof(WpmBackgroundBrush));
         OnPropertyChanged(nameof(GapBackgroundBrush));
+        OnPropertyChanged(nameof(StartTimeBackgroundBrush));
+        OnPropertyChanged(nameof(EndTimeBackgroundBrush));
         OnPropertyChanged(nameof(ShotInDisplay));
         OnPropertyChanged(nameof(ShotOutDisplay));
         OnPropertyChanged(nameof(ShotInBackgroundBrush));

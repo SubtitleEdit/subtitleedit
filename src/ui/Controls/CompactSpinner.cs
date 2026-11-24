@@ -59,7 +59,26 @@ internal static class CompactSpinner
             textBox.BorderBrush = Brushes.Transparent;
             textBox.BorderThickness = new Avalonia.Thickness(0);
             textBox.Background = Brushes.Transparent;
+            MakeInnerTextBoxBorderless(textBox);
         }
+    }
+
+    /// <summary>
+    /// Keeps the text box inside the spinner from drawing a field of its own. Its BorderBrush,
+    /// BorderThickness and Background are set locally, but Fluent 2's pointer-over and focus
+    /// styles paint the template's PART_BorderElement from theme resources instead - a second
+    /// rounded border plus a 2px accent underline inside the spinner's own border and underline.
+    /// Overriding those resources on the text box (as Fluent 2's editable ComboBox does for its
+    /// inner text box) leaves the spinner's single border and bottom line.
+    /// </summary>
+    internal static void MakeInnerTextBoxBorderless(TextBox textBox)
+    {
+        var resources = textBox.Resources;
+        resources["TextControlBackgroundPointerOver"] = Brushes.Transparent;
+        resources["TextControlBackgroundFocused"] = Brushes.Transparent;
+        resources["TextControlBorderBrushPointerOver"] = Brushes.Transparent;
+        resources["TextControlBorderBrushFocused"] = Brushes.Transparent;
+        resources["TextControlThemeBorderThicknessFocused"] = new Avalonia.Thickness(0);
     }
 
     private static void OnTemplateApplied(object? sender, TemplateAppliedEventArgs e)

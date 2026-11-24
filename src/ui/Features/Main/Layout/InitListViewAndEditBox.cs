@@ -2031,6 +2031,11 @@ public static partial class InitListViewAndEditBox
         pasteMenuItem.Command = vm.TextBoxPasteCommand;
         flyoutTextBox.Items.Add(pasteMenuItem);
 
+        // Paste text copied from a PDF without its line breaks, then auto-break (#17137).
+        var pasteAndAutoBreakMenuItem = new MenuItem { Header = Se.Language.General.PasteAndAutoBreak };
+        pasteAndAutoBreakMenuItem.Command = vm.TextBoxPasteAndAutoBreakCommand;
+        flyoutTextBox.Items.Add(pasteAndAutoBreakMenuItem);
+
         flyoutTextBox.Items.Add(new Separator());
 
         // Keep the SE4 order here: "at cursor/video position" first, then "at cursor position".
@@ -2316,7 +2321,7 @@ public static partial class InitListViewAndEditBox
 
         if (Se.Settings.Appearance.TextBoxShowButtonColor)
         {
-            var colorButton = UiUtil.MakeButton(vm.ShowColorPickerCommand, IconNames.Palette, Se.Language.Main.ColorHint);
+            var colorButton = UiUtil.MakeButton(vm.ShowColorPickerOrSelectedTextCommand, IconNames.Palette, Se.Language.Main.ColorHint);
             buttonPanel.Children.Add(colorButton);
         }
 
@@ -2563,7 +2568,7 @@ public static partial class InitListViewAndEditBox
     {
         vm.EditTextBox.ContentControl.RemoveControlFromParent();
 
-        var textBox = MakeSubtitleTextBox();
+        var textBox = MakeSubtitleTextBox(vm);
         textBox[!TextBox.TextProperty] = new Binding(nameof(vm.SelectedSubtitle) + "." + nameof(SubtitleLineViewModel.Text))
         {
             Mode = BindingMode.TwoWay
@@ -2990,7 +2995,7 @@ public static partial class InitListViewAndEditBox
         return bottom + timeControlsPanel.Margin.Top + timeControlsPanel.Margin.Bottom + EditGridMargin * 2;
     }
 
-    private static TextBox MakeSubtitleTextBox()
+    private static TextBox MakeSubtitleTextBox(MainViewModel vm)
     {
         var appearance = Se.Settings.Appearance;
 
@@ -3014,8 +3019,9 @@ public static partial class InitListViewAndEditBox
         ScrollViewer.SetAllowAutoHide(textBox, false);
 
         // Pasted text goes straight into the paragraph via the two-way binding, so its line
-        // breaks must be SE's own - see TextBoxPasteNormalizer (#13591).
-        TextBoxPasteNormalizer.NormalizeLineBreaksOnPaste(textBox);
+        // breaks must be SE's own - see TextBoxPasteNormalizer (#13591). Text wrapped by its
+        // source (a PDF) is joined and auto-broken again (#17137).
+        TextBoxPasteNormalizer.NormalizeLineBreaksOnPaste(textBox, vm.GetDetectedLanguageCode);
 
         // Drag a selection out of one edit box and drop it into the other, or move it within
         // the same box - as SE4's edit boxes allowed (#14534).
@@ -3040,7 +3046,7 @@ public static partial class InitListViewAndEditBox
 
     private static Avalonia.Controls.Control MakeTextBoxOriginal(MainViewModel vm)
     {
-        var textBox = MakeSubtitleTextBox();
+        var textBox = MakeSubtitleTextBox(vm);
         textBox[!TextBox.TextProperty] = new Binding(nameof(vm.SelectedSubtitle) + "." + nameof(SubtitleLineViewModel.OriginalText))
         {
             Mode = BindingMode.TwoWay

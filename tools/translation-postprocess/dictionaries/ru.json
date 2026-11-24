@@ -1,0 +1,23 @@
+{
+  "target_language": "ru",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "Большое спасибо."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "До завтра."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "Спокойной ночи."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "С днём рождения!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "До скорого."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "Спасибо."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Кто ты?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "Не знаю."},
+      {"source": "Thank you very much.", "draft": "Большое спасибо", "replacement": "Большое спасибо."},
+      {"source": "See you tomorrow.", "draft": "До завтра", "replacement": "До завтра."},
+      {"source": "Good night.", "draft": "Спокойной ночи", "replacement": "Спокойной ночи."},
+      {"source": "Happy birthday!", "draft": "С днём рождения", "replacement": "С днём рождения!"},
+      {"source": "See you soon.", "draft": "До скорого", "replacement": "До скорого."},
+      {"source": "Thank you.", "draft": "Спасибо", "replacement": "Спасибо."},
+      {"source": "Who are you?", "draft": "Кто ты", "replacement": "Кто ты?"},
+      {"source": "I don't know.", "draft": "Не знаю", "replacement": "Не знаю."}
+    ]
+  }
+}

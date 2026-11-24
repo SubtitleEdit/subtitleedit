@@ -3273,7 +3273,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
         }
 
-        new Core.Forms.TimeCodesBeautifier(subtitle, frameRate, timeCodes, shotChanges).Beautify();
+        // The video's frames (and its cached shot changes) start at the container start time.
+        var timelineOffsetMs = hasVideoFile ? WaveFileExtractor.GetTimelineOffsetMilliseconds(videoFileName) : 0;
+
+        new Core.Forms.TimeCodesBeautifier(subtitle, frameRate, timeCodes, shotChanges, timelineOffsetMs).Beautify();
         return subtitle;
     }
 
@@ -3299,11 +3302,13 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return subtitle;
         }
 
+        // The video's frames start at its container start time on the player's timeline (#17149).
+        var offsetMs = string.IsNullOrEmpty(videoFileName) ? 0 : WaveFileExtractor.GetTimelineOffsetMilliseconds(videoFileName);
         var frameDurationMs = TimeCode.BaseUnit / frameRate;
         foreach (var p in subtitle.Paragraphs)
         {
-            var newStartMs = Math.Round(p.StartTime.TotalMilliseconds / frameDurationMs, MidpointRounding.AwayFromZero) * frameDurationMs;
-            var newEndMs = Math.Round(p.EndTime.TotalMilliseconds / frameDurationMs, MidpointRounding.AwayFromZero) * frameDurationMs;
+            var newStartMs = FrameGrid.Snap(p.StartTime.TotalMilliseconds, frameDurationMs, offsetMs);
+            var newEndMs = FrameGrid.Snap(p.EndTime.TotalMilliseconds, frameDurationMs, offsetMs);
 
             // Snapping can collapse start and end to the same frame (or invert them) for
             // sub-frame durations; keep the cue at least one frame long.

@@ -3377,22 +3377,49 @@ namespace Nikse.SubtitleEdit.Core.Common
             return null;
         }
 
+        private sealed class DefaultEncodingEntry
+        {
+            public string Name;
+            public Encoding Encoding;
+        }
+
+        private static volatile DefaultEncodingEntry _defaultEncodingCache;
+
+        /// <summary>
+        /// The configured default encoding when it is not UTF-8/UTF-16, else Encoding.Default.
+        /// Finding it means a scan of every installed encoding (each GetEncoding() call
+        /// allocates), which used to run on every file open - so cache it per setting value.
+        /// </summary>
+        private static Encoding GetDefaultAnsiEncoding(string defaultEncodingName)
+        {
+            var cache = _defaultEncodingCache;
+            if (cache != null && cache.Name == defaultEncodingName)
+            {
+                return cache.Encoding;
+            }
+
+            var encoding = Encoding.Default;
+            foreach (var e in Encoding.GetEncodings())
+            {
+                var enc = e.GetEncoding();
+                if (enc.WebName == defaultEncodingName && enc.WebName != Encoding.Unicode.WebName && enc.WebName != Encoding.UTF8.WebName)
+                {
+                    encoding = enc;
+                    break;
+                }
+            }
+
+            _defaultEncodingCache = new DefaultEncodingEntry { Name = defaultEncodingName, Encoding = encoding };
+            return encoding;
+        }
+
         public static Encoding GetEncodingFromFile(string fileName, bool skipAnsiAuto = false)
         {
             var encoding = Encoding.Default;
 
             try
             {
-                foreach (var e in Encoding.GetEncodings())
-                {
-                    var enc = e.GetEncoding();
-                    if (enc.WebName == Configuration.Settings.General.DefaultEncoding && enc.WebName != Encoding.Unicode.WebName && enc.WebName != Encoding.UTF8.WebName)
-                    {
-                        encoding = enc;
-                        break;
-                    }
-                }
-
+                encoding = GetDefaultAnsiEncoding(Configuration.Settings.General.DefaultEncoding);
                 using (var file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
                     var bom = new byte[12]; // Get the byte-order mark, if there is one

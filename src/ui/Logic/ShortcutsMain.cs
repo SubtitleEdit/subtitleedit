@@ -438,6 +438,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.TextBoxCut2Command), Se.Language.Options.Shortcuts.TextBoxCut2 },
         { nameof(MainViewModel.TextBoxPasteCommand), Se.Language.Options.Shortcuts.TextBoxPaste },
         { nameof(MainViewModel.TextBoxPaste2Command), Se.Language.Options.Shortcuts.TextBoxPaste2 },
+        { nameof(MainViewModel.TextBoxPasteAndAutoBreakCommand), Se.Language.Options.Shortcuts.TextBoxPasteAndAutoBreak },
         { nameof(MainViewModel.TextBoxCopyCommand), Se.Language.Options.Shortcuts.TextBoxCopy },
         { nameof(MainViewModel.TextBoxCopy2Command), Se.Language.Options.Shortcuts.TextBoxCopy2 },
         { nameof(MainViewModel.TextBoxSelectAllCommand), Se.Language.Options.Shortcuts.TextBoxSelectAll },
@@ -968,6 +969,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.TextBoxCut2Command, nameof(vm.TextBoxCut2Command), ShortcutCategory.TextBox);
         AddShortcut(shortcuts, vm.TextBoxPasteCommand, nameof(vm.TextBoxPasteCommand), ShortcutCategory.TextBox);
         AddShortcut(shortcuts, vm.TextBoxPaste2Command, nameof(vm.TextBoxPaste2Command), ShortcutCategory.TextBox);
+        AddShortcut(shortcuts, vm.TextBoxPasteAndAutoBreakCommand, nameof(vm.TextBoxPasteAndAutoBreakCommand), ShortcutCategory.TextBox);
         AddShortcut(shortcuts, vm.TextBoxCopyCommand, nameof(vm.TextBoxCopyCommand), ShortcutCategory.TextBox);
         AddShortcut(shortcuts, vm.TextBoxCopy2Command, nameof(vm.TextBoxCopy2Command), ShortcutCategory.TextBox);
         AddShortcut(shortcuts, vm.TextBoxSelectAllCommand, nameof(vm.TextBoxSelectAllCommand), ShortcutCategory.TextBox);

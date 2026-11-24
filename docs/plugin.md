@@ -167,6 +167,12 @@ launched as `dotnet <entry> <requestFilePath>`.
         "actor": "", "marginV": "0", "layer": 0, "isComment": false }
     ]
   },
+  "originalSubtitle": {
+    "format": "Advanced Sub Station Alpha",
+    "fileName": "C:\\videos\\episode01.en.ass",
+    "native": "...", "subRip": "...", "header": "...",
+    "paragraphs": [ { "startMs": 1000, "endMs": 3000, "text": "Hello world" } ]
+  },
   "subtitleEncoding": "UTF-8 with BOM",
   "selectedIndices": [3, 4, 5],
   "videoFileName": "C:\\videos\\episode01.mkv",
@@ -225,6 +231,13 @@ launched as `dotnet <entry> <requestFilePath>`.
   `videoOffsetMs`. Changes to `rules` are not read back — keep your own options in
   `settings`. Subtitle Edit does not hand out the path to its `Settings.json`: the file
   is rewritten by Subtitle Edit on exit and its layout is internal.
+- `originalSubtitle` is the **original (source-language) subtitle** when one is
+  open next to a translation, with the same fields as `subtitle`. In the ordinary
+  translation view `originalSubtitle.paragraphs[n]` is the original of
+  `subtitle.paragraphs[n]`; with "show original's non-matching lines" on the counts
+  can differ, so match by time code. Omitted when no original is loaded, from Batch
+  convert, and on older SE versions. It is read-only — Subtitle Edit does not read it
+  back from the response.
 - `subtitleEncoding` is the display name of the encoding the file was loaded with
   (e.g. `UTF-8 with BOM`). Empty when unknown / on older SE versions.
 - `pluginDataDirectory` is a **persistent, writable folder private to your plugin**

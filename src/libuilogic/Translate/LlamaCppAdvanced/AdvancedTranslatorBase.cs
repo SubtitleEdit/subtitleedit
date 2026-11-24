@@ -84,7 +84,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
         }
 
         return map.TryGetValue(1, out var translation) && translation.Length > 0
-            ? stripped.Restore(translation)
+            ? RestoreTranslation(stripped, translation, LineBreakLanguage(targetLanguageCode))
             : string.Empty;
     }
 
@@ -174,13 +174,14 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
                 await RetranslateEchoedLinesAsync(map, lines, sourceLanguageCode, targetLanguageCode, cancellationToken);
             }
 
+            var lineBreakLanguage = LineBreakLanguage(targetLanguageCode);
             applyRowUpdate(() =>
             {
                 for (var i = 0; i < count; i++)
                 {
                     var translation = map[i + 1];
                     rows[index + i].TranslatedText = translation.Length > 0
-                        ? stripped[i].Restore(translation)
+                        ? RestoreTranslation(stripped[i], translation, lineBreakLanguage)
                         : rows[index + i].Text;
                 }
             });
@@ -202,6 +203,31 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
 
         throw new HttpRequestException("No usable translation in " + Name + " reply" +
                                        (string.IsNullOrEmpty(Error) ? string.Empty : ": " + Error));
+    }
+
+    private string RestoreTranslation(StrippedLine source, string translation, string language)
+    {
+        return Settings.KeepLineBreaks
+            ? TranslationLineBreaks.Restore(source, translation, Configuration.Settings.General.SubtitleLineMaximumLength, language)
+            : source.Restore(translation);
+    }
+
+    /// <summary>
+    /// The line breaker's language code for this engine's target "code", which is an English
+    /// language name ("Danish", "Chinese (Simplified)"). The code picks the do-not-break-after
+    /// list and the CJK rules; an unknown name gives "" (no list, as before).
+    /// </summary>
+    internal static string LineBreakLanguage(string targetLanguage)
+    {
+        var pair = ChatGptTranslate.ListLanguages().FirstOrDefault(p => string.Equals(p.Code, targetLanguage, StringComparison.OrdinalIgnoreCase));
+        if (pair == null || string.IsNullOrEmpty(pair.TwoLetterIsoLanguageName))
+        {
+            return string.Empty;
+        }
+
+        // "zh-CN" -> "zh" (the CJK checks compare the bare code); Norwegian's list is nb_.
+        var code = pair.TwoLetterIsoLanguageName.Split('-', '_')[0].ToLowerInvariant();
+        return code == "no" ? "nb" : code;
     }
 
     /// <summary>

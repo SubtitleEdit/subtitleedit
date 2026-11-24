@@ -1,0 +1,23 @@
+{
+  "target_language": "tr",
+  "rules": {
+    "en": [
+      {"source": "Thank you very much.", "draft": "Thank you very much.", "replacement": "Çok teşekkür ederim."},
+      {"source": "See you tomorrow.", "draft": "See you tomorrow.", "replacement": "Yarın görüşürüz."},
+      {"source": "Good night.", "draft": "Good night.", "replacement": "İyi geceler."},
+      {"source": "Happy birthday!", "draft": "Happy birthday!", "replacement": "Doğum günün kutlu olsun!"},
+      {"source": "See you soon.", "draft": "See you soon.", "replacement": "Yakında görüşürüz."},
+      {"source": "Thank you.", "draft": "Thank you.", "replacement": "Teşekkür ederim."},
+      {"source": "Who are you?", "draft": "Who are you?", "replacement": "Sen kimsin?"},
+      {"source": "I don't know.", "draft": "I don't know.", "replacement": "Bilmiyorum."},
+      {"source": "Thank you very much.", "draft": "Çok teşekkür ederim", "replacement": "Çok teşekkür ederim."},
+      {"source": "See you tomorrow.", "draft": "Yarın görüşürüz", "replacement": "Yarın görüşürüz."},
+      {"source": "Good night.", "draft": "İyi geceler", "replacement": "İyi geceler."},
+      {"source": "Happy birthday!", "draft": "Doğum günün kutlu olsun", "replacement": "Doğum günün kutlu olsun!"},
+      {"source": "See you soon.", "draft": "Yakında görüşürüz", "replacement": "Yakında görüşürüz."},
+      {"source": "Thank you.", "draft": "Teşekkür ederim", "replacement": "Teşekkür ederim."},
+      {"source": "Who are you?", "draft": "Sen kimsin", "replacement": "Sen kimsin?"},
+      {"source": "I don't know.", "draft": "Bilmiyorum", "replacement": "Bilmiyorum."}
+    ]
+  }
+}

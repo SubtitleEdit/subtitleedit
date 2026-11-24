@@ -20,6 +20,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Extension => ".xml";
 
+        // IsMine accepts these too; listing them keeps this format ahead of Timed Text 1.0
+        // (which lists them as well) when a .ttml/.dfxp file is opened.
+        public override List<string> AlternateExtensions => new List<string> { ".ttml", ".dfxp" };
+
         private const string TtmlNamespace = "http://www.w3.org/ns/ttml";
         private const string TtmlStylingNamespace = "http://www.w3.org/ns/ttml#styling";
 
