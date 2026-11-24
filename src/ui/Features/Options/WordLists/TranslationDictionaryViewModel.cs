@@ -1,4 +1,6 @@
 using Avalonia.Controls;
+using Avalonia.Input;
+using Nikse.SubtitleEdit.Logic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -177,6 +179,9 @@ public partial class TranslationDictionaryViewModel : ObservableObject
 
     [RelayCommand]
     private void Close() => Window?.Close();
+
+    /// <summary>Escape closes the window, F1 opens the Auto Translate help where the dictionary is described.</summary>
+    internal void OnKeyDown(KeyEventArgs e) => UiUtil.CloseOnEscapeOrShowHelp(e, Window, "features/auto-translate");
 
     private bool TrySave(IReadOnlyList<TranslationPostProcessDictionary.Entry> entries)
     {

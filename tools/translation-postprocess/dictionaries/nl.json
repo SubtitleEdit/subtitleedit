@@ -17,7 +17,29 @@
       {"source": "See you soon.", "draft": "Tot snel", "replacement": "Tot snel."},
       {"source": "Thank you.", "draft": "Bedankt", "replacement": "Bedankt."},
       {"source": "Who are you?", "draft": "Wie ben je", "replacement": "Wie ben je?"},
-      {"source": "I don't know.", "draft": "Ik weet het niet", "replacement": "Ik weet het niet."}
+      {"source": "I don't know.", "draft": "Ik weet het niet", "replacement": "Ik weet het niet."},
+      {"source": "I'm good.", "draft": "Ik ben goed.", "suggestions": ["Het gaat goed met me.", "Ik hoef niks, dank je."], "note": "First: how the speaker feels. Second: declining an offer."},
+      {"source": "Big deal.", "draft": "Groot probleem.", "suggestions": ["Nou en?", "Dat is een groot probleem."], "note": "Usually sarcastic (so what?); keep the literal meaning if something really is important."},
+      {"source": "Keep it down.", "draft": "Houd het stil.", "replacement": "Doe eens wat zachter."},
+      {"source": "Go ahead.", "draft": "Ga verder.", "suggestions": ["Ga je gang.", "Ga verder."], "note": "First: giving permission. Second: telling someone to carry on."},
+      {"source": "Easy does it.", "draft": "Gemakkelijk is het.", "replacement": "Rustig aan."},
+      {"source": "Count me in.", "draft": "Doe me mee.", "replacement": "Ik doe mee."},
+      {"source": "Count me out.", "draft": "Laat me.", "replacement": "Ik doe niet mee."},
+      {"source": "Get a grip.", "draft": "Pak het aan.", "replacement": "Beheers je."},
+      {"source": "Spit it out.", "draft": "Spit het eruit.", "replacement": "Zeg het nou maar."},
+      {"source": "We're even.", "draft": "We zijn gelijk.", "replacement": "We staan quitte."},
+      {"source": "Same here.", "draft": "Ook hier.", "replacement": "Ik ook."},
+      {"source": "Tell me about it.", "draft": "Vertel me erover.", "suggestions": ["Wat je zegt.", "Vertel me erover."], "note": "Usually sarcastic agreement; keep the literal request if the speaker wants to hear more."},
+      {"source": "Knock yourself out.", "draft": "Doe je best.", "replacement": "Ga je gang."},
+      {"source": "Bless you.", "draft": "Gelukkig", "suggestions": ["Gezondheid.", "God zegene je."], "note": "Use the first after a sneeze; the second is a blessing."},
+      {"source": "Here we go.", "draft": "Hier gaan we.", "replacement": "Daar gaan we."},
+      {"source": "You wish.", "draft": "Dat is jouw wens.", "replacement": "Had je gedacht."},
+      {"source": "Keep the change.", "draft": "Behoud het geld.", "replacement": "Hou het wisselgeld maar."},
+      {"source": "It's on me.", "draft": "Het is aan mij.", "suggestions": ["Ik trakteer.", "Het is mijn schuld."], "note": "First: the speaker is paying. Second: the speaker takes the blame."},
+      {"source": "You're telling me.", "draft": "Je vertelt het mij.", "replacement": "Wat je zegt."},
+      {"source": "Says who?", "draft": "Zegt wie?", "replacement": "Wie zegt dat?"},
+      {"source": "Watch it.", "draft": "Kijk het.", "suggestions": ["Pas op.", "Kijk ernaar."], "note": "First: a warning. Second: watching a film or show."},
+      {"source": "Cheer up.", "draft": "Wees blij.", "replacement": "Kop op."}
     ]
   }
 }

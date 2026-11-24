@@ -18,7 +18,29 @@
       {"source": "See you soon.", "draft": "Hasta pronto", "replacement": "Hasta pronto."},
       {"source": "Thank you.", "draft": "Gracias", "replacement": "Gracias."},
       {"source": "Who are you?", "draft": "¿Quién eres", "replacement": "¿Quién eres?"},
-      {"source": "I don't know.", "draft": "No lo sé", "replacement": "No lo sé."}
+      {"source": "I don't know.", "draft": "No lo sé", "replacement": "No lo sé."},
+      {"source": "Keep it down.", "draft": "Mantén la calma.", "replacement": "Baja la voz."},
+      {"source": "Easy does it.", "draft": "Más vale poco que nada.", "replacement": "Con calma."},
+      {"source": "Count me in.", "draft": "Inclúyme.", "replacement": "Cuenta conmigo."},
+      {"source": "Count me out.", "draft": "No me cuentes.", "replacement": "No cuentes conmigo."},
+      {"source": "Get a grip.", "draft": "Agarra las riendas.", "replacement": "Contrólate."},
+      {"source": "Cut it out.", "draft": "Cállate.", "replacement": "Basta ya."},
+      {"source": "I'm in.", "draft": "Estoy dentro.", "suggestions": ["Me apunto.", "Estoy dentro."], "note": "First: joining a plan. Second: physically inside."},
+      {"source": "Tell me about it.", "draft": "Dime sobre eso.", "suggestions": ["Ni que lo digas.", "Háblame de eso."], "note": "Usually sarcastic agreement; keep the literal request if the speaker wants to hear more."},
+      {"source": "Knock yourself out.", "draft": "¡Haz lo posible!", "replacement": "Tú mismo."},
+      {"source": "Bless you.", "draft": "¡Bendecido seas.", "suggestions": ["Salud.", "Que Dios te bendiga."], "note": "Use the first after a sneeze; the second is a blessing."},
+      {"source": "Busted.", "draft": "Cagado.", "replacement": "Pillado."},
+      {"source": "You wish.", "draft": "Quieres.", "replacement": "Ya quisieras."},
+      {"source": "Rise and shine.", "draft": "Levántate y brilla.", "replacement": "Arriba, dormilón."},
+      {"source": "Keep the change.", "draft": "Conserve el cambio.", "suggestions": ["Quédese con el cambio.", "Quédese con la vuelta."], "note": "Cambio in Latin America, vuelta in Spain."},
+      {"source": "It's on me.", "draft": "Es mi responsabilidad.", "suggestions": ["Invito yo.", "Es mi responsabilidad."], "note": "First: the speaker is paying. Second: the speaker takes the blame."},
+      {"source": "You're telling me.", "draft": "Estás diciéndome.", "replacement": "Ni que lo digas."},
+      {"source": "Watch it.", "draft": "Míralo.", "suggestions": ["Cuidado.", "Míralo."], "note": "First: a warning. Second: watching a film or show."},
+      {"source": "Help yourself.", "draft": "Ayúdate a ti mismo.", "suggestions": ["Sírvete.", "Ayúdate a ti mismo."], "note": "First: an offer of food or drink. Second: the speaker refuses to help."},
+      {"source": "Make yourself at home.", "draft": "Hazte cómodo.", "replacement": "Estás en tu casa."},
+      {"source": "Here we go.", "draft": "Aquí vamos.", "replacement": "Allá vamos."},
+      {"source": "Speak of the devil.", "draft": "¡Como decía!", "replacement": "Hablando del rey de Roma."},
+      {"source": "We're even.", "draft": "Estamos empatados.", "suggestions": ["Estamos a mano.", "Estamos empatados."], "note": "First: no debt between them. Second: a tied game."}
     ]
   }
 }

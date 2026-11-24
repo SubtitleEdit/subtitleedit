@@ -3,6 +3,7 @@ using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
@@ -13,8 +14,11 @@ namespace Nikse.SubtitleEdit.Features.Options.WordLists;
 
 public sealed class TranslationDictionaryWindow : Window
 {
+    private readonly TranslationDictionaryViewModel _vm;
+
     public TranslationDictionaryWindow(TranslationDictionaryViewModel vm)
     {
+        _vm = vm;
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Translate.PostProcessDictionary;
         Width = 860;
@@ -76,6 +80,12 @@ public sealed class TranslationDictionaryWindow : Window
         status.TextWrapping = TextWrapping.Wrap;
         Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(status, UiUtil.MakeButton(Se.Language.General.Close, vm.CloseCommand)));
         UiUtil.FocusOnFirstActivation(this, target);
+    }
+
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        base.OnKeyDown(e);
+        _vm.OnKeyDown(e);
     }
 
     /// <summary>

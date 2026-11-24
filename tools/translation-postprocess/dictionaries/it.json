@@ -17,7 +17,31 @@
       {"source": "See you soon.", "draft": "A presto", "replacement": "A presto."},
       {"source": "Thank you.", "draft": "Grazie", "replacement": "Grazie."},
       {"source": "Who are you?", "draft": "Chi sei", "replacement": "Chi sei?"},
-      {"source": "I don't know.", "draft": "Non lo so", "replacement": "Non lo so."}
+      {"source": "I don't know.", "draft": "Non lo so", "replacement": "Non lo so."},
+      {"source": "Get lost!", "draft": "Perdi!", "replacement": "Sparisci!"},
+      {"source": "Big deal.", "draft": "Grande affare.", "suggestions": ["E allora?", "È una cosa importante."], "note": "Usually sarcastic (so what?); keep the literal meaning if something really is important."},
+      {"source": "Count me in.", "draft": "Includimi.", "replacement": "Ci sto."},
+      {"source": "Count me out.", "draft": "Non mi includere.", "replacement": "Io non ci sto."},
+      {"source": "Get a grip.", "draft": "Prendi il controllo.", "replacement": "Controllati."},
+      {"source": "Cut it out.", "draft": "Fallo finire.", "replacement": "Piantala."},
+      {"source": "Easy does it.", "draft": "Facile, ma con criterio.", "replacement": "Piano, piano."},
+      {"source": "Bless you.", "draft": "Prego.", "suggestions": ["Salute.", "Che Dio ti benedica."], "note": "Use the first after a sneeze; the second is a blessing."},
+      {"source": "You wish.", "draft": "Vuoi.", "replacement": "Ti piacerebbe."},
+      {"source": "Rise and shine.", "draft": "Alzati e fai la cosa buona.", "replacement": "Sveglia!"},
+      {"source": "Keep the change.", "draft": "Conserva il cambiamento.", "replacement": "Tenga il resto."},
+      {"source": "It's on me.", "draft": "È colpa mia.", "suggestions": ["Offro io.", "È colpa mia."], "note": "First: the speaker is paying. Second: the speaker takes the blame."},
+      {"source": "You're telling me.", "draft": "Mi stai dicendo.", "replacement": "A chi lo dici."},
+      {"source": "Says who?", "draft": "Dice chi?", "replacement": "Chi lo dice?"},
+      {"source": "Watch it.", "draft": "Guardalo.", "suggestions": ["Attento.", "Guardalo."], "note": "First: a warning. Second: watching a film or show."},
+      {"source": "Tell me about it.", "draft": "Dimmi ne.", "suggestions": ["A chi lo dici.", "Parlamene."], "note": "Usually sarcastic agreement; keep the literal request if the speaker wants to hear more."},
+      {"source": "Same here.", "draft": "Anche qui.", "replacement": "Anch'io."},
+      {"source": "Hang in there.", "draft": "Rimani forte.", "replacement": "Tieni duro."},
+      {"source": "Sounds good.", "draft": "Sembra bene.", "replacement": "Mi sta bene."},
+      {"source": "Speak of the devil.", "draft": "Proprio tu.", "replacement": "Parli del diavolo..."},
+      {"source": "Help yourself.", "draft": "Aiutati.", "suggestions": ["Serviti pure.", "Aiutati."], "note": "First: an offer of food or drink. Second: the speaker refuses to help."},
+      {"source": "Make yourself at home.", "draft": "Rendetevi a vostro agio.", "replacement": "Fai come se fossi a casa tua."},
+      {"source": "Cheer up.", "draft": "Ridi.", "replacement": "Su con la vita."},
+      {"source": "I'm in.", "draft": "Sono dentro.", "suggestions": ["Ci sto.", "Sono dentro."], "note": "First: joining a plan. Second: physically inside."}
     ]
   }
 }

@@ -14,13 +14,15 @@ public class TranslationPostProcessDictionaryTests
     [Theory]
     [InlineData("Danish", "Danish", "da", "Tak.")]
     [InlineData("Norwegian", "Norwegian", "no", "Takk.")]
-    [InlineData("Brazilian Portuguese", "Brazilian Portuguese", "pt-BR", "Agradeço.")]
+    [InlineData("Brazilian Portuguese", "Brazilian Portuguese", "pt-BR", "Obrigado.")]
     [InlineData("Chinese", "Chinese", "zh-TW", "謝謝。")]
     public void EmbeddedDictionariesResolveProviderLanguageMetadata(string name, string code, string iso, string expected)
     {
         var rules = TranslationPostProcessDictionary.Get(
             new TranslationPair("English", "EN-US"), new TranslationPair(name, code, iso));
-        Assert.Equal(expected, rules?.Match("Thank you.", "Thank you.")?.Replacement);
+        // Portuguese thanks depend on the speaker's gender, so they are suggestions; the first is applied.
+        var rule = rules?.Match("Thank you.", "Thank you.");
+        Assert.Equal(expected, rule?.Replacement ?? rule?.Suggestions[0]);
     }
 
     [Fact]
