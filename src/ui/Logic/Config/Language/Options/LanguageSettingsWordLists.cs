@@ -16,6 +16,7 @@ public class LanguageSettingsWordLists
     public string TranslationReviewOnly { get; set; }
     public string TranslationRuleOutput { get; set; }
     public string TranslationRuleNote { get; set; }
+    public string TranslationRules { get; set; }
     public string SaveTranslationRule { get; set; }
     public string UnableToAddItem { get; set; }
     public string UnableToRemoveItem { get; set; }
@@ -88,6 +89,7 @@ public class LanguageSettingsWordLists
         TranslationReviewOnly = "Suggest for review";
         TranslationRuleOutput = "Replacement or one suggestion per line";
         TranslationRuleNote = "Review note (optional)";
+        TranslationRules = "Translation rules";
         SaveTranslationRule = "Save rule";
         UnableToAddItem = "Unable to add item, it probably already exists!";
         UnableToRemoveItem = "Unable to remove item!";

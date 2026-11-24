@@ -38,7 +38,7 @@ public sealed class TranslationDictionaryWindow : Window
                 },
             }),
         };
-        AutomationProperties.SetName(rules, language.RegexRules);
+        AutomationProperties.SetName(rules, language.TranslationRules);
         rules.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(vm.Entries)));
         rules.Bind(ListBox.SelectedItemProperty, new Binding(nameof(vm.SelectedEntry)) { Mode = BindingMode.TwoWay });
         var review = new CheckBox { Content = language.TranslationReviewOnly };

@@ -404,6 +404,18 @@ public class AutoTranslateWindow : Window
         AutomationProperties.SetName(toggle, language.PostProcessDictionary);
         ToolTip.SetTip(toggle, language.PostProcessDictionaryHint);
 
+        // Clicking the label flips the switch, like a check box caption.
+        var caption = Label(language.PostProcessDictionary);
+        caption.Cursor = new Cursor(StandardCursorType.Hand);
+        caption.Tapped += (_, _) =>
+        {
+            if (toggle.IsEffectivelyEnabled)
+            {
+                vm.UsePostProcessDictionary = !vm.UsePostProcessDictionary;
+            }
+        };
+        ToolTip.SetTip(caption, language.PostProcessDictionaryHint);
+
         var summary = Label(string.Empty);
         summary.Bind(TextBlock.TextProperty, new Binding(nameof(vm.PostProcessSummary)));
         summary.Bind(IsVisibleProperty, new Binding(nameof(vm.ShowPostProcessSummary)));
@@ -415,7 +427,7 @@ public class AutoTranslateWindow : Window
         {
             Margin = new Thickness(12, 4),
             ItemSpacing = 8,
-            Children = { toggle, Label(language.PostProcessDictionary), summary, next },
+            Children = { toggle, caption, summary, next },
         };
     }
 

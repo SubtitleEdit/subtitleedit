@@ -211,6 +211,7 @@ public partial class AutoTranslateViewModel : ObservableObject
     public void Initialize(Subtitle subtitle)
     {
         _dictionaryMatches.Clear();
+        _dictionaryAvailability = null;
         UsePostProcessDictionary = Se.Settings.AutoTranslate.UsePostProcessDictionary;
         RefreshDictionaryRows();
         _subtitle = new Subtitle(subtitle, false);

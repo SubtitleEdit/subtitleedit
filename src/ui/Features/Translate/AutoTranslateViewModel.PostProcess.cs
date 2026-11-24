@@ -40,14 +40,32 @@ public partial class AutoTranslateViewModel
             var changed = _dictionaryMatches.Count(pair => pair.Key.TranslatedText != pair.Value.OriginalText);
             var review = _dictionaryMatches.Count(pair =>
                 pair.Value.Rule.Suggestions.Count > 0 && pair.Key.TranslatedText == pair.Value.OriginalText);
-            if (UsePostProcessDictionary && _dictionaryMatches.Count == 0 &&
-                TranslationPostProcessDictionary.Get(SelectedSourceLanguage, SelectedTargetLanguage, Se.TranslationPostProcessDictionariesFolder) == null)
+            if (UsePostProcessDictionary && _dictionaryMatches.Count == 0 && !HasDictionaryForSelectedLanguages())
             {
                 return Se.Language.Translate.PostProcessNoDictionary;
             }
 
             return string.Format(Se.Language.Translate.PostProcessSummary, changed, review);
         }
+    }
+
+    private (TranslationPair? Source, TranslationPair? Target, bool HasDictionary)? _dictionaryAvailability;
+
+    /// <summary>
+    /// Whether a dictionary exists for the selected pair. The answer is kept per language pair, so the
+    /// summary does not read and parse the dictionary file each time it refreshes.
+    /// </summary>
+    private bool HasDictionaryForSelectedLanguages()
+    {
+        var source = SelectedSourceLanguage;
+        var target = SelectedTargetLanguage;
+        if (_dictionaryAvailability is not { } cached || !ReferenceEquals(cached.Source, source) || !ReferenceEquals(cached.Target, target))
+        {
+            var hasDictionary = TranslationPostProcessDictionary.Get(source, target, Se.TranslationPostProcessDictionariesFolder) != null;
+            _dictionaryAvailability = cached = (source, target, hasDictionary);
+        }
+
+        return cached.HasDictionary;
     }
 
     public string? SelectedDictionaryText

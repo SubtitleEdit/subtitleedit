@@ -35,6 +35,8 @@ The window shows how many matches have changed and how many still have suggestio
 
 To edit the rules, open **Options → Word lists → Translation dictionaries**. Choose a target language and select a rule to edit or remove, or start a new rule. Enter the exact source cue and engine translation. Use **Suggest for review** for wording that depends on the scene. Saving or deleting a rule updates your personal copy for that target language. Auto Translate reads it on the next run.
 
+The dictionary is used only in the Auto Translate window. Batch Convert does not apply it.
+
 ## Supported Engines
 
 - **Google Translate V1 API** — Free Google Translate. When Google answers with its "unusual traffic" block page, Subtitle Edit retries the request through a fallback endpoint (`clients5.google.com`) before giving up; a block is on Google's side and is usually lifted again after minutes to a few hours
