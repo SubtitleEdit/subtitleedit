@@ -24697,8 +24697,9 @@ public partial class MainViewModel :
             return;
         }
 
+        var languageCode = ReferenceEquals(textBox, EditTextBoxOriginal) ? GetOriginalLanguageCode() : GetDetectedLanguageCode();
         textBox.Text = TextBoxPasteNormalizer.ComposePasteAndAutoBreak(
-            textBox.Text ?? string.Empty, textBox.SelectionStart, textBox.SelectionEnd, clipboardText, GetDetectedLanguageCode());
+            textBox.Text ?? string.Empty, textBox.SelectionStart, textBox.SelectionEnd, clipboardText, languageCode);
         textBox.CaretIndex = textBox.Text.Length;
         _updateAudioVisualizer = true;
     }
@@ -28134,6 +28135,17 @@ public partial class MainViewModel :
     internal string GetDetectedLanguageCode()
     {
         return _detectedLanguageCode ??= Subtitles.AutoDetectGoogleLanguageOrNull() ?? string.Empty;
+    }
+
+    /// <summary>
+    /// Language of the original subtitle, for line breaks in the original text box - it is not
+    /// the translation's language (#17137). Falls back to the translation's when no original is loaded.
+    /// </summary>
+    internal string GetOriginalLanguageCode()
+    {
+        return _subtitleOriginal is { Paragraphs.Count: > 0 }
+            ? LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(_subtitleOriginal) ?? string.Empty
+            : GetDetectedLanguageCode();
     }
 
     private void AutoTrimWhiteSpaces()
