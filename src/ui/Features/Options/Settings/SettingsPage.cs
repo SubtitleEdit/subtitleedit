@@ -726,6 +726,7 @@ public class SettingsPage : UserControl
             },
             MakeSeparator(),
             new SettingsItem(Se.Language.Options.Settings.ErrorBackgroundColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.ErrorColor))),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowErrorDetailsOnHover, nameof(_vm.ShowErrorDetailsOnHover)),
         ]));
 
         sections.Add(new SettingsSection(Se.Language.General.VideoPlayer, IconNames.PlayBox, "#a78bfa",

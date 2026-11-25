@@ -1612,45 +1612,14 @@ public partial class SubtitleLineViewModel : ObservableObject
             }
         }
 
-        var minGap = general.MinimumBetweenLines.GetMilliseconds();
         if (prev != null)
         {
-            var gapPrev = (StartTime - prev.EndTime).TotalMilliseconds;
-            if (gapPrev < 0)
-            {
-                if (general.ColorTimeCodeOverlap)
-                {
-                    errors.Add(new LineError(LineErrorType.Overlap, string.Format(l.DetailOverlapFromPrevious, Math.Round(-gapPrev, 3))));
-                }
-            }
-            else if (gapPrev < minGap && general.ColorGapTooShort)
-            {
-                errors.Add(new LineError(LineErrorType.GapTooShort, string.Format(l.DetailGapToPrevious, Math.Round(gapPrev, 3), minGap)));
-            }
-            else if (IsGapInColorRange(general, gapPrev))
-            {
-                errors.Add(new LineError(LineErrorType.GapInRange, string.Format(l.DetailGapInRangeToPrevious, Math.Round(gapPrev, 3), general.GapRangeMin.GetMilliseconds(), general.GapRangeMax.GetMilliseconds())));
-            }
+            AddGapError(errors, general, (StartTime - prev.EndTime).TotalMilliseconds, toPrevious: true);
         }
 
         if (next != null)
         {
-            var gapNext = (next.StartTime - EndTime).TotalMilliseconds;
-            if (gapNext < 0)
-            {
-                if (general.ColorTimeCodeOverlap)
-                {
-                    errors.Add(new LineError(LineErrorType.Overlap, string.Format(l.DetailOverlapToNext, Math.Round(-gapNext, 3))));
-                }
-            }
-            else if (gapNext < minGap && general.ColorGapTooShort)
-            {
-                errors.Add(new LineError(LineErrorType.GapTooShort, string.Format(l.DetailGapToNext, Math.Round(gapNext, 3), minGap)));
-            }
-            else if (IsGapInColorRange(general, gapNext))
-            {
-                errors.Add(new LineError(LineErrorType.GapInRange, string.Format(l.DetailGapInRangeToNext, Math.Round(gapNext, 3), general.GapRangeMin.GetMilliseconds(), general.GapRangeMax.GetMilliseconds())));
-            }
+            AddGapError(errors, general, (next.StartTime - EndTime).TotalMilliseconds, toPrevious: false);
         }
 
         if (GetMatchingCustomErrorRule() is { } customRule)
@@ -1659,6 +1628,181 @@ public partial class SubtitleLineViewModel : ObservableObject
         }
 
         return errors;
+    }
+
+    /// <summary>
+    /// The gap rule for one side of the line, as GetErrorList reports it: overlap, else too short,
+    /// else in the range to avoid. Adds nothing when the matching color option is off.
+    /// </summary>
+    private static void AddGapError(List<LineError> errors, SeGeneral general, double gapMs, bool toPrevious)
+    {
+        var l = Se.Language.ErrorList;
+        if (gapMs < 0)
+        {
+            if (general.ColorTimeCodeOverlap)
+            {
+                errors.Add(MakeOverlapError(gapMs, toPrevious));
+            }
+
+            return;
+        }
+
+        var minGap = general.MinimumBetweenLines.GetMilliseconds();
+        if (gapMs < minGap && general.ColorGapTooShort)
+        {
+            errors.Add(new LineError(LineErrorType.GapTooShort, string.Format(toPrevious ? l.DetailGapToPrevious : l.DetailGapToNext, Math.Round(gapMs, 3), minGap)));
+        }
+        else if (IsGapInColorRange(general, gapMs))
+        {
+            errors.Add(new LineError(LineErrorType.GapInRange, string.Format(toPrevious ? l.DetailGapInRangeToPrevious : l.DetailGapInRangeToNext, Math.Round(gapMs, 3), general.GapRangeMin.GetMilliseconds(), general.GapRangeMax.GetMilliseconds())));
+        }
+    }
+
+    private static LineError MakeOverlapError(double gapMs, bool toPrevious)
+    {
+        var l = Se.Language.ErrorList;
+        return new LineError(LineErrorType.Overlap, string.Format(toPrevious ? l.DetailOverlapFromPrevious : l.DetailOverlapToNext, Math.Round(-gapMs, 3)));
+    }
+
+    /// <summary>
+    /// Why one grid cell is tinted, one "Label: detail" per line, or empty when it is not.
+    /// Built on demand when the cell's tooltip opens (issue #17188), so it mirrors the
+    /// matching *BackgroundBrush conditions exactly - keep the two in sync.
+    /// </summary>
+    public string GetCellErrorDetails(SubtitleGridErrorCell cell)
+    {
+        var general = Se.Settings.General;
+        var l = Se.Language.ErrorList;
+        var errors = new List<LineError>();
+        var extra = new List<string>();
+
+        switch (cell)
+        {
+            case SubtitleGridErrorCell.StartTime:
+                if (HasTimeCodeGapError(general, PreviousGap))
+                {
+                    AddGapError(errors, general, PreviousGap, toPrevious: true);
+                }
+
+                break;
+            case SubtitleGridErrorCell.EndTime:
+                if (HasTimeCodeGapError(general, Gap))
+                {
+                    AddGapError(errors, general, Gap, toPrevious: false);
+                }
+
+                break;
+            case SubtitleGridErrorCell.Gap:
+                if (Gap < 0 && general.ColorGapTooShort)
+                {
+                    // The Gap cell tints an overlap as "too short" even with the overlap color off.
+                    errors.Add(MakeOverlapError(Gap, toPrevious: false));
+                }
+                else if (Gap >= 0)
+                {
+                    AddGapError(errors, general, Gap, toPrevious: false);
+                }
+
+                break;
+            case SubtitleGridErrorCell.Duration:
+            {
+                var cpsFallback = !general.ShowColumnCps || !IsCpsColumnVisible;
+                foreach (var error in GetErrorList(null, null))
+                {
+                    if (error.Type is LineErrorType.DurationTooShort or LineErrorType.DurationTooLong ||
+                        (cpsFallback && error.Type == LineErrorType.CharactersPerSecond))
+                    {
+                        errors.Add(error);
+                    }
+                }
+
+                break;
+            }
+            case SubtitleGridErrorCell.Text:
+                if (!string.IsNullOrEmpty(Text))
+                {
+                    foreach (var error in GetErrorList(null, null))
+                    {
+                        if (error.Type is LineErrorType.TooManyLines or LineErrorType.LineTooLong or LineErrorType.LineTooWide or LineErrorType.CustomRule)
+                        {
+                            errors.Add(error);
+                        }
+                    }
+                }
+
+                break;
+            case SubtitleGridErrorCell.Cps:
+                foreach (var error in GetErrorList(null, null))
+                {
+                    if (error.Type == LineErrorType.CharactersPerSecond)
+                    {
+                        errors.Add(error);
+                    }
+                }
+
+                break;
+            case SubtitleGridErrorCell.Wpm:
+                if (general.ColorWordsPerMinute && WordsPerMinute > general.SubtitleMaximumWordsPerMinute)
+                {
+                    extra.Add($"{l.WordsPerMinute}: {string.Format(l.DetailXGreaterThanY, Math.Round(WordsPerMinute), general.SubtitleMaximumWordsPerMinute)}");
+                }
+
+                break;
+            case SubtitleGridErrorCell.ShotIn:
+                if (_shotInWarning)
+                {
+                    extra.Add($"{l.StartTooCloseToShotChange}: {FormatShotChangeOffsetWithUnit(_shotInMs, _shotInFrames)}");
+                }
+
+                break;
+            case SubtitleGridErrorCell.ShotOut:
+                if (_shotOutWarning)
+                {
+                    extra.Add($"{l.EndTooCloseToShotChange}: {FormatShotChangeOffsetWithUnit(_shotOutMs, _shotOutFrames)}");
+                }
+
+                break;
+        }
+
+        if (errors.Count == 0 && extra.Count == 0)
+        {
+            return string.Empty;
+        }
+
+        var sb = new StringBuilder();
+        foreach (var error in errors)
+        {
+            if (sb.Length > 0)
+            {
+                sb.AppendLine();
+            }
+
+            sb.Append(error);
+        }
+
+        foreach (var line in extra)
+        {
+            if (sb.Length > 0)
+            {
+                sb.AppendLine();
+            }
+
+            sb.Append(line);
+        }
+
+        return sb.ToString();
+    }
+
+    private static string FormatShotChangeOffsetWithUnit(double ms, int frames)
+    {
+        var value = FormatShotChangeOffset(ms, frames);
+        if (value.Length == 0)
+        {
+            return value;
+        }
+
+        var l = Se.Language.ErrorList;
+        return string.Format(Se.Settings.General.UseFrameMode ? l.DetailXFrames : l.DetailXMs, value);
     }
 
     public void RefreshTimeCodes()

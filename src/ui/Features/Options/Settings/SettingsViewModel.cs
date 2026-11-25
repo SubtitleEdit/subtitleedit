@@ -289,6 +289,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _colorOverlap;
     [ObservableProperty] private bool _colorGapTooShort;
     [ObservableProperty] private bool _colorGapInRange;
+    [ObservableProperty] private bool _showErrorDetailsOnHover;
     [ObservableProperty] private int? _gapRangeMinMs;
     [ObservableProperty] private int? _gapRangeMaxMs;
     [ObservableProperty] private int? _gapRangeMinFrames;
@@ -1211,6 +1212,7 @@ public partial class SettingsViewModel : ObservableObject
         ColorOverlap = general.ColorTimeCodeOverlap;
         ColorGapTooShort = general.ColorGapTooShort;
         ColorGapInRange = general.ColorGapInRange;
+        ShowErrorDetailsOnHover = general.ShowErrorDetailsOnHover;
         GapRangeMinMs = general.GapRangeMin.Milliseconds;
         GapRangeMaxMs = general.GapRangeMax.Milliseconds;
         GapRangeMinFrames = general.GapRangeMin.Frames;
@@ -2127,6 +2129,7 @@ public partial class SettingsViewModel : ObservableObject
         general.ColorTimeCodeOverlap = ColorOverlap;
         general.ColorGapTooShort = ColorGapTooShort;
         general.ColorGapInRange = ColorGapInRange;
+        general.ShowErrorDetailsOnHover = ShowErrorDetailsOnHover;
         general.GapRangeMin.Milliseconds = GapRangeMinMs ?? general.GapRangeMin.Milliseconds;
         general.GapRangeMax.Milliseconds = GapRangeMaxMs ?? general.GapRangeMax.Milliseconds;
         general.GapRangeMin.Frames = GapRangeMinFrames ?? general.GapRangeMin.Frames;
@@ -3236,6 +3239,7 @@ public partial class SettingsViewModel : ObservableObject
                 Se.Settings.General.GapRangeMin = g.GapRangeMin;
                 Se.Settings.General.GapRangeMax = g.GapRangeMax;
                 Se.Settings.General.ErrorColor = g.ErrorColor;
+                Se.Settings.General.ShowErrorDetailsOnHover = g.ShowErrorDetailsOnHover;
                 Se.Settings.General.ColorCustomErrorRules = g.ColorCustomErrorRules; // the rules themselves are user data and stay
             }
         }
