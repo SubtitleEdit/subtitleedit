@@ -1064,6 +1064,12 @@ public partial class AudioVisualizer : Control
         }
 
         var point = e.GetPosition(this);
+        if (TryToggleSelection(e.KeyModifiers, point))
+        {
+            e.Handled = true;
+            return;
+        }
+
         if (!_isCtrlDown && !_isAltDown && !_isShiftDown && e.Pointer.IsPrimary)
         {
             var p = HitTestParagraph(point);
@@ -1134,6 +1140,56 @@ public partial class AudioVisualizer : Control
                 return;
             }
         }
+    }
+
+    /// <summary>
+    /// The modifier that adds a line to / removes it from the selection with a click on the line:
+    /// Ctrl on Windows and Linux, Cmd or Shift on macOS (#17119).
+    /// </summary>
+    internal static bool IsToggleSelectionModifier(KeyModifiers modifiers, bool isMac)
+    {
+        if (modifiers.HasFlag(KeyModifiers.Alt))
+        {
+            return false;
+        }
+
+        var shift = modifiers.HasFlag(KeyModifiers.Shift);
+        if (isMac)
+        {
+            return !modifiers.HasFlag(KeyModifiers.Control) && modifiers.HasFlag(KeyModifiers.Meta) != shift;
+        }
+
+        return modifiers.HasFlag(KeyModifiers.Control) && !shift;
+    }
+
+    /// <summary>
+    /// Whether a toggle-modifier click on <paramref name="hit"/> toggles its selection. A click on
+    /// the one selected line keeps the older meaning of these modifiers - set that line's start
+    /// (Shift) or end (Ctrl/Cmd) at the click - so it does not toggle.
+    /// </summary>
+    internal static bool ShouldToggleSelection(IReadOnlyList<SubtitleLineViewModel> selected, SubtitleLineViewModel? hit)
+    {
+        return hit != null && !(selected.Count == 1 && ReferenceEquals(selected[0], hit));
+    }
+
+    private bool TryToggleSelection(KeyModifiers modifiers, Point point)
+    {
+        if (OnToggleSelection == null || IsReadOnly || EditOriginalTimeCodes ||
+            !IsToggleSelectionModifier(modifiers, OperatingSystem.IsMacOS()))
+        {
+            return false;
+        }
+
+        var hit = HitTestParagraph(point);
+        if (!ShouldToggleSelection(AllSelectedParagraphs, hit))
+        {
+            return false;
+        }
+
+        _audioVisualizerLastScroll = 0;
+        OnToggleSelection.Invoke(this, new ParagraphEventArgs(RelativeXPositionToSeconds(point.X), hit!));
+        InvalidateVisual();
+        return true;
     }
 
     public const double MinZoomFactor = 0.1;
@@ -1444,19 +1500,9 @@ public partial class AudioVisualizer : Control
 
         if (isMove && isClick)
         {
-            if (_isCtrlDown && !OperatingSystem.IsMacOS() && _activeParagraph != null && OnToggleSelection != null)
-            {
-                var videoPosition = RelativeXPositionToSeconds(pos.X);
-                _audioVisualizerLastScroll = 0;
-                OnToggleSelection.Invoke(this, new ParagraphEventArgs(videoPosition, _activeParagraph));
-            }
-            else if (_isShiftDown && OperatingSystem.IsMacOS() && _activeParagraph != null && OnToggleSelection != null)
-            {
-                var videoPosition = RelativeXPositionToSeconds(pos.X);
-                _audioVisualizerLastScroll = 0;
-                OnToggleSelection.Invoke(this, new ParagraphEventArgs(videoPosition, _activeParagraph));
-            }
-            else if (OnVideoPositionChanged != null)
+            // A toggle-selection click is handled by the Tapped that follows (TryToggleSelection)
+            // and does not seek.
+            if (OnVideoPositionChanged != null && !IsToggleSelectionModifier(e.KeyModifiers, OperatingSystem.IsMacOS()))
             {
                 var videoPosition = RelativeXPositionToSeconds(e.GetPosition(this).X);
                 _audioVisualizerLastScroll = 0;

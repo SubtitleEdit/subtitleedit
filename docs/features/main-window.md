@@ -184,8 +184,9 @@ Two draw styles are available for the waveform: **Classic** (simple lines) and *
 | **Click** | Empty area | Set video position |
 | **Click** | Subtitle bar | Select subtitle and set video position |
 | **Double-click** | Subtitle bar | Select subtitle and set video position |
-| **Shift+Click** | Anywhere | Set start time of selected subtitle |
-| **Ctrl+Click** | Anywhere | Set end time of selected subtitle |
+| **Ctrl+Click** (macOS: **Cmd+Click** or **Shift+Click**) | Another subtitle bar | Add the subtitle to / remove it from the selection |
+| **Shift+Click** | Empty area or the selected subtitle | Set start time of selected subtitle |
+| **Ctrl+Click** (macOS: **Cmd+Click**) | Empty area or the selected subtitle | Set end time of selected subtitle |
 | **Ctrl+Shift+Click** | Anywhere | Set start time of selected subtitle and offset all following subtitles |
 | **Alt+Click** | Anywhere | Move selected subtitle so it starts here (duration kept) |
 | **Drag** | Left edge of subtitle | Resize start time |
@@ -193,6 +194,7 @@ Two draw styles are available for the waveform: **Classic** (simple lines) and *
 | **Alt+Drag** | Left edge | Resize start and adjust previous subtitle's end simultaneously |
 | **Alt+Drag** | Right edge | Resize end and adjust next subtitle's start simultaneously |
 | **Drag** | Middle of subtitle | Move entire subtitle (preserving duration) |
+| **Drag** | Middle of a subtitle in a multi-selection | Move all selected subtitles together |
 | **Click+Drag** | Empty area | Create a new subtitle selection |
 | **Scroll wheel** | Anywhere | Scroll waveform left/right |
 | **Alt+Scroll** | Anywhere | Horizontal zoom in/out |
