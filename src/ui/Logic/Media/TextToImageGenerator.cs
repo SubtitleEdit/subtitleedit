@@ -24,7 +24,7 @@ public static class TextToImageGenerator
     {
         if (kerning == 0)
         {
-            return GenerateImage(text, fontName, fontSize, isBold, textColor, outlineColor, shadowColor, backgroundColor, outlineWidth, shadowWidth, cornerRadius);
+            return GenerateImageWithPadding(text, fontName, fontSize, isBold, textColor, outlineColor, shadowColor, backgroundColor, outlineWidth, shadowWidth, cornerRadius);
         }
 
         // Measure the total width of the text
