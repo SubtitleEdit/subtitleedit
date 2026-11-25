@@ -134,6 +134,7 @@ public class LanguageSettings
     public string ColorOverlap { get; set; }
     public string ColorGapTooShort { get; set; }
     public string ColorGapInRange { get; set; }
+    public string ShowErrorDetailsOnHover { get; set; }
     public string GapRangeMs { get; set; }
     public string GapRangeFrames { get; set; }
     public string ErrorBackgroundColor { get; set; }
@@ -541,6 +542,7 @@ public class LanguageSettings
         ColorOverlap = "Color time code overlap";
         ColorGapTooShort = "Color if gap is too short";
         ColorGapInRange = "Color if gap is in range";
+        ShowErrorDetailsOnHover = "Show error details on mouse hover";
         GapRangeMs = "Gap range (ms)";
         GapRangeFrames = "Gap range (frames)";
         ErrorBackgroundColor = "Error background color";

@@ -486,6 +486,7 @@ public partial class SettingsImportExportViewModel : ObservableObject
             to.GapRangeMin = from.GapRangeMin;
             to.GapRangeMax = from.GapRangeMax;
             to.ErrorColor = from.ErrorColor;
+            to.ShowErrorDetailsOnHover = from.ShowErrorDetailsOnHover;
             to.ColorCustomErrorRules = from.ColorCustomErrorRules;
             to.CustomErrorRules = from.CustomErrorRules;
         }

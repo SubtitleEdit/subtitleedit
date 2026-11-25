@@ -32,6 +32,11 @@ public class LanguageErrorList
     public string DetailGapToNext { get; set; }
     public string DetailGapInRangeToPrevious { get; set; }
     public string DetailGapInRangeToNext { get; set; }
+    public string WordsPerMinute { get; set; }
+    public string StartTooCloseToShotChange { get; set; }
+    public string EndTooCloseToShotChange { get; set; }
+    public string DetailXMs { get; set; }
+    public string DetailXFrames { get; set; }
     public string Tip { get; set; }
     public string ExportAsText { get; set; }
     public string ExportAsExcel { get; set; }
@@ -72,6 +77,11 @@ public class LanguageErrorList
         DetailGapToNext = "to next: {0} < {1} ms";
         DetailGapInRangeToPrevious = "to previous: {0} ms (range {1}-{2} ms)";
         DetailGapInRangeToNext = "to next: {0} ms (range {1}-{2} ms)";
+        WordsPerMinute = "Words per minute";
+        StartTooCloseToShotChange = "Start too close to shot change";
+        EndTooCloseToShotChange = "End too close to shot change";
+        DetailXMs = "{0} ms";
+        DetailXFrames = "{0} frames";
         Tip = "Double-click a line (or press Enter) to go to it. Which checks run, and their limits, are set in Settings > General.";
         ExportAsText = "Text file (.txt)...";
         ExportAsExcel = "Excel file (.xlsx)...";

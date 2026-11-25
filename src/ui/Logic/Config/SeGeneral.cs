@@ -215,6 +215,9 @@ public class SeGeneral
     public MsOrFramesValue GapRangeMin { get; set; } = new() { Milliseconds = 120, Frames = 3 };
     public MsOrFramesValue GapRangeMax { get; set; } = new() { Milliseconds = 480, Frames = 12 };
     public string ErrorColor { get; set; }
+
+    /// <summary>Show why a tinted grid cell is an error when the mouse hovers over it (#17188).</summary>
+    public bool ShowErrorDetailsOnHover { get; set; }
     public bool ColorCustomErrorRules { get; set; }
     public List<SeCustomErrorRule> CustomErrorRules { get; set; } = new();
 
@@ -400,6 +403,7 @@ public class SeGeneral
         ColorTimeCodeOverlap = true;
         ColorGapTooShort = true;
         ErrorColor = Color.FromArgb(50, 255, 0, 0).FromColorToHex();
+        ShowErrorDetailsOnHover = true;
         ColorCustomErrorRules = true;
 
         FfmpegPath = string.Empty;
