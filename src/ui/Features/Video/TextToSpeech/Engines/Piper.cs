@@ -167,8 +167,10 @@ public class Piper : ITtsEngine
                 var config = filesElements.FirstOrDefault(p => p.Name.EndsWith("onnx.json"));
                 if (model != null && config != null)
                 {
-                    var modelUrl = "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/" + model.Name;
-                    var configUrl = "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/" + config.Name;
+                    // "main", not a tag: Refresh voices downloads main/voices.json, and voices added
+                    // after a tag (e.g. ur_PK-fasih, #17190) 404 when resolved against that tag.
+                    var modelUrl ="https://huggingface.co/rhasspy/piper-voices/resolve/main/" + model.Name;
+                    var configUrl = "https://huggingface.co/rhasspy/piper-voices/resolve/main/" + config.Name;
 
                     var piperVoice = new PiperVoice(name.Json, languageDisplay, quality.Json, modelUrl, configUrl);
                     result.Add(new Voice(piperVoice));
