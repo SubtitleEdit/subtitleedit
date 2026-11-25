@@ -10,6 +10,7 @@ using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.FindText;
 using Nikse.SubtitleEdit.Features.Shared.GoToLineNumber;
 using Nikse.SubtitleEdit.Features.Shared.ShowImage;
+using Nikse.SubtitleEdit.Features.Sync.PointSync;
 using Nikse.SubtitleEdit.Features.Sync.PointSync.SetSyncPoint;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -22,7 +23,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Sync.PointSyncViaOther;
 
-public partial class PointSyncViaOtherViewModel : ObservableObject
+public partial class PointSyncViaOtherViewModel : ObservableObject, ISyncedLineMarker
 {
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _subtitles;
     [ObservableProperty] private SubtitleLineViewModel? _selectedSubtitle;

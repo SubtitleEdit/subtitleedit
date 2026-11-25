@@ -71,21 +71,25 @@ public class PointSyncWindow : Window
     }
 
     /// <summary>
-    /// The subtitle being synced, on the left of the button bar.
+    /// The synced-line legend and the subtitle being synced, on the left of the button bar.
     /// </summary>
     private static Control MakeFileInfo(PointSyncViewModel vm)
     {
         var label = PointSyncChrome.MakeFileNameLabel(vm, nameof(vm.FileName));
+        var legend = PointSyncChrome.MakeSyncedLineLegend();
+        legend.Margin = new Thickness(0, 0, 16, 0);
         var grid = new Grid
         {
             ColumnDefinitions =
             {
                 new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(GridLength.Auto),
                 new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
             },
         };
-        grid.Add(PointSyncChrome.MakeFileIcon(), 0, 0);
-        grid.Add(label, 0, 1);
+        grid.Add(legend, 0, 0);
+        grid.Add(PointSyncChrome.MakeFileIcon(), 0, 1);
+        grid.Add(label, 0, 2);
         return grid;
     }
 
@@ -113,14 +117,7 @@ public class PointSyncWindow : Window
         dataGrid.ItemsSource = vm.Subtitles;
         dataGrid.Columns.AddRange(new[]
         {
-            new SeTableViewColumn
-            {
-                Header = Se.Language.General.NumberSymbol,
-                CellTheme = UiUtil.TableViewCellTheme,
-                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-                Binding = new Binding(nameof(SubtitleLineViewModel.Number)),
-                Width = new GridLength(60), // content-sized (Auto) on the DataGrid; TableView treats Auto as star
-            },
+            PointSyncChrome.MakeSyncedNumberColumn(vm),
             new SeTableViewColumn
             {
                 Header = Se.Language.General.Show,
