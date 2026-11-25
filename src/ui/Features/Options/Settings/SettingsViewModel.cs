@@ -511,14 +511,16 @@ public partial class SettingsViewModel : ObservableObject
 
     /// <summary>
     /// True once an import has replaced (and saved) the settings. They are live from then on even
-    /// if the dialog is cancelled, so the main window still has to apply them (#15944).
+    /// if the dialog is cancelled, so the main window still has to apply them (#15944). Unlike
+    /// <see cref="SettingsReplaced"/> this stays true after an Apply: it only tells the main window
+    /// to compare the settings at close, and that comparison skips whatever Apply already applied.
     /// </summary>
     public bool SettingsImported { get; private set; }
 
     /// <summary>
-    /// True once an import or a reset has replaced the settings wholesale. The main window then
-    /// applies the layout sizes and the waveform zoom *from* the settings instead of carrying its
-    /// current on-screen state over them, which is what a plain OK does (#16213).
+    /// True while an import or reset has replaced settings that still need to be applied.
+    /// The main window then restores the saved layout and waveform zoom (#16213). Apply consumes
+    /// it, so a later Apply or OK keeps the on-screen panel sizes again.
     /// </summary>
     public bool SettingsReplaced { get; private set; }
 
@@ -3277,7 +3279,8 @@ public partial class SettingsViewModel : ObservableObject
         }
 
         await FileTypeAssociationsManager.SaveFileTypeAssociationsAsync(FileTypeAssociations, Window);
-        _mainViewModel?.ApplySettings();
+        _mainViewModel?.ApplySettings(SettingsReplaced);
+        SettingsReplaced = false;
 
         // Everything up to here is now applied, so this is the baseline the OK press must be
         // compared against - without it OK re-applies every change this Apply already made and

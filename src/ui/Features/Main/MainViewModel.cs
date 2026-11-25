@@ -15733,10 +15733,6 @@ public partial class MainViewModel :
     private string _oldSpectrogramStyle = string.Empty;
     private bool _oldFfmpegUseCenterChannelOnly;
 
-    // Set for the ApplySettings that follows a settings import or reset: the layout sizes and
-    // the waveform zoom then come from the settings, not from what is on screen (#16213).
-    private bool _applyLayoutAndZoomFromSettings;
-
     [RelayCommand]
     private async Task CommandShowSettings()
     {
@@ -15787,15 +15783,13 @@ public partial class MainViewModel :
                 return;
             }
 
-            // Set only now, past the early return above, so it cannot linger for an unrelated
-            // ApplySettings later (e.g. a language change, which keeps the on-screen sizes).
-            _applyLayoutAndZoomFromSettings = viewModel.SettingsReplaced;
+            var useSavedLayoutAndZoom = viewModel.SettingsReplaced;
 
             // Defer to a fresh dispatcher cycle: ApplySettings rebuilds the layout, which
             // destroys and recreates the video player control (a native Win32 HWND on Windows
             // with mpv-wid/VLC). Doing that inside the ShowDialog continuation races the modal
             // dialog's teardown and can leave the main window disabled - a full UI freeze (#10815).
-            Dispatcher.UIThread.Post(ApplySettings);
+            Dispatcher.UIThread.Post(() => ApplySettings(useSavedLayoutAndZoom));
         }
     }
 
@@ -15938,7 +15932,8 @@ public partial class MainViewModel :
         ShowStatus($"{Se.Language.General.Theme}: {SettingsViewModel.MapThemeToTranslation(Se.Settings.Appearance.Theme)}");
     }
 
-    public void ApplySettings()
+    // Restore the saved layout and waveform zoom on the apply following an import or reset (#16213).
+    public void ApplySettings(bool useSavedLayoutAndZoom = false)
     {
         // Restored at the very end, after the format list refresh below: SetLayout re-creates
         // the grid (which silently auto-selects row 0), and re-filling SubtitleFormats then
@@ -16118,7 +16113,7 @@ public partial class MainViewModel :
             // A plain OK keeps the panel sizes the user has on screen. After an import or a
             // reset the sizes in the settings are the ones to show - taking the on-screen ones
             // here silently threw the imported sizes away (#16213).
-            if (!_applyLayoutAndZoomFromSettings)
+            if (!useSavedLayoutAndZoom)
             {
                 Se.Settings.Appearance.CurrentLayoutPositions = InitLayout.SaveLayoutPositions(ContentGrid.Children.FirstOrDefault() as Grid);
             }
@@ -16129,13 +16124,11 @@ public partial class MainViewModel :
 
         // The rebuilt waveform inherits the zoom of the one it replaces (CarryOverWaveformState);
         // an imported zoom is only read when a waveform is first created, so push it here.
-        if (_applyLayoutAndZoomFromSettings && Se.Settings.Waveform.RememberZoom && AudioVisualizer != null)
+        if (useSavedLayoutAndZoom && Se.Settings.Waveform.RememberZoom && AudioVisualizer != null)
         {
             AudioVisualizer.ZoomFactor = Math.Clamp(Se.Settings.Waveform.ZoomFactor, AudioVisualizer.MinZoomFactor, AudioVisualizer.MaxZoomFactor);
             AudioVisualizer.VerticalZoomFactor = Math.Clamp(Se.Settings.Waveform.VerticalZoomFactor, AudioVisualizer.MinZoomFactor, AudioVisualizer.MaxZoomFactor);
         }
-
-        _applyLayoutAndZoomFromSettings = false;
 
         _autoBackupService.StopAutobackup();
         _autoBackupService.StartAutoBackup(this);
