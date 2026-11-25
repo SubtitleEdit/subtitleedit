@@ -939,6 +939,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformTextFontBold, nameof(_vm.WaveformTextFontBold)),
             new SettingsItem(string.Empty, () => UiUtil.MakeButton(Se.Language.Options.Settings.WaveformColorThemesDotDotDot, _vm.OpenWaveformThemesCommand)),
             new SettingsItem(Se.Language.Options.Settings.WaveformTextColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.WaveformTextColor))),
+            new SettingsItem(Se.Language.Options.Settings.WaveformOriginalTextColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.WaveformOriginalTextColor))),
             new SettingsItem(Se.Language.Options.Settings.WaveformColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.WaveformColor))),
             new SettingsItem(Se.Language.Options.Settings.WaveformParagraphBackgroundColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.WaveformParagraphBackgroundColor))),
             new SettingsItem(Se.Language.Options.Settings.WaveformBackgroundColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.WaveformBackgroundColor))),

@@ -850,12 +850,17 @@ internal sealed class SkiaWaveformRenderer
 
     private void DrawParagraphText(SKCanvas canvas, SkiaWaveformFrame f, SkiaParagraph p, float x, float y, byte alpha)
     {
+        DrawParagraphText(canvas, f, p, x, y, alpha, f.TextColor);
+    }
+
+    private void DrawParagraphText(SKCanvas canvas, SkiaWaveformFrame f, SkiaParagraph p, float x, float y, byte alpha, SKColor baseColor)
+    {
         // Screen privacy mode (#15300) blurs the subtitle text; the shared text paint is reset
         // below so numbers, durations and time labels stay sharp.
         _text.ImageFilter = f.BlurText ? _textBlur : null;
         try
         {
-            DrawParagraphTextLines(canvas, f, p, x, y, alpha);
+            DrawParagraphTextLines(canvas, f, p, x, y, alpha, baseColor);
         }
         finally
         {
@@ -863,9 +868,9 @@ internal sealed class SkiaWaveformRenderer
         }
     }
 
-    private void DrawParagraphTextLines(SKCanvas canvas, SkiaWaveformFrame f, SkiaParagraph p, float x, float y, byte alpha)
+    private void DrawParagraphTextLines(SKCanvas canvas, SkiaWaveformFrame f, SkiaParagraph p, float x, float y, byte alpha, SKColor baseColor)
     {
-        var color = f.TextColor.WithAlpha((byte)(f.TextColor.Alpha * alpha / 255));
+        var color = baseColor.WithAlpha((byte)(baseColor.Alpha * alpha / 255));
         if (f.UnwrapText)
         {
             DrawText(canvas, _textCache.Get(p.Unwrapped, f.FontSize, p.RightToLeft), x, y, color);
@@ -1017,7 +1022,9 @@ internal sealed class SkiaWaveformRenderer
             VerticalLine(canvas, right - 0.5, top, f.Height, 1, Half(f.ParagraphRightColor));
             canvas.Save();
             canvas.ClipRect(SKRect.Create(left + 1, top, right - left - 3, height));
-            DrawParagraphText(canvas, f, cue, left + 3, top + TimeLineTextOffset, full ? (byte)255 : (byte)128);
+            // The text stays at full strength - at half it was hard to read on top of the
+            // waveform peaks (#17119); the dimmed background and edges mark it as the reference.
+            DrawParagraphText(canvas, f, cue, left + 3, top + TimeLineTextOffset, 255, f.OriginalTextColor);
             canvas.Restore();
         }
     }
