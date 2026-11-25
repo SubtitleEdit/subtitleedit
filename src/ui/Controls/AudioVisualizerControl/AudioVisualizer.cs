@@ -643,6 +643,7 @@ public partial class AudioVisualizer : Control
     private Pen _paintLeft = new Pen(new SolidColorBrush(Color.FromArgb(60, 0, 255, 0)), 2);
     private Pen _paintRight = new Pen(new SolidColorBrush(Color.FromArgb(100, 255, 0, 0)), 2);
     private IBrush _paintText = new SolidColorBrush(WaveformColors.CurrentTextHex.FromHexToColor());
+    private IBrush _paintOriginalText = MakeOriginalTextBrush();
     private Typeface _typeface = new Typeface(UiUtil.GetDefaultFontName(), FontStyle.Normal, Se.Settings.Waveform.WaveformTextFontBold ? FontWeight.Bold : FontWeight.Normal);
     private readonly Pen _paintShotChangeParagraphStartPen = new Pen(new SolidColorBrush(Color.FromArgb(175, 0, 100, 0)), 2, dashStyle: DashStyle.Dash);
     private readonly Pen _paintShotChangeParagraphEndPen = new Pen(new SolidColorBrush(Color.FromArgb(175, 110, 10, 10)), 2, dashStyle: DashStyle.Dash);
@@ -4034,15 +4035,15 @@ public partial class AudioVisualizer : Control
     // short-lived garbage to trigger GC pauses, which show up as the cursor briefly freezing and
     // then jumping. Cache the prepared text and the shaped FormattedText; both are cleared in
     // ResetCache() when the waveform font/colors change.
-    private readonly Dictionary<(string Text, bool RightToLeft), FormattedText> _paragraphFormattedTextCache = new(512);
+    private readonly Dictionary<(string Text, bool RightToLeft, bool Original), FormattedText> _paragraphFormattedTextCache = new(512);
     private readonly Dictionary<string, (List<string> Lines, string Unwrapped, bool RightToLeft)> _paragraphTextCache = new(512);
 
     // The direction is part of the key: the same string shapes differently in the two directions
     // (see GetPreparedParagraphText), and the number/duration/CPS labels stay left to right even
     // under a right to left paragraph.
-    internal FormattedText GetCachedParagraphText(string text, bool rightToLeft = false)
+    internal FormattedText GetCachedParagraphText(string text, bool rightToLeft = false, bool original = false)
     {
-        var key = (text, rightToLeft);
+        var key = (text, rightToLeft, original);
         if (!_paragraphFormattedTextCache.TryGetValue(key, out var formatted))
         {
             if (_paragraphFormattedTextCache.Count > 8000)
@@ -4052,7 +4053,7 @@ public partial class AudioVisualizer : Control
 
             formatted = new FormattedText(text, CultureInfo.CurrentCulture,
                 rightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight,
-                _typeface, _fontSize, _paintText);
+                _typeface, _fontSize, original ? _paintOriginalText : _paintText);
             _paragraphFormattedTextCache[key] = formatted;
         }
 
@@ -4351,26 +4352,29 @@ public partial class AudioVisualizer : Control
                 continue;
             }
 
-            // Draw original subtitle cues with the waveform theme at half opacity.
+            // Draw original subtitle cues with the waveform theme at half opacity. The text stays
+            // at full strength in its own color - at half it was hard to read on top of the
+            // waveform peaks (#17119); the dimmed background and edges mark it as the reference.
             using (context.PushOpacity(EditOriginalTimeCodes ? 1.0 : OriginalSubtitleOpacity))
             {
                 context.FillRectangle(_paintParagraphBackground, new Rect(left, top, right - left, height));
                 context.DrawLine(_paintLeft, new Point(left, top), new Point(left, top + height));
                 context.DrawLine(_paintRight, new Point(right - 1, top), new Point(right - 1, top + height));
-                using (context.PushClip(new Rect(left + 1, top, right - left - 3, height)))
-                {
-                    DrawParagraphText(context, cue.Text, left + 3, top);
-                }
+            }
+
+            using (context.PushClip(new Rect(left + 1, top, right - left - 3, height)))
+            {
+                DrawParagraphText(context, cue.Text, left + 3, top, original: true);
             }
         }
     }
 
-    private void DrawParagraphText(DrawingContext context, string text, double x, double y)
+    private void DrawParagraphText(DrawingContext context, string text, double x, double y, bool original = false)
     {
         var prepared = GetPreparedParagraphText(text);
         if (Se.Settings.Waveform.WaveformUnwrapText)
         {
-            var unwrapped = GetCachedParagraphText(prepared.Unwrapped, prepared.RightToLeft);
+            var unwrapped = GetCachedParagraphText(prepared.Unwrapped, prepared.RightToLeft, original);
             using (BlurText ? context.PushEffect(TextBlurEffect, new Rect(x, y, unwrapped.Width, unwrapped.Height)) : (IDisposable?)null)
             {
                 context.DrawText(unwrapped, new Point(x, y));
@@ -4385,7 +4389,7 @@ public partial class AudioVisualizer : Control
             double width = 0, height = 0;
             foreach (var line in prepared.Lines)
             {
-                var formattedText = GetCachedParagraphText(line, prepared.RightToLeft);
+                var formattedText = GetCachedParagraphText(line, prepared.RightToLeft, original);
                 width = Math.Max(width, formattedText.Width);
                 height += formattedText.Height;
             }
@@ -4397,7 +4401,7 @@ public partial class AudioVisualizer : Control
         {
             foreach (var line in prepared.Lines)
             {
-                var formattedText = GetCachedParagraphText(line, prepared.RightToLeft);
+                var formattedText = GetCachedParagraphText(line, prepared.RightToLeft, original);
                 context.DrawText(formattedText, new Point(x, y));
                 y += formattedText.Height;
             }
@@ -5734,6 +5738,13 @@ public partial class AudioVisualizer : Control
         return _displayMode;
     }
 
+    // Empty setting = follow the (theme's) waveform text color.
+    private static IBrush MakeOriginalTextBrush()
+    {
+        var hex = Se.Settings.Waveform.WaveformOriginalTextColor;
+        return new SolidColorBrush((string.IsNullOrEmpty(hex) ? WaveformColors.CurrentTextHex : hex).FromHexToColor());
+    }
+
     internal void ResetCache()
     {
         ResetFancyColorCaches();
@@ -5749,6 +5760,7 @@ public partial class AudioVisualizer : Control
         _timeLineCacheValid = false;
 
         _paintText = new SolidColorBrush(WaveformColors.CurrentTextHex.FromHexToColor());
+        _paintOriginalText = MakeOriginalTextBrush();
         _typeface = new Typeface(UiUtil.GetDefaultFontName(), FontStyle.Normal, Se.Settings.Waveform.WaveformTextFontBold ? FontWeight.Bold : FontWeight.Normal);
         _fontSize = Se.Settings.Waveform.WaveformTextFontSize;
     }

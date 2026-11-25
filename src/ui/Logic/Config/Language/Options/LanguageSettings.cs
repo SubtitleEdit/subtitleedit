@@ -177,6 +177,7 @@ public class LanguageSettings
     public string WaveformTextFontSize { get; set; }
     public string WaveformTextFontBold { get; set; }
     public string WaveformTextColor { get; set; }
+    public string WaveformOriginalTextColor { get; set; }
     public string WaveformColor { get; set; }
     public string WaveformBackgroundColor { get; set; }
     public string WaveformSelectedColor { get; set; }
@@ -582,6 +583,7 @@ public class LanguageSettings
         WaveformTextFontSize = "Waveform text font size";
         WaveformTextFontBold = "Waveform text font bold";
         WaveformTextColor = "Waveform text color";
+        WaveformOriginalTextColor = "Waveform original text color";
         WaveformColor = "Waveform color";
         WaveformBackgroundColor = "Waveform background color";
         WaveformSelectedColor = "Waveform selected color";

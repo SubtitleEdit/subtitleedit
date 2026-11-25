@@ -57,6 +57,8 @@ public class SkiaAudioVisualizer : AudioVisualizer
 
     private string? _textColorSource;
     private SKColor _textColor = SKColors.White;
+    private string? _originalTextColorSource;
+    private SKColor _originalTextColor = SKColors.White;
     private string? _fontNameSource;
     private string _fontName = string.Empty;
 
@@ -134,6 +136,8 @@ public class SkiaAudioVisualizer : AudioVisualizer
         f.ParagraphBackgroundColor = ToSkColor(ParagraphBackground, SKColors.Transparent);
         f.ParagraphSelectedBackgroundColor = ToSkColor(ParagraphSelectedBackground, SKColors.Transparent);
         f.TextColor = GetTextColor(WaveformColors.CurrentTextHex);
+        var originalTextHex = settings.Waveform.WaveformOriginalTextColor;
+        f.OriginalTextColor = string.IsNullOrEmpty(originalTextHex) ? f.TextColor : GetOriginalTextColor(originalTextHex);
         for (var i = 0; i < f.BookmarkColors.Length; i++)
         {
             f.BookmarkColors[i] = ToSkColor(BookmarkColors.Get(i), SKColors.Orange);
@@ -504,6 +508,17 @@ public class SkiaAudioVisualizer : AudioVisualizer
         return _textColor;
     }
 
+    private SKColor GetOriginalTextColor(string hex)
+    {
+        if (!ReferenceEquals(hex, _originalTextColorSource))
+        {
+            _originalTextColorSource = hex;
+            _originalTextColor = ToSkColor(hex.FromHexToColor(), SKColors.White);
+        }
+
+        return _originalTextColor;
+    }
+
     private string GetFontName(string appearanceFontName)
     {
         // UiUtil.GetDefaultFontName scans the system fonts when no UI font is set - not per frame.
@@ -556,6 +571,7 @@ internal sealed class SkiaWaveformFrame
     public SKColor ParagraphBackgroundColor;
     public SKColor ParagraphSelectedBackgroundColor;
     public SKColor TextColor;
+    public SKColor OriginalTextColor;
     public readonly SKColor[] BookmarkColors = new SKColor[Nikse.SubtitleEdit.Logic.BookmarkColors.Count];
 
     public string FontName = string.Empty;

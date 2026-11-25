@@ -48,6 +48,12 @@ public class SeWaveform
     public int WaveformTextFontSize { get; set; }
     public bool WaveformTextFontBold { get; set; }
     public string WaveformTextColor { get; set; }
+
+    /// <summary>
+    /// Text color of the original subtitle shown under the editable one in the waveform.
+    /// Empty follows <see cref="WaveformTextColor"/> (and the UI theme's waveform text color).
+    /// </summary>
+    public string WaveformOriginalTextColor { get; set; }
     public string WaveformColor { get; set; }
     public string WaveformBackgroundColor { get; set; }
     public string WaveformSelectedColor { get; set; }
@@ -169,6 +175,7 @@ public class SeWaveform
         WaveformTextFontSize = 10;
         WaveformTextFontBold = false;
         WaveformTextColor = Colors.White.FromColorToHex();
+        WaveformOriginalTextColor = string.Empty;
         WaveformColor = Color.FromArgb(255, 0, 70, 0).FromColorToHex();
         WaveformBackgroundColor = Color.FromArgb(255, 0, 0, 0).FromColorToHex();
         WaveformSelectedColor = Color.FromArgb(150, 0, 120, 255).FromColorToHex();

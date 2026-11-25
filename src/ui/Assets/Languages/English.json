@@ -3950,6 +3950,7 @@
       "waveformTextFontSize": "Waveform text font size",
       "waveformTextFontBold": "Waveform text font bold",
       "waveformTextColor": "Waveform text color",
+      "waveformOriginalTextColor": "Waveform original text color",
       "waveformColor": "Waveform color",
       "waveformBackgroundColor": "Waveform background color",
       "waveformSelectedColor": "Waveform selected color",

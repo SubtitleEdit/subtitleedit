@@ -356,6 +356,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private int _waveformTextFontSize;
     [ObservableProperty] private bool _waveformTextFontBold;
     [ObservableProperty] private Color _waveformTextColor;
+    [ObservableProperty] private Color _waveformOriginalTextColor;
     [ObservableProperty] private Color _waveformColor;
     [ObservableProperty] private Color _waveformBackgroundColor;
     [ObservableProperty] private Color _waveformParagraphBackgroundColor;
@@ -1151,6 +1152,9 @@ public partial class SettingsViewModel : ObservableObject
         WaveformTextFontSize = Se.Settings.Waveform.WaveformTextFontSize;
         WaveformTextFontBold = Se.Settings.Waveform.WaveformTextFontBold;
         WaveformTextColor = Se.Settings.Waveform.WaveformTextColor.FromHexToColor();
+        WaveformOriginalTextColor = string.IsNullOrEmpty(Se.Settings.Waveform.WaveformOriginalTextColor)
+            ? WaveformTextColor
+            : Se.Settings.Waveform.WaveformOriginalTextColor.FromHexToColor();
         WaveformColor = Se.Settings.Waveform.WaveformColor.FromHexToColor();
         WaveformBackgroundColor = Se.Settings.Waveform.WaveformBackgroundColor.FromHexToColor();
         WaveformParagraphBackgroundColor = Se.Settings.Waveform.ParagraphBackground.FromHexToColor();
@@ -2067,6 +2071,10 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Waveform.WaveformTextFontSize = WaveformTextFontSize;
         Se.Settings.Waveform.WaveformTextFontBold = WaveformTextFontBold;
         Se.Settings.Waveform.WaveformTextColor = WaveformTextColor.FromColorToHex();
+        // Same as the text color = keep following it (and the UI theme's waveform text color).
+        Se.Settings.Waveform.WaveformOriginalTextColor = WaveformOriginalTextColor == WaveformTextColor
+            ? string.Empty
+            : WaveformOriginalTextColor.FromColorToHex();
         Se.Settings.Waveform.WaveformColor = WaveformColor.FromColorToHex();
         Se.Settings.Waveform.WaveformBackgroundColor = WaveformBackgroundColor.FromColorToHex();
         Se.Settings.Waveform.ParagraphBackground = WaveformParagraphBackgroundColor.FromColorToHex();
@@ -2666,6 +2674,15 @@ public partial class SettingsViewModel : ObservableObject
         if (result.OkPressed)
         {
             _videoControlsItems = result.ResultItems;
+        }
+    }
+
+    partial void OnWaveformTextColorChanged(Color oldValue, Color newValue)
+    {
+        // An original text color that was following the text color keeps following it.
+        if (WaveformOriginalTextColor == oldValue)
+        {
+            WaveformOriginalTextColor = newValue;
         }
     }
 
