@@ -8,10 +8,12 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Svg.Skia;
 using Avalonia.Threading;
+using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using SkiaSharp;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Help.About;
@@ -217,10 +219,77 @@ public class AboutWindow : Window
         buttonOk.Classes.Add("primary");
 
         var sections = new StackPanel { Children = { headerSection, bodySection } };
-        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonOk));
+        var root = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonOk));
+        Content = AddDelayedBackdrop(root);
 
         UiUtil.FocusOnFirstActivation(this, buttonOk); // hack to make OnKeyDown work
         KeyDown += vm.OnKeyDown;
+    }
+
+    /// <summary>
+    /// After ten seconds an aurora fades in behind the window and its panels turn to frosted
+    /// glass: Avalonia 12.2's BackdropEffect blurs whatever is drawn behind a visual.
+    /// </summary>
+    private Panel AddDelayedBackdrop(Grid root)
+    {
+        var backdrop = new AuroraBackdrop
+        {
+            Opacity = 0,
+            IsVisible = false,
+        };
+
+        var glassParts = new List<(Border Border, SolidColorBrush Brush)>();
+        foreach (var child in root.Children)
+        {
+            if (child is Border { Background: ISolidColorBrush solid } border)
+            {
+                var brush = new SolidColorBrush(solid.Color);
+                border.Background = brush;
+                glassParts.Add((border, brush));
+            }
+        }
+
+        var startTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(10) };
+        var fadeTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(16) };
+        var fadeStart = DateTime.MinValue;
+        startTimer.Tick += (_, _) =>
+        {
+            startTimer.Stop();
+            backdrop.IsVisible = true;
+            foreach (var (border, _) in glassParts)
+            {
+                border.BackdropEffect = new BlurEffect { Radius = 18 };
+                // Volatile: what is behind changes every frame, so a retained snapshot saves nothing
+                border.BackdropEffectCache = BackdropEffectCache.Parse("Volatile");
+            }
+
+            fadeStart = DateTime.UtcNow;
+            fadeTimer.Start();
+        };
+        fadeTimer.Tick += (_, _) =>
+        {
+            var t = Math.Clamp((DateTime.UtcNow - fadeStart).TotalSeconds / 2.5, 0, 1);
+            var eased = t * t * (3 - 2 * t);
+            backdrop.Opacity = eased;
+            foreach (var (_, brush) in glassParts)
+            {
+                brush.Opacity = 1 - 0.5 * eased;
+            }
+
+            if (t >= 1)
+            {
+                fadeTimer.Stop();
+            }
+        };
+
+        Opened += (_, _) => startTimer.Start();
+        Closed += (_, _) =>
+        {
+            startTimer.Stop();
+            fadeTimer.Stop();
+        };
+
+        return new Panel { Children = { backdrop, root } };
     }
 
     // SvgImage draws straight onto the Skia canvas and ignores the Opacity of its Image
