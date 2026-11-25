@@ -1168,8 +1168,8 @@ internal sealed class SkiaWaveformRenderer
 /// <summary>
 /// Shaped, positioned text blobs for the render thread, keyed by string and size. Shaping goes
 /// through HarfBuzz (<see cref="SKShaper"/>), so ligatures and right to left scripts come out in
-/// visual order; a string the UI font cannot show falls back to a system font that has its first
-/// missing character. (Mixed-direction bidi reordering is not done.)
+/// visual order; characters the UI font cannot show are shaped in runs with a system font that
+/// has them. (Mixed-direction bidi reordering is not done.)
 /// </summary>
 internal sealed class SkiaTextCache
 {
@@ -1229,19 +1229,43 @@ internal sealed class SkiaTextCache
             _texts.Clear();
         }
 
-        var font = GetFont(PickTypeface(text), size);
-        font.GetFontMetrics(out var metrics);
+        var segments = SplitByTypeface(text);
+        var ascent = 0f;
+        var descent = 0f;
+        var leading = 0f;
+        foreach (var typeface in DistinctTypefaces(segments))
+        {
+            GetFont(typeface, size).GetFontMetrics(out var metrics);
+            ascent = Math.Min(ascent, metrics.Ascent);
+            descent = Math.Max(descent, metrics.Descent);
+            leading = Math.Max(leading, metrics.Leading);
+        }
+
         shaped = new ShapedText
         {
-            Baseline = -metrics.Ascent,
-            Height = metrics.Descent - metrics.Ascent + metrics.Leading,
+            Baseline = -ascent,
+            Height = descent - ascent + leading,
         };
 
         if (!string.IsNullOrWhiteSpace(text))
         {
             if (!rightToLeft && !SkiaBidiRuns.HasStrongRightToLeft(text))
             {
-                ShapeSingleRun(text, font, shaped);
+                if (segments.Count == 1)
+                {
+                    ShapeSingleRun(text, GetFont(segments[0].Typeface, size), shaped);
+                }
+                else
+                {
+                    using var builder = new SKTextBlobBuilder();
+                    var x = ShapeSegments(builder, segments, size, false, 0, out var any);
+                    if (any)
+                    {
+                        shaped.Blob = builder.Build();
+                    }
+
+                    shaped.Width = x;
+                }
             }
             else
             {
@@ -1276,10 +1300,33 @@ internal sealed class SkiaTextCache
         var any = false;
         foreach (var run in runs)
         {
-            var font = GetFont(PickTypeface(run.Text), size);
+            x = ShapeSegments(builder, SplitByTypeface(run.Text), size, run.RightToLeft, x, out var runAny);
+            any |= runAny;
+        }
+
+        if (any)
+        {
+            shaped.Blob = builder.Build();
+        }
+
+        shaped.Width = x;
+    }
+
+    /// <summary>
+    /// Shapes font segments of one directional run side by side from <paramref name="x"/> and
+    /// returns the x after the last one. The segments are in logical order, so a right to left run
+    /// lays them out last to first.
+    /// </summary>
+    private float ShapeSegments(SKTextBlobBuilder builder, List<(string Text, SKTypeface Typeface)> segments, float size, bool rightToLeft, float x, out bool any)
+    {
+        any = false;
+        for (var i = 0; i < segments.Count; i++)
+        {
+            var segment = segments[rightToLeft ? segments.Count - 1 - i : i];
+            var font = GetFont(segment.Typeface, size);
             using var buffer = new HarfBuzzSharp.Buffer();
-            buffer.AddUtf16(run.Text);
-            buffer.Direction = run.RightToLeft ? HarfBuzzSharp.Direction.RightToLeft : HarfBuzzSharp.Direction.LeftToRight;
+            buffer.AddUtf16(segment.Text);
+            buffer.Direction = rightToLeft ? HarfBuzzSharp.Direction.RightToLeft : HarfBuzzSharp.Direction.LeftToRight;
             buffer.GuessSegmentProperties();
             var result = GetShaper(font.Typeface).Shape(buffer, x, 0, font);
             if (result.Codepoints.Length > 0)
@@ -1291,12 +1338,19 @@ internal sealed class SkiaTextCache
             x += result.Width;
         }
 
-        if (any)
-        {
-            shaped.Blob = builder.Build();
-        }
+        return x;
+    }
 
-        shaped.Width = x;
+    private static IEnumerable<SKTypeface> DistinctTypefaces(List<(string Text, SKTypeface Typeface)> segments)
+    {
+        var seen = new HashSet<SKTypeface>();
+        foreach (var segment in segments)
+        {
+            if (seen.Add(segment.Typeface))
+            {
+                yield return segment.Typeface;
+            }
+        }
     }
 
     private static void AppendRun(SKTextBlobBuilder builder, SKFont font, SKShaper.Result result)
@@ -1323,27 +1377,75 @@ internal sealed class SkiaTextCache
         return shaper;
     }
 
-    private SKTypeface PickTypeface(string text)
+    /// <summary>
+    /// Splits <paramref name="text"/> into runs that each use one typeface: the UI font where it
+    /// has the character, else a system font that has it (#17189 - one fallback font picked for
+    /// the whole line from its first missing character showed boxes for characters that font
+    /// lacks, e.g. a CJK Extension B ideograph after common Han characters). Spaces, controls and
+    /// combining marks stay with the run they are in.
+    /// </summary>
+    internal List<(string Text, SKTypeface Typeface)> SplitByTypeface(string text)
     {
+        var segments = new List<(string Text, SKTypeface Typeface)>(1);
+        SKTypeface? current = null;
+        var start = 0;
+        var index = 0;
         foreach (var rune in text.EnumerateRunes())
         {
-            if (rune.Value < 0x80 || System.Text.Rune.IsWhiteSpace(rune) || System.Text.Rune.IsControl(rune) || _typeface.ContainsGlyph(rune.Value))
+            if (!IsNeutral(rune))
             {
-                continue;
+                var typeface = PickTypeface(rune, current ?? _typeface);
+                if (current != null && typeface != current)
+                {
+                    segments.Add((text.Substring(start, index - start), current));
+                    start = index;
+                }
+
+                current = typeface;
             }
 
-            if (!_fallbacks.TryGetValue(rune.Value, out var fallback))
-            {
-                fallback = SKFontManager.Default.MatchCharacter(_familyName ?? string.Empty,
-                    _bold ? SKFontStyleWeight.Bold : SKFontStyleWeight.Normal,
-                    SKFontStyleWidth.Normal, SKFontStyleSlant.Upright, null, rune.Value) ?? _typeface;
-                _fallbacks[rune.Value] = fallback;
-            }
-
-            return fallback;
+            index += rune.Utf16SequenceLength;
         }
 
-        return _typeface;
+        segments.Add((text.Substring(start), current ?? _typeface));
+        return segments;
+    }
+
+    private SKTypeface PickTypeface(System.Text.Rune rune, SKTypeface current)
+    {
+        if (rune.Value < 0x80 || _typeface.ContainsGlyph(rune.Value))
+        {
+            return _typeface;
+        }
+
+        if (current != _typeface && current.ContainsGlyph(rune.Value))
+        {
+            return current;
+        }
+
+        if (!_fallbacks.TryGetValue(rune.Value, out var fallback))
+        {
+            fallback = SKFontManager.Default.MatchCharacter(_familyName ?? string.Empty,
+                _bold ? SKFontStyleWeight.Bold : SKFontStyleWeight.Normal,
+                SKFontStyleWidth.Normal, SKFontStyleSlant.Upright, null, rune.Value) ?? _typeface;
+            _fallbacks[rune.Value] = fallback;
+        }
+
+        return fallback;
+    }
+
+    private static bool IsNeutral(System.Text.Rune rune)
+    {
+        if (System.Text.Rune.IsWhiteSpace(rune) || System.Text.Rune.IsControl(rune))
+        {
+            return true;
+        }
+
+        var category = System.Text.Rune.GetUnicodeCategory(rune);
+        return category is System.Globalization.UnicodeCategory.NonSpacingMark
+            or System.Globalization.UnicodeCategory.EnclosingMark
+            or System.Globalization.UnicodeCategory.SpacingCombiningMark
+            or System.Globalization.UnicodeCategory.Format;
     }
 
     private SKFont GetFont(SKTypeface typeface, float size)
