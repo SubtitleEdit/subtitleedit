@@ -13,6 +13,7 @@ using Avalonia.Styling;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
 using Nikse.SubtitleEdit.Features.Shared.PickLanguage;
@@ -857,6 +858,9 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Waveform.ShowOriginalSubtitle, nameof(_vm.WaveformShowOriginalSubtitle)),
             MakeCheckboxSetting(Se.Language.Waveform.ShowTimelineTracks, nameof(_vm.WaveformShowTimelineTracks)),
             MakeCheckboxSetting(Se.Language.Waveform.TimelineShowThumbnails, nameof(_vm.WaveformTimelineShowThumbnails)),
+            new SettingsItem(Se.Language.Options.Settings.TimelineTrackFontSize, () => UiUtil.MakeNumericUpDownInt(
+                TimelineTracks.MinFontSize, TimelineTracks.MaxFontSize, TimelineTracks.DefaultFontSize, 120, _vm, nameof(_vm.TimelineTrackFontSize))),
+            new SettingsItem(Se.Language.Options.Settings.TimelineTrackBarColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.TimelineTrackBarColor))),
 
             new SettingsItem(Se.Language.Options.Settings.WaveformSingleClickAction, () => new ComboBox
             {

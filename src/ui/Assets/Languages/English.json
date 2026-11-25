@@ -3968,6 +3968,8 @@
       "waveformTextFontBold": "Waveform text font bold",
       "waveformTextColor": "Waveform text color",
       "waveformOriginalTextColor": "Waveform original text color",
+      "timelineTrackFontSize": "Timeline track font size",
+      "timelineTrackBarColor": "Timeline track bar color",
       "waveformColor": "Waveform color",
       "waveformBackgroundColor": "Waveform background color",
       "waveformSelectedColor": "Waveform selected color",

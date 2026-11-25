@@ -65,6 +65,15 @@ public class SeWaveform
     public string WaveformFancyHighColor { get; set; }
     public string ParagraphBackground { get; set; }
     public string ParagraphSelectedBackground { get; set; }
+
+    /// <summary>
+    /// Fill color of the subtitle bars in the timeline track rows above the waveform (#17184).
+    /// Empty follows <see cref="ParagraphBackground"/>, which also tints the waveform itself.
+    /// </summary>
+    public string TimelineTrackBarColor { get; set; }
+
+    /// <summary>Font size of the text in the timeline track rows; the rows grow with it (#17184).</summary>
+    public int TimelineTrackFontSize { get; set; }
     public bool InvertMouseWheel { get; set; }
 
     // SE 4 parity: when true, the mouse wheel over the waveform seeks the video position
@@ -187,6 +196,8 @@ public class SeWaveform
         WaveformFancyHighColor = Colors.Orange.FromColorToHex();
         ParagraphBackground = Color.FromArgb(140, 70, 70, 70).FromColorToHex();
         ParagraphSelectedBackground = Color.FromArgb(140, 70, 70, 120).FromColorToHex();
+        TimelineTrackBarColor = string.Empty;
+        TimelineTrackFontSize = 12;
         ShotChangesSensitivity = 0.4;
         ShotChangesImportTimeCodeFormat = "Seconds";
         SnapToShotChangesPixels = 8;
