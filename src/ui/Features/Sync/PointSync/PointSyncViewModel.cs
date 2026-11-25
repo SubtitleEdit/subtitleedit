@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Sync.PointSync;
 
-public partial class PointSyncViewModel : ObservableObject
+public partial class PointSyncViewModel : ObservableObject, ISyncedLineMarker
 {
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _subtitles;
     [ObservableProperty] private SubtitleLineViewModel? _selectedSubtitle;
@@ -27,6 +27,17 @@ public partial class PointSyncViewModel : ObservableObject
 
     public ObservableCollection<SyncPoint> SyncPoints { get; set; }
     [ObservableProperty] private SyncPoint? _selectedSyncPoint;
+
+    /// <summary>
+    /// Lines that are part of a sync point - marked in the "#" column so it is easy to see which
+    /// lines are already synced, like in "Point sync via other subtitle" (issue #17053).
+    /// </summary>
+    private readonly HashSet<SubtitleLineViewModel> _syncedLines = new(ReferenceEqualityComparer.Instance);
+
+    /// <summary>Raised when the set of synced lines changes, so visible cells re-mark themselves.</summary>
+    public event Action? SyncedLinesChanged;
+
+    public bool IsSynced(SubtitleLineViewModel line) => _syncedLines.Contains(line);
 
     public Window? Window { get; set; }
     public List<SubtitleLineViewModel> SyncedSubtitles { get; private set; }
@@ -55,6 +66,7 @@ public partial class PointSyncViewModel : ObservableObject
         _windowService = windowService;
         Subtitles = new ObservableCollection<SubtitleLineViewModel>();
         SyncPoints = new ObservableCollection<SyncPoint>();
+        SyncPoints.CollectionChanged += (_, _) => UpdateSyncedLines();
         WindowTitle = string.Empty;
         FileName = string.Empty;
         FileNameOther = string.Empty;
@@ -84,6 +96,20 @@ public partial class PointSyncViewModel : ObservableObject
             // Start at the line selected in the main window (issue #15062).
             SelectedSubtitle = Subtitles[Math.Clamp(selectedIndex, 0, Subtitles.Count - 1)];
         }
+    }
+
+    private void UpdateSyncedLines()
+    {
+        _syncedLines.Clear();
+        foreach (var syncPoint in SyncPoints)
+        {
+            if (syncPoint.LeftIndex >= 0 && syncPoint.LeftIndex < Subtitles.Count)
+            {
+                _syncedLines.Add(Subtitles[syncPoint.LeftIndex]);
+            }
+        }
+
+        SyncedLinesChanged?.Invoke();
     }
 
     private void Close()
