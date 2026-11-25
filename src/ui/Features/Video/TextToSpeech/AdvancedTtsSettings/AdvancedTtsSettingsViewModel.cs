@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
@@ -47,9 +48,9 @@ public partial class AdvancedTtsSettingsViewModel : ObservableObject
     public AdvancedTtsSettingsViewModel(IFolderHelper folderHelper)
     {
         _folderHelper = folderHelper;
-        RubberbandStatus = FfmpegGenerator.IsRubberbandAvailable()
-            ? Se.Language.Video.TextToSpeech.RubberbandInstalled
-            : Se.Language.Video.TextToSpeech.RubberbandNotFound;
+        // Probing ffmpeg spawns a process - do it off the UI thread so the window opens at once.
+        RubberbandStatus = string.Empty;
+        _ = LoadRubberbandStatusAsync();
         var s = Se.Settings.Video.TextToSpeech;
         DoProAudioChain = s.ProAudioChainEnabled;
         DoAudioDucking = s.AudioDuckingEnabled;
@@ -67,6 +68,17 @@ public partial class AdvancedTtsSettingsViewModel : ObservableObject
         EdgeTtsVolume = s.EdgeTtsVolume;
         GenerationFolder = s.GenerationFolder ?? string.Empty;
         DoDeleteTempFiles = s.DeleteTempFiles;
+    }
+
+    private async Task LoadRubberbandStatusAsync()
+    {
+        var available = await FfmpegGenerator.IsRubberbandAvailableAsync();
+        Dispatcher.UIThread.Post(() =>
+        {
+            RubberbandStatus = available
+                ? Se.Language.Video.TextToSpeech.RubberbandInstalled
+                : Se.Language.Video.TextToSpeech.RubberbandNotFound;
+        });
     }
 
     [RelayCommand]

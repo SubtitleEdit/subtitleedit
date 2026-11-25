@@ -4364,7 +4364,10 @@ public partial class TextToSpeechViewModel : ObservableObject
 
         var doVad = Se.Settings.Video.TextToSpeech.VadSilenceCompressionEnabled;
         var vadMaxSilence = Se.Settings.Video.TextToSpeech.VadMaxSilenceSeconds;
-        var doHighQualityStretch = Se.Settings.Video.TextToSpeech.HighQualityTimeStretchEnabled;
+        // Without librubberband in ffmpeg every high-quality stretch fails and is redone with
+        // atempo - two ffmpeg runs per line - so check the (cached) filter list once instead.
+        var doHighQualityStretch = Se.Settings.Video.TextToSpeech.HighQualityTimeStretchEnabled &&
+                                   await FfmpegGenerator.IsRubberbandAvailableAsync();
 
         // Generous per-ffmpeg-call bound: each call processes a single subtitle's audio (seconds
         // long), so minutes means ffmpeg is wedged - kill it and surface an error instead of
