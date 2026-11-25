@@ -415,6 +415,30 @@ public class EditorStyleLayoutTests
         Assert.Equal(TimelineTracks.VideoRowHeight + 2 + 4 * 26, TimelineTracks.GetTotalHeight(4));
     }
 
+    [Fact]
+    public void BiggerTrackFont_GrowsTheRows()
+    {
+        var before = Se.Settings.Waveform.TimelineTrackFontSize;
+        try
+        {
+            Assert.Equal(12, new SeWaveform().TimelineTrackFontSize);
+
+            Se.Settings.Waveform.TimelineTrackFontSize = 20;
+            Assert.Equal(40, TimelineTracks.SubtitleRowHeight);
+            Assert.Equal(34, TimelineTracks.CompactSubtitleRowHeight);
+
+            // Out-of-range values from a hand-edited settings file are clamped.
+            Se.Settings.Waveform.TimelineTrackFontSize = 0;
+            Assert.Equal(30, TimelineTracks.SubtitleRowHeight);
+            Se.Settings.Waveform.TimelineTrackFontSize = 500;
+            Assert.Equal(TimelineTracks.MaxFontSize, TimelineTracks.FontSize);
+        }
+        finally
+        {
+            Se.Settings.Waveform.TimelineTrackFontSize = before;
+        }
+    }
+
     private static TimelineTracks ShowTimeline(Window window, MainViewModel vm)
     {
         InitLayout.MakeLayout(vm.MainView!, vm, 14);

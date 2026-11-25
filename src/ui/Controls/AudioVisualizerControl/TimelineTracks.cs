@@ -8,6 +8,7 @@ using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -41,12 +42,28 @@ public enum TimelineTrackGrouping
 public class TimelineTracks : Control, IDisposable
 {
     public const double VideoRowHeight = TimelineThumbnailCache.ThumbnailHeight;
-    public const double SubtitleRowHeight = 30;
-    public const double CompactSubtitleRowHeight = 24;
     public const double RowGap = 2;
 
+    public const int MinFontSize = 8;
+    public const int MaxFontSize = 40;
+    public const int DefaultFontSize = 12;
+
+    /// <summary>Font size of the bar text from the settings (#17184); the rows grow with it.</summary>
+    internal static double FontSize
+    {
+        get
+        {
+            var size = Se.Settings.Waveform.TimelineTrackFontSize;
+            return size <= 0 ? DefaultFontSize : Math.Clamp(size, MinFontSize, MaxFontSize);
+        }
+    }
+
+    // 30 and 24 at the default 12: room for a line of text plus the bar's inset and padding.
+    public static double SubtitleRowHeight => Math.Ceiling(FontSize * 1.25) + 15;
+    public static double CompactSubtitleRowHeight => Math.Ceiling(FontSize * 1.25) + 9;
+
     /// <summary>Height with a single subtitle row, which is what a new layout starts with.</summary>
-    public const double TotalHeight = VideoRowHeight + RowGap + SubtitleRowHeight + RowGap;
+    public static double TotalHeight => VideoRowHeight + RowGap + SubtitleRowHeight + RowGap;
 
     // More groups than this share the last row: a timeline taller than the waveform it sits on
     // has stopped being a timeline.
@@ -96,7 +113,7 @@ public class TimelineTracks : Control, IDisposable
     private IPen _cursorPen = new Pen(Brushes.Cyan, 1);
     private IPen _shotChangePen = new Pen(Brushes.AntiqueWhite, 1);
     private IBrush _textBrush = Brushes.White;
-    private (Color, Color, Color, Color, Color, string) _colorKey;
+    private (Color, Color, Color, Color, Color, string, Color?) _colorKey;
 
     /// <summary>The video the filmstrip shows; null or empty for none.</summary>
     public Func<string?>? GetVideoFileName { get; set; }
@@ -794,7 +811,7 @@ public class TimelineTracks : Control, IDisposable
 
             if (!_labelCache.TryGetValue(label, out var text))
             {
-                text = new FormattedText(label, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, _typeface, 10, _textBrush);
+                text = new FormattedText(label, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, _typeface, Math.Max(MinFontSize, FontSize - 2), _textBrush);
                 _labelCache[label] = text;
             }
 
@@ -819,7 +836,7 @@ public class TimelineTracks : Control, IDisposable
         }
 
         var plain = HtmlUtil.RemoveHtmlTags(source, true).Replace("\r\n", " ").Replace('\n', ' ').Trim();
-        var text = new FormattedText(plain, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, _typeface, 12, _textBrush);
+        var text = new FormattedText(plain, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, _typeface, FontSize, _textBrush);
         cache[paragraph] = (source, text);
         return text;
     }
@@ -833,7 +850,8 @@ public class TimelineTracks : Control, IDisposable
             source?.WaveformSelectedColor ?? Colors.White,
             source?.WaveformCursorColor ?? Colors.Cyan,
             source?.WaveformShotChangeColor ?? Colors.AntiqueWhite,
-            WaveformColors.CurrentTextHex);
+            WaveformColors.CurrentTextHex,
+            GetOwnBarColor());
         if (key == _colorKey)
         {
             return;
@@ -852,7 +870,11 @@ public class TimelineTracks : Control, IDisposable
 
         // The waveform's paragraph colors are translucent overlays for a busy background; on a
         // plain row they are blended into it and drawn solid instead.
-        var paragraph = Blend(background, Opaque(key.Item2), 0.75);
+        // A bar color of its own (#17184) is drawn as picked: its alpha says how much of the
+        // background shows through, so an opaque pick is exactly the color on screen.
+        var paragraph = key.Item7 is { } own
+            ? Blend(background, Opaque(own), own.A / 255.0)
+            : Blend(background, Opaque(key.Item2), 0.75);
         var paragraphSelected = Blend(background, Opaque(key.Item3), 0.55);
         _paragraphBrush = new SolidColorBrush(paragraph);
         _paragraphSelectedBrush = new SolidColorBrush(paragraphSelected);
@@ -864,6 +886,21 @@ public class TimelineTracks : Control, IDisposable
         _textCache.Clear();
         _originalTextCache.Clear();
         _labelCache.Clear();
+    }
+
+    /// <summary>
+    /// The bar color from the settings, or null to derive it from the paragraph color. A theme
+    /// with a waveform palette of its own wins, as it does for every other waveform color.
+    /// </summary>
+    private static Color? GetOwnBarColor()
+    {
+        var hex = Se.Settings.Waveform.TimelineTrackBarColor;
+        if (string.IsNullOrEmpty(hex) || UiTheme.GetThemeWaveformColors() != null)
+        {
+            return null;
+        }
+
+        return hex.FromHexToColor();
     }
 
     private static Color Opaque(Color color) => Color.FromRgb(color.R, color.G, color.B);

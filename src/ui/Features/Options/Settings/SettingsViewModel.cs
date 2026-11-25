@@ -360,6 +360,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private Color _waveformColor;
     [ObservableProperty] private Color _waveformBackgroundColor;
     [ObservableProperty] private Color _waveformParagraphBackgroundColor;
+    [ObservableProperty] private Color _timelineTrackBarColor;
+    [ObservableProperty] private int _timelineTrackFontSize;
     [ObservableProperty] private Color _waveformSelectedColor;
     [ObservableProperty] private Color _waveformParagraphSelectedBackgroundColor;
     [ObservableProperty] private Color _waveformCursorColor;
@@ -1158,6 +1160,10 @@ public partial class SettingsViewModel : ObservableObject
         WaveformColor = Se.Settings.Waveform.WaveformColor.FromHexToColor();
         WaveformBackgroundColor = Se.Settings.Waveform.WaveformBackgroundColor.FromHexToColor();
         WaveformParagraphBackgroundColor = Se.Settings.Waveform.ParagraphBackground.FromHexToColor();
+        TimelineTrackBarColor = string.IsNullOrEmpty(Se.Settings.Waveform.TimelineTrackBarColor)
+            ? WaveformParagraphBackgroundColor
+            : Se.Settings.Waveform.TimelineTrackBarColor.FromHexToColor();
+        TimelineTrackFontSize = Se.Settings.Waveform.TimelineTrackFontSize;
         WaveformSelectedColor = Se.Settings.Waveform.WaveformSelectedColor.FromHexToColor();
         WaveformParagraphSelectedBackgroundColor = Se.Settings.Waveform.ParagraphSelectedBackground.FromHexToColor();
         WaveformCursorColor = Se.Settings.Waveform.WaveformCursorColor.FromHexToColor();
@@ -2078,6 +2084,11 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Waveform.WaveformColor = WaveformColor.FromColorToHex();
         Se.Settings.Waveform.WaveformBackgroundColor = WaveformBackgroundColor.FromColorToHex();
         Se.Settings.Waveform.ParagraphBackground = WaveformParagraphBackgroundColor.FromColorToHex();
+        // Same as the paragraph color = keep following it (and the UI theme's palette).
+        Se.Settings.Waveform.TimelineTrackBarColor = TimelineTrackBarColor == WaveformParagraphBackgroundColor
+            ? string.Empty
+            : TimelineTrackBarColor.FromColorToHex();
+        Se.Settings.Waveform.TimelineTrackFontSize = TimelineTrackFontSize;
         Se.Settings.Waveform.ParagraphSelectedBackground = WaveformParagraphSelectedBackgroundColor.FromColorToHex();
         Se.Settings.Waveform.WaveformSelectedColor = WaveformSelectedColor.FromColorToHex();
         Se.Settings.Waveform.WaveformCursorColor = WaveformCursorColor.FromColorToHex();
@@ -2683,6 +2694,15 @@ public partial class SettingsViewModel : ObservableObject
         if (WaveformOriginalTextColor == oldValue)
         {
             WaveformOriginalTextColor = newValue;
+        }
+    }
+
+    partial void OnWaveformParagraphBackgroundColorChanged(Color oldValue, Color newValue)
+    {
+        // A bar color that was following the paragraph color keeps following it.
+        if (TimelineTrackBarColor == oldValue)
+        {
+            TimelineTrackBarColor = newValue;
         }
     }
 
