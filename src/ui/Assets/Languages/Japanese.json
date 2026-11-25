@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "5.5.0-beta13",
+  "version": "5.5.0-beta14",
   "translatedBy": "hisui3393",
   "cultureName": "jp-JP",
   "general": {
@@ -460,6 +460,8 @@
     "pleaseSelectOutputFolder": "出力フォルダーを選択してください",
     "pickResolutionFromCurrentVideo": "現在のビデオの解像度を選択",
     "pickResolutionFromVideoDotDotDot": "ビデオの解像度を選択",
+    "customResolutionDotDotDot": "カスタム解像度...",
+    "customResolution": "カスタム解像度",
     "pickSubtitleFile": "字幕ファイルを選択",
     "pickVideoFile": "ビデオファイルを選択",
     "pickVideoPosition": "ビデオの位置を選択",
@@ -3323,6 +3325,10 @@
     "extraWidth": "幅の追加（ピクセル）",
     "extraWidthHint": "各字幕行の左右に追加するマスクの幅。先頭や末尾の文字に付いた縁取りや影を覆います",
     "proPainterDownloadQuestion": "Subtitle EditのサポートファイルからProPainter（約180 MB）をダウンロードしますか？ ProPainterは非商用利用のライセンスで提供され、インストール後はローカル環境で動作します。",
+    "proPainterStarting": "ProPainterを開始しています...",
+    "proPainterEstimatingMotionXY": "ProPainter: 動きを推定中、このバッチのフレームペア {0}/{1}...",
+    "proPainterCompletingMotion": "ProPainter: 動きを補完中...",
+    "proPainterInpaintingXY": "ProPainter: インペインティング中、このバッチのフレーム {0}/{1}...",
     "temporalConsistency": "時間方向の一貫性（ちらつきを軽減）",
     "temporalConsistencyHint": "映像が静止している間、近接するフレームの実際の背景と直前の補完結果を再利用します",
     "outputFile": "出力ファイル",
