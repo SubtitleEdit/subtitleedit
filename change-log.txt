@@ -3,6 +3,29 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.5.0-beta14 (25th of November 2026)
+
+* Auto-translate: editable post-processing dictionaries (39 bundled), with suggestions shown beside the engine draft
+* Auto-translate "Keep line breaks": repair line counts and break with the target language's rules (incl. CJK)
+* Paste: text wrapped by its source (e.g. PDF) is joined and auto-broken - thx swiatgluchych-poland
+* Word lists: edit the do-not-break-after list
+* Waveform: own color for original subtitle text - thx bichitoxxx
+* Waveform: Ctrl/Cmd+click on a line toggles it in the selection - thx bichitoxxx
+* Copy text from original shortcut now also works on reference-only rows - thx fraternl
+* Settings import: Apply keeps the imported panel layout - thx FunkyKnilch/Golden007-prog
+* About window: aurora backdrop behind frosted glass
+* Plugins: send the original subtitle in request.json
+* mpv: fix fullscreen losing the video (mpv Metal)
+* mpv OpenGL: recover when the video control never initializes
+* Fluent 2: draw one field border on time code and seconds up/downs
+* Faster subtitle file reading
+* SubRip/CSV: keep valid cues around malformed timing rows
+* Fix loading malformed TTML and YouTube timed text + Nuendo CSV crash after a malformed row
+* Update llama.cpp to b12675 and CrispEmbed to v0.17.21
+* Update Japanese translation - thx hisui3393
+
+-----------------------------------------------------------------------------------------------------
+
 v5.5.0-beta13 (24th of November 2026)
 
 * Update to Avalonia 12.2 with the Fluent 2 theme, full-row selection highlight in the grid
