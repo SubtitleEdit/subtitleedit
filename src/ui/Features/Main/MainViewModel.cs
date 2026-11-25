@@ -14729,6 +14729,64 @@ public partial class MainViewModel :
         }
     }
 
+    /// <summary>
+    /// Copies of the working rows for a tool dialog, without the display-only reference rows: those
+    /// are lines of the original subtitle, not of this one. Point sync showed them as "0" rows with
+    /// no text, and their times gave the "Gap after" hints false neighbours (issue #17183).
+    /// <paramref name="selectedIndex"/> is the selected row's index among the copies - for a
+    /// selected reference row, the working row before it.
+    /// </summary>
+    private List<SubtitleLineViewModel> CopyWorkingRowsForDialog(SubtitleLineViewModel? selectedRow, out int selectedIndex)
+    {
+        var rows = new List<SubtitleLineViewModel>(Subtitles.Count);
+        selectedIndex = 0;
+        foreach (var row in Subtitles)
+        {
+            if (ReferenceEquals(row, selectedRow))
+            {
+                selectedIndex = Math.Max(0, row.IsReferenceOnly ? rows.Count - 1 : rows.Count);
+            }
+
+            if (!row.IsReferenceOnly)
+            {
+                rows.Add(new SubtitleLineViewModel(row));
+            }
+        }
+
+        return rows;
+    }
+
+    /// <summary>
+    /// <see cref="ApplyDialogRows"/> for a dialog given <see cref="CopyWorkingRowsForDialog"/>: the
+    /// reference rows go back in (ApplyDialogRows drops rows it is not given), each where it sat
+    /// among the working rows so the grid is updated in place, and are then put back at their
+    /// times among the retimed working rows.
+    /// </summary>
+    private void ApplyDialogRowsKeepingReferenceRows(IReadOnlyList<SubtitleLineViewModel> lines, GridPosition before)
+    {
+        var result = new List<SubtitleLineViewModel>(lines.Count + Subtitles.Count);
+        var next = 0;
+        foreach (var row in Subtitles)
+        {
+            if (row.IsReferenceOnly)
+            {
+                result.Add(row);
+            }
+            else if (next < lines.Count)
+            {
+                result.Add(lines[next++]);
+            }
+        }
+
+        for (; next < lines.Count; next++)
+        {
+            result.Add(lines[next]);
+        }
+
+        ApplyDialogRows(result, before);
+        RepositionReferenceOnlyRows();
+    }
+
     [RelayCommand]
     private async Task ShowPointSync()
     {
@@ -14747,13 +14805,13 @@ public partial class MainViewModel :
         var before = CaptureGridPosition();
         var result = await ShowDialogAsync<PointSyncWindow, PointSyncViewModel>(vm =>
         {
-            var paragraphs = Subtitles.Select(p => new SubtitleLineViewModel(p)).ToList();
-            vm.Initialize(paragraphs, before.SelectedRow == null ? 0 : Subtitles.IndexOf(before.SelectedRow), _videoFileName ?? string.Empty, _subtitleFileName ?? string.Empty, MakeVideoPreviewSubtitleContext(), AudioVisualizer, _audioTrack?.Id ?? -1);
+            var paragraphs = CopyWorkingRowsForDialog(before.SelectedRow, out var selectedIndex);
+            vm.Initialize(paragraphs, selectedIndex, _videoFileName ?? string.Empty, _subtitleFileName ?? string.Empty, MakeVideoPreviewSubtitleContext(), AudioVisualizer, _audioTrack?.Id ?? -1);
         });
 
         if (result.OkPressed)
         {
-            EndToolApply(toolApply, () => ApplyDialogRows(result.SyncedSubtitles, before));
+            EndToolApply(toolApply, () => ApplyDialogRowsKeepingReferenceRows(result.SyncedSubtitles, before));
         }
 
         // Point sync can open a video of its own - take it over here too (issue #13341).
@@ -14781,13 +14839,13 @@ public partial class MainViewModel :
         var before = CaptureGridPosition();
         var result = await ShowDialogAsync<PointSyncViaOtherWindow, PointSyncViaOtherViewModel>(vm =>
         {
-            var paragraphs = Subtitles.Select(p => new SubtitleLineViewModel(p)).ToList();
-            vm.Initialize(paragraphs, before.SelectedRow == null ? 0 : Subtitles.IndexOf(before.SelectedRow), _videoFileName ?? string.Empty, _subtitleFileName ?? string.Empty, MakeVideoPreviewSubtitleContext(), _audioTrack?.Id ?? -1);
+            var paragraphs = CopyWorkingRowsForDialog(before.SelectedRow, out var selectedIndex);
+            vm.Initialize(paragraphs, selectedIndex, _videoFileName ?? string.Empty, _subtitleFileName ?? string.Empty, MakeVideoPreviewSubtitleContext(), _audioTrack?.Id ?? -1);
         });
 
         if (result.OkPressed)
         {
-            EndToolApply(toolApply, () => ApplyDialogRows(result.SyncedSubtitles, before));
+            EndToolApply(toolApply, () => ApplyDialogRowsKeepingReferenceRows(result.SyncedSubtitles, before));
         }
 
         // "Set sync point via video" can open a video of its own - take it over here too (issue #13341).
