@@ -3,7 +3,9 @@ using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.UiLogic.Common;
 using System;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Shared.TextBoxUtils;
 
@@ -92,7 +94,8 @@ public static class TextBoxPasteNormalizer
     /// <summary>
     /// <paramref name="text"/> with the range <paramref name="selectionStart"/>-<paramref name="selectionEnd"/>
     /// replaced by <paramref name="pasted"/> joined to one line, then unbroken and auto-broken
-    /// as a whole. A space is kept between the pasted text and the words around it.
+    /// as a whole. A space is kept between the pasted text and the words around it, except
+    /// next to a script written without spaces between words.
     /// </summary>
     internal static string ComposePasteAndAutoBreak(string text, int selectionStart, int selectionEnd, string pasted, string languageCode)
     {
@@ -102,24 +105,51 @@ public static class TextBoxPasteNormalizer
         var before = text.Substring(0, start);
         var after = text.Substring(end);
 
-        var oneLine = Utilities.UnbreakLine(NormalizeBreakChars(pasted ?? string.Empty)).Trim();
+        var oneLine = UnbreakLine(NormalizeBreakChars(pasted ?? string.Empty)).Trim();
         if (oneLine.Length == 0)
         {
             return text;
         }
 
-        if (before.Length > 0 && !char.IsWhiteSpace(before[^1]))
+        // No space next to Chinese, Japanese, Thai... - those scripts have none between words.
+        if (before.Length > 0 && !char.IsWhiteSpace(before[^1]) && UnspacedScript.NeedsSpaceBetween(before[^1], oneLine[0]))
         {
             oneLine = " " + oneLine;
         }
 
-        if (after.Length > 0 && !char.IsWhiteSpace(after[0]))
+        if (after.Length > 0 && !char.IsWhiteSpace(after[0]) && UnspacedScript.NeedsSpaceBetween(oneLine[^1], after[0]))
         {
             oneLine += " ";
         }
 
-        var unbroken = Utilities.UnbreakLine(before + oneLine + after);
+        var unbroken = UnbreakLine(before + oneLine + after);
         return Utilities.AutoBreakLine(unbroken, languageCode);
+    }
+
+    /// <summary>
+    /// <see cref="Utilities.UnbreakLine"/>, except that a break next to a script written without
+    /// spaces between words (Chinese, Japanese, Thai...) is joined without one - a PDF wraps such
+    /// text anywhere, and a space there would be a new character in the text (#17137).
+    /// </summary>
+    internal static string UnbreakLine(string text)
+    {
+        var lines = text.SplitToLines();
+        if (lines.Count == 1)
+        {
+            return lines[0];
+        }
+
+        var trimmed = lines.Select(line => line.Trim()).ToList();
+        var touchesUnspacedScript = false;
+        for (var i = 1; i < trimmed.Count && !touchesUnspacedScript; i++)
+        {
+            touchesUnspacedScript = trimmed[i - 1].Length > 0 && trimmed[i].Length > 0 &&
+                                    !UnspacedScript.NeedsSpaceBetween(trimmed[i - 1][^1], trimmed[i][0]);
+        }
+
+        return touchesUnspacedScript
+            ? UnspacedScript.JoinLines(trimmed).FixExtraSpaces()
+            : Utilities.UnbreakLine(text);
     }
 
     /// <summary>

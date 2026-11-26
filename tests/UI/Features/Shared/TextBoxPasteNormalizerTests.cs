@@ -86,6 +86,55 @@ public class TextBoxPasteNormalizerTests
         Assert.Equal("Hello", TextBoxPasteNormalizer.ComposePasteAndAutoBreak("Hello", 5, 5, " \n ", "en"));
     }
 
+    private const string JapanesePdfText = "今日はとても暑いので、\n外に出かけるのはやめて\n家で映画を見ることにしました。";
+
+    [Fact]
+    public void Compose_Japanese_JoinsWithoutSpaces()
+    {
+        var result = TextBoxPasteNormalizer.ComposePasteAndAutoBreak(string.Empty, 0, 0, JapanesePdfText, "ja");
+
+        Assert.DoesNotContain(" ", result);
+        Assert.Equal("今日はとても暑いので、外に出かけるのはやめて家で映画を見ることにしました。", result.Replace(Environment.NewLine, string.Empty));
+    }
+
+    [Fact]
+    public void Compose_JapaneseAfterJapaneseText_NoSpaceAtTheJoin()
+    {
+        var result = TextBoxPasteNormalizer.ComposePasteAndAutoBreak("前の文。", 4, 4, JapanesePdfText, "ja");
+
+        Assert.DoesNotContain(" ", result);
+        Assert.StartsWith("前の文。今日は", result);
+    }
+
+    [Fact]
+    public void Compose_Chinese_JoinsWithoutSpaces()
+    {
+        var result = TextBoxPasteNormalizer.ComposePasteAndAutoBreak(string.Empty, 0, 0, "我们今天去公园\n散步，然后去\n吃晚饭。", "zh");
+
+        Assert.Equal("我们今天去公园散步，然后去吃晚饭。", result.Replace(Environment.NewLine, string.Empty));
+    }
+
+    [Fact]
+    public void Compose_Thai_JoinsWithoutSpaces()
+    {
+        var result = TextBoxPasteNormalizer.ComposePasteAndAutoBreak(string.Empty, 0, 0, "วันนี้อากาศ\nร้อนมาก\nจริงๆ", "th");
+
+        Assert.Equal("วันนี้อากาศร้อนมากจริงๆ", result.Replace(Environment.NewLine, string.Empty));
+    }
+
+    [Theory]
+    [InlineData("big\nwide\nworld", "big wide world")]
+    [InlineData("big \n wide", "big wide")]
+    [InlineData("日本\n語", "日本語")]
+    [InlineData("日本 \n 語", "日本語")]
+    [InlineData("Tokyo\n東京", "Tokyo東京")]
+    [InlineData("나 이제\n가야 해.", "나 이제 가야 해.")] // Korean is written with spaces
+    [InlineData("<i>big</i>\n<i>wide</i>", "<i>big wide</i>")]
+    public void UnbreakLine_SpacesOnlyBetweenSpacedScripts(string input, string expected)
+    {
+        Assert.Equal(expected, TextBoxPasteNormalizer.UnbreakLine(input));
+    }
+
     [Fact]
     public void NormalizeBreakChars_ConvertsUnknownBreaks()
     {

@@ -2569,7 +2569,7 @@ public static partial class InitListViewAndEditBox
     {
         vm.EditTextBox.ContentControl.RemoveControlFromParent();
 
-        var textBox = MakeSubtitleTextBox(vm);
+        var textBox = MakeSubtitleTextBox(vm.GetDetectedLanguageCode);
         textBox[!TextBox.TextProperty] = new Binding(nameof(vm.SelectedSubtitle) + "." + nameof(SubtitleLineViewModel.Text))
         {
             Mode = BindingMode.TwoWay
@@ -2996,7 +2996,7 @@ public static partial class InitListViewAndEditBox
         return bottom + timeControlsPanel.Margin.Top + timeControlsPanel.Margin.Bottom + EditGridMargin * 2;
     }
 
-    private static TextBox MakeSubtitleTextBox(MainViewModel vm)
+    private static TextBox MakeSubtitleTextBox(Func<string> getLanguageCode)
     {
         var appearance = Se.Settings.Appearance;
 
@@ -3022,7 +3022,7 @@ public static partial class InitListViewAndEditBox
         // Pasted text goes straight into the paragraph via the two-way binding, so its line
         // breaks must be SE's own - see TextBoxPasteNormalizer (#13591). Text wrapped by its
         // source (a PDF) is joined and auto-broken again (#17137).
-        TextBoxPasteNormalizer.NormalizeLineBreaksOnPaste(textBox, vm.GetDetectedLanguageCode);
+        TextBoxPasteNormalizer.NormalizeLineBreaksOnPaste(textBox, getLanguageCode);
 
         // Drag a selection out of one edit box and drop it into the other, or move it within
         // the same box - as SE4's edit boxes allowed (#14534).
@@ -3047,7 +3047,8 @@ public static partial class InitListViewAndEditBox
 
     private static Avalonia.Controls.Control MakeTextBoxOriginal(MainViewModel vm)
     {
-        var textBox = MakeSubtitleTextBox(vm);
+        // The original is in its own language - auto-break pasted text with that one (#17137).
+        var textBox = MakeSubtitleTextBox(vm.GetOriginalLanguageCode);
         textBox[!TextBox.TextProperty] = new Binding(nameof(vm.SelectedSubtitle) + "." + nameof(SubtitleLineViewModel.OriginalText))
         {
             Mode = BindingMode.TwoWay
