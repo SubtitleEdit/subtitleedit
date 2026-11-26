@@ -97,7 +97,7 @@ To translate English subtitles into Spanish, German, Danish or another language 
 | **Index-Translate 2B (Q8_0)** | 2.1 GB | Best small model, for limited memory or when speed matters most. About 0.6 s per line, with more slips than the 9B |
 | **Gemma 4 E4B it (Q4_K_M)** | 5.4 GB | Good alternative at about 1 s per line, with more errors than the 9B in Danish and German but not in Japanese |
 | **TranslateGemma 12B (Q4_K_M)** | 7.3 GB | Close to the 9B in quality, but it can return English lines untranslated when lines are merged into one request. Subtitle Edit detects this and retries, so it can take longer |
-| **Hy-MT3 30B-A3B (IQ2)** | 13.1 GB | Best with idioms ("That ship has sailed" becomes the matching local expression, not a literal ship) and faster than the 9B. Covers 102 languages and was the best we tested into German and Swedish and as good as the best into French, Spanish and Japanese, but it makes more mistakes in Danish than Index-Translate 9B |
+| **Hy-MT3 30B-A3B (IQ3_XXS)** | 11.6 GB | Best with idioms ("That ship has sailed" becomes the matching local expression, not a literal ship) and faster than the 9B. Covers 102 languages and was the best we tested into German and Swedish and as good as the best into French, Spanish and Japanese, but it makes more mistakes in Danish than Index-Translate 9B |
 | **TranslatePsy-AfriSLM 4B** | 3.1 GB | The one to use for the 19 African languages it covers |
 
 These recommendations come from small tests of about 24 lines of English dialogue, mostly into Danish, German and Japanese, with Index-Translate 9B also tested into Spanish, French, Russian and Chinese, and Hy-MT3 into Spanish, French and Swedish. Results for other languages can differ, so try a few lines before translating a whole file.
