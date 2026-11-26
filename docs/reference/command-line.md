@@ -447,7 +447,7 @@ seconv movie.srt subrip --translate-to:da --translate-engine:ollama --translate-
 ```
 
 Precedence for `llamacpp`, highest first: `--translate-prompt`, then a curated model's own trained
-prompt (MiLMMT-46, Hy-MT2 — applied automatically when that model is selected), then
+prompt (MiLMMT-46, Hy-MT3 — applied automatically when that model is selected), then
 `tools.llamaCppPrompt` from a `--settings` file, then the built-in default. `--translate-prompt`
 deliberately overrides the curated template too: an option given on the command line must never be
 a no-op. `ollama` and `lmstudio` have no per-model template, so it is simply
