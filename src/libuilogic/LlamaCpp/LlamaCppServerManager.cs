@@ -56,12 +56,13 @@ public sealed record LlamaCppModel(
 /// </summary>
 public static class LlamaCppServerManager
 {
-    // Tencent's official Hy-MT2 prompt - the model is trained on exactly this phrasing and
-    // expects the TARGET language's English name ({1}); {0} (source) is unused by design.
+    // Tencent's official Hy-MT prompt (the same wording for Hy-MT2 and Hy-MT3) - the model is
+    // trained on exactly this phrasing and expects the TARGET language's English name ({1});
+    // {0} (source) is unused by design.
     // The line-break sentence is our addition to Tencent's official wording: the 7B honors it
     // reliably, the 1.8B only sometimes - lost breaks are restored by SE's auto-break like for
     // the other LLM engines.
-    private const string HyMt2PromptTemplate =
+    private const string HyMtPromptTemplate =
         "Translate the following text into {1}. Keep line breaks exactly the same. Note that you should only output the translated result without any additional explanation:";
 
     // MiLMMT-46's trained raw-completion format (with language English names). The text sits
@@ -134,7 +135,7 @@ public static class LlamaCppServerManager
             ChatTemplate: "gemma", NoJinja: true),
 
         // MiLMMT-46 v1.0 (Xiaomi, 2026) - Gemma3-based translation-specialized models, 46
-        // languages including Danish/Norwegian/Swedish (the gap in Hy-MT2's coverage); the paper
+        // languages including Danish/Norwegian/Swedish (the gap in Hy-MT2's coverage, filled by Hy-MT3); the paper
         // reports it ahead of TranslateGemma and Hy-MT 1.5. Temperature 0 matches the model
         // card's greedy-decoding usage. CompletionOnly: see the record field - regular engine only.
         new LlamaCppModel("MiLMMT-46 4B (Q4_K_M) - 46 languages incl. Nordic", "MiLMMT-46-4B-v1.0.Q4_K_M.gguf", "2.5 GB",
@@ -227,35 +228,39 @@ public static class LlamaCppServerManager
             "https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF/resolve/main/Qwen3.6-35B-A3B-UD-IQ2_M.gguf",
             NoThinking: true),
 
-        // Hy-MT2 (Tencent Hunyuan-MT 2, 2026) - translation-specialized, official GGUFs, Apache-2.0.
-        // Excellent for its 33+5 supported languages (CJK, major European/Asian) but has NO Nordic
-        // languages (Danish/Swedish/Norwegian/Finnish), no Greek/Romanian/Hungarian - generation in
-        // unsupported languages produces garbage, hence the coverage note in the display name.
-        // Trained on a fixed prompt (PromptTemplate below, with language NAMES - the generic prompt
-        // makes it answer in Chinese) and Tencent-recommended sampling. Embedded chat template works
-        // as-is, so no ChatTemplate/NoJinja overrides.
-        // Hy-MT2 30B-A3B - the same family as a mixture-of-experts model (30B total, ~3B active per
-        // token), as mradermacher's imatrix IQ3_XXS: Tencent's own GGUFs start at Q4_K_M (18.2 GB).
-        // Tested 2026-11-20 (seconv, 24 dialog lines EN->DE/FR/JA, M4 24 GB): the only model of the
-        // list that renders idioms by meaning instead of word by word ("That ship has sailed" ->
-        // "Le train est déjà parti" / "もう手遅れだよ", "not holding my breath" right in all three),
-        // clearly ahead of the 7B ("Avant-propos", "Jure-moi", a stray "<br") and faster than
-        // Index-Translate 9B (13-31 s vs ~40 s per language). Its slips were small: a dropped
-        // apostrophe/word in French ("qu un", "jusqu'lundi"), one Japanese line given twice, and a
-        // space after dialogue dashes. TranslateGemma 27B at the same size (IQ3_XXS, 10.7 GB) was
-        // tested alongside and is not offered: stray "< />" fragments on many lines, and 15-25x slower.
-        new LlamaCppModel("Hy-MT2 30B-A3B (IQ3_XXS) - 33 languages, no Nordic", "Hy-MT2-30B-A3B.i1-IQ3_XXS.gguf", "11.6 GB",
-            "https://huggingface.co/mradermacher/Hy-MT2-30B-A3B-i1-GGUF/resolve/main/Hy-MT2-30B-A3B.i1-IQ3_XXS.gguf",
-            PromptTemplate: HyMt2PromptTemplate, Temperature: 0.7, TopP: 0.6, TopK: 20, RepeatPenalty: 1.05),
-        new LlamaCppModel("Hy-MT2 7B (Q4_K_M) - 33 languages, no Nordic", "Hy-MT2-7B-Q4_K_M.gguf", "4.6 GB",
-            "https://huggingface.co/tencent/Hy-MT2-7B-GGUF/resolve/main/Hy-MT2-7B-Q4_K_M.gguf",
-            PromptTemplate: HyMt2PromptTemplate, Temperature: 0.7, TopP: 0.6, TopK: 20, RepeatPenalty: 1.05),
-        new LlamaCppModel("Hy-MT2 7B (Q8_0) - 33 languages, no Nordic", "HY-MT2-7B-Q8_0.gguf", "8.0 GB",
-            "https://huggingface.co/tencent/Hy-MT2-7B-GGUF/resolve/main/HY-MT2-7B-Q8_0.gguf",
-            PromptTemplate: HyMt2PromptTemplate, Temperature: 0.7, TopP: 0.6, TopK: 20, RepeatPenalty: 1.05),
-        new LlamaCppModel("Hy-MT2 1.8B (Q8_0) - 33 languages, no Nordic", "Hy-MT2-1.8B-Q8_0.gguf", "1.9 GB",
-            "https://huggingface.co/tencent/Hy-MT2-1.8B-GGUF/resolve/main/Hy-MT2-1.8B-Q8_0.gguf",
-            PromptTemplate: HyMt2PromptTemplate, Temperature: 0.7, TopP: 0.6, TopK: 20, RepeatPenalty: 1.05),
+        // Hy-MT3 (Tencent Hunyuan-MT 3, 2026-11) - translation-specialized, official GGUFs, Apache-2.0.
+        // 102 languages - the 38 of Hy-MT2 plus 64 new ones, now including Danish, Swedish,
+        // Norwegian, Finnish and Icelandic (Hy-MT2 had no Nordic languages at all). Trained on the
+        // same fixed prompt as Hy-MT2 (language NAMES - the generic prompt makes it answer in
+        // Chinese). Tencent recommends different sampling per size: the 1.8B/7B the Hy-MT2 values,
+        // the 30B-A3B top_p 1.0, top_k off (0) and no repetition penalty. Embedded chat template
+        // works as-is (hy_v3 architecture, supported by llama.cpp since 2026-07).
+        // Tested 2026-11-26 (#17210, seconv, 24 dialog lines EN->FR/JA/ES/DE/DA/SV, M4 24 GB)
+        // against Hy-MT2 30B (the previous best) and Index-Translate 9B (Danish/Swedish):
+        // - 30B-A3B, Tencent's own "IQ2" (13.1 GB): FR/JA/ES on par with Hy-MT2 30B, idioms by
+        //   meaning ("C'est pas sorcier", "Il a cassé sa pipe"); German better - it keeps "-"
+        //   dialogue dashes and the line split, which Hy-MT2 turned into "–" and moved; Swedish
+        //   ahead of Index 9B ("Sluta slingra dig"). 13-14 s per language, Japanese included
+        //   (Hy-MT2 30B: 33 s). Danish is its weak spot ("Han gik bumpen", "Aflad en besked") -
+        //   Index-Translate 9B stays the better Danish pick. mradermacher's i1 quants
+        //   (IQ3_XXS 11.6 GB) were not tested; Tencent's GGUFs above IQ2 start at Q4_K_M (19.5 GB).
+        // - 7B Q4_K_M: the most natural French of all, German mixed ("Das Schiff ist gesunken"),
+        //   Danish weaker than the 30B (one stray "<br＞"). ~21 s, Japanese 67 s.
+        // - 1.8B Q8_0: 9 s per language, but often wrong in Danish ("blive skudt i benet").
+        // Replaces the Hy-MT2 entries; a downloaded Hy-MT2 file shows up as a custom model and
+        // keeps the trained prompt and sampling through CreateCustomModel.
+        new LlamaCppModel("Hy-MT3 30B-A3B (IQ2) - 102 languages", "Hy-MT3-30B-A3B-IQ2.gguf", "13.1 GB",
+            "https://huggingface.co/tencent/Hy-MT3-30B-A3B-GGUF/resolve/main/Hy-MT3-30B-A3B-IQ2.gguf",
+            PromptTemplate: HyMtPromptTemplate, Temperature: 0.7, TopP: 1.0, TopK: 0, RepeatPenalty: 1.0),
+        new LlamaCppModel("Hy-MT3 7B (Q4_K_M) - 102 languages", "Hy-MT3-7B-Q4_K_M.gguf", "5.1 GB",
+            "https://huggingface.co/tencent/Hy-MT3-7B-GGUF/resolve/main/Hy-MT3-7B-Q4_K_M.gguf",
+            PromptTemplate: HyMtPromptTemplate, Temperature: 0.7, TopP: 0.6, TopK: 20, RepeatPenalty: 1.05),
+        new LlamaCppModel("Hy-MT3 7B (Q8_0) - 102 languages", "Hy-MT3-7B-Q8_0.gguf", "8.7 GB",
+            "https://huggingface.co/tencent/Hy-MT3-7B-GGUF/resolve/main/Hy-MT3-7B-Q8_0.gguf",
+            PromptTemplate: HyMtPromptTemplate, Temperature: 0.7, TopP: 0.6, TopK: 20, RepeatPenalty: 1.05),
+        new LlamaCppModel("Hy-MT3 1.8B (Q8_0) - 102 languages", "Hy-MT3-1.8B-Q8_0.gguf", "1.9 GB",
+            "https://huggingface.co/tencent/Hy-MT3-1.8B-GGUF/resolve/main/Hy-MT3-1.8B-Q8_0.gguf",
+            PromptTemplate: HyMtPromptTemplate, Temperature: 0.7, TopP: 0.6, TopK: 20, RepeatPenalty: 1.05),
 
         // PLaMo 3 Translate (Preferred Networks, 2026-11) - translation-specialized, official GGUFs,
         // 53 languages with Japanese <-> English as its strength. No Nordic languages, and no
@@ -730,12 +735,37 @@ public static class LlamaCppServerManager
                        name.Contains("plamo3", StringComparison.OrdinalIgnoreCase)) &&
                       name.Contains("translate", StringComparison.OrdinalIgnoreCase);
         var promptTemplate = isMiLmMt ? MiLmMt46PromptTemplate : isPlamo ? PlamoTranslatePromptTemplate : null;
+        if (IsHyMtFileName(name))
+        {
+            // Hy-MT2/Hy-MT3 chat models: the trained prompt and Tencent's sampling, but not
+            // completion-only - they follow the advanced engine's batch instructions too.
+            var isHyMt3Moe = name.Contains("hy-mt3", StringComparison.OrdinalIgnoreCase) &&
+                             name.Contains("30b", StringComparison.OrdinalIgnoreCase);
+            return new LlamaCppModel(displayName, fileNameOrPath, size, Url: string.Empty,
+                ChatTemplate: chatTemplate, NoJinja: noJinja, NoThinking: noThinking,
+                PromptTemplate: HyMtPromptTemplate,
+                Temperature: 0.7,
+                TopP: isHyMt3Moe ? 1.0 : 0.6,
+                TopK: isHyMt3Moe ? 0 : 20,
+                RepeatPenalty: isHyMt3Moe ? 1.0 : 1.05);
+        }
+
         return new LlamaCppModel(displayName, fileNameOrPath, size, Url: string.Empty,
             ChatTemplate: chatTemplate, NoJinja: noJinja,
             PromptTemplate: promptTemplate,
             Temperature: promptTemplate != null ? 0 : -1,
             CompletionOnly: promptTemplate != null,
             NoThinking: noThinking);
+    }
+
+    /// <summary>
+    /// A Tencent Hy-MT2 or Hy-MT3 translation model (any size or quant, e.g. "HY-MT2-7B-Q8_0.gguf",
+    /// "Hy-MT3-30B-A3B.i1-IQ3_XXS.gguf"). Both answer in Chinese under SE's generic prompt.
+    /// </summary>
+    private static bool IsHyMtFileName(string fileName)
+    {
+        return fileName.Contains("hy-mt2", StringComparison.OrdinalIgnoreCase) ||
+               fileName.Contains("hy-mt3", StringComparison.OrdinalIgnoreCase);
     }
 
     /// <summary>
