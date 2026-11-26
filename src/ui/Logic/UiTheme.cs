@@ -1095,6 +1095,8 @@ public static class UiTheme
                 }
             },
 
+            MakeCheckedToggleIconStyle(),
+
             // Icons on a colored accent square (settings sections, word lists, shortcut
             // groups) keep their white glyph: the blanket icon foreground above would wash
             // them out against the colored background (#12717). Hosts opt in by adding
@@ -1152,6 +1154,26 @@ public static class UiTheme
 
         Application.Current.Styles.Add(_themeOverrideStyle);
     }
+
+    // A checked toggle icon follows the foreground of the presenter it sits in, so it matches
+    // the button's own text: the Fluent checked/hover/pressed/disabled foregrounds for plain
+    // toggles, and the on-accent color windows set for their own tool/segment/chip toggles.
+    // The blanket icon foreground above would otherwise keep it gray on the accent background.
+    private static Style MakeCheckedToggleIconStyle() => new(x => x.OfType<ToggleButton>().Class(":checked")
+        .Descendant().OfType<Optris.Icons.Avalonia.Icon>())
+    {
+        Setters =
+        {
+            new Setter(Optris.Icons.Avalonia.Icon.ForegroundProperty,
+                new Binding(nameof(Avalonia.Controls.Presenters.ContentPresenter.Foreground))
+                {
+                    RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor)
+                    {
+                        AncestorType = typeof(Avalonia.Controls.Presenters.ContentPresenter),
+                    },
+                }),
+        },
+    };
 
     private static void RemoveLighterDark()
     {
@@ -1662,6 +1684,8 @@ public static class UiTheme
             {
                 Setters = { new Setter(Optris.Icons.Avalonia.Icon.ForegroundProperty, new SolidColorBrush(Color.FromRgb(107, 78, 91))) }
             },
+
+            MakeCheckedToggleIconStyle(),
 
             // Icons on a colored accent square keep their white glyph (#12717)
             new Style(x => x.OfType<ContentControl>().Class(IconOnAccentClassName)
