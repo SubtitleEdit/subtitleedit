@@ -6,6 +6,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Layout;
+using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Styling;
@@ -1095,6 +1096,8 @@ public static class UiTheme
                 }
             },
 
+            MakeCheckedToggleIconStyle(),
+
             // Icons on a colored accent square (settings sections, word lists, shortcut
             // groups) keep their white glyph: the blanket icon foreground above would wash
             // them out against the colored background (#12717). Hosts opt in by adding
@@ -1152,6 +1155,16 @@ public static class UiTheme
 
         Application.Current.Styles.Add(_themeOverrideStyle);
     }
+
+    private static Style MakeCheckedToggleIconStyle() => new(x => x.OfType<ToggleButton>().Class(":checked")
+        .Descendant().OfType<Optris.Icons.Avalonia.Icon>())
+    {
+        Setters =
+        {
+            new Setter(Optris.Icons.Avalonia.Icon.ForegroundProperty,
+                new DynamicResourceExtension("ToggleButtonForegroundChecked")),
+        },
+    };
 
     private static void RemoveLighterDark()
     {
@@ -1662,6 +1675,8 @@ public static class UiTheme
             {
                 Setters = { new Setter(Optris.Icons.Avalonia.Icon.ForegroundProperty, new SolidColorBrush(Color.FromRgb(107, 78, 91))) }
             },
+
+            MakeCheckedToggleIconStyle(),
 
             // Icons on a colored accent square keep their white glyph (#12717)
             new Style(x => x.OfType<ContentControl>().Class(IconOnAccentClassName)
