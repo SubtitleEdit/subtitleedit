@@ -15,12 +15,14 @@ namespace UITests.Logic.Download;
 public class WhisperCppLinuxExecutableHashTests
 {
     // whisper-cli extracted from whisper-vulkan-linux64.zip / whisper-cuda-linux64.zip
-    private const string VulkanCurrent = "7cac3ce34947b128bdc129d303cf95ec27a454fc51dd04920d3b87f7efe82766";
+    private const string VulkanCurrent = "f04293964609cf60fd5aa1eb3afc406db0aae856fe48fdebb70d24bc32c5bfd5";
+    private const string Vulkan195 = "7cac3ce34947b128bdc129d303cf95ec27a454fc51dd04920d3b87f7efe82766";
     private const string Vulkan194 = "3e142b4a8c99a4d5cf00cdd4e15fb77c2a842dd0bd83f647675fe1d303e91a03";
     private const string Vulkan193 = "f57c4dbd4478f73720533f477311e354dc04ac818ca558e5c9855d5978075894";
     private const string VulkanR2 = "da61c0c1910c103cf8dea855855f072249689ee2310f375e2b79615cbd012c05";
     private const string VulkanBroken191 = "782fac61b9bcfe8f6db22564bb5a2cda2c22550b9ef38064ec5f188bc86dfe79";
-    private const string CudaCurrent = "683be7436dee6784c62a23dc02472ab959d72a31285b7293f1406a8a09ad8287";
+    private const string CudaCurrent = "b08106a3eadcba413fd7ef2e89ecd5c6e80b92c698ac4898c222a0506e2cfc82";
+    private const string Cuda195 = "683be7436dee6784c62a23dc02472ab959d72a31285b7293f1406a8a09ad8287";
     private const string Cuda194 = "9c93f819e170d0f00a08c256ac2299f819a8e94f3a6f116bac2657c6ab8de62a";
     private const string CudaR2 = "3a4d717745c2d8cf19ca7a954c29c0349a7f158d93a6597bb86e155f0735474a";
     private const string CudaBroken191 = "16a838ae67e248020b9bc65b8584fcc113cf18167c9cfc0a2d98e194fa52cf95";
@@ -45,6 +47,8 @@ public class WhisperCppLinuxExecutableHashTests
     }
 
     [Theory]
+    [InlineData(DownloadHashManager.WhisperCpp.LinuxVulkanExecutable, Vulkan195)]
+    [InlineData(DownloadHashManager.WhisperCpp.LinuxCudaExecutable, Cuda195)]
     [InlineData(DownloadHashManager.WhisperCpp.LinuxVulkanExecutable, Vulkan194)]
     [InlineData(DownloadHashManager.WhisperCpp.LinuxCudaExecutable, Cuda194)]
     [InlineData(DownloadHashManager.WhisperCpp.LinuxVulkanExecutable, Vulkan193)]
