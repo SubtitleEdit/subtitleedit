@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Logic.Media;
 
@@ -850,19 +851,78 @@ public class FfmpegGenerator
         return FfmpegHelper.GetFfmpegLocation();
     }
 
+    private static readonly object RubberbandCacheLock = new();
+    private static string? _rubberbandCacheKey;
+    private static bool _rubberbandCacheValue;
+
     /// <summary>
-    /// Check if FFmpeg has rubberband filter support.
+    /// Check if FFmpeg has rubberband filter support. Running "ffmpeg -filters" takes tens of
+    /// milliseconds (far more on a cold start or with a virus scanner), so the answer is cached
+    /// per ffmpeg binary - path plus write time, so a replaced or updated ffmpeg is probed again.
     /// </summary>
     public static bool IsRubberbandAvailable()
     {
+        var ffmpegLocation = GetFfmpegLocation();
+        var cacheKey = GetRubberbandCacheKey(ffmpegLocation);
+        lock (RubberbandCacheLock)
+        {
+            if (cacheKey == _rubberbandCacheKey)
+            {
+                return _rubberbandCacheValue;
+            }
+        }
+
+        var available = ProbeRubberband(ffmpegLocation);
+        lock (RubberbandCacheLock)
+        {
+            _rubberbandCacheKey = cacheKey;
+            _rubberbandCacheValue = available;
+        }
+
+        return available;
+    }
+
+    /// <summary>
+    /// <see cref="IsRubberbandAvailable"/> without blocking the caller on a first probe.
+    /// </summary>
+    public static Task<bool> IsRubberbandAvailableAsync()
+    {
+        var cacheKey = GetRubberbandCacheKey(GetFfmpegLocation());
+        lock (RubberbandCacheLock)
+        {
+            if (cacheKey == _rubberbandCacheKey)
+            {
+                return Task.FromResult(_rubberbandCacheValue);
+            }
+        }
+
+        return Task.Run(IsRubberbandAvailable);
+    }
+
+    private static string GetRubberbandCacheKey(string ffmpegLocation)
+    {
         try
         {
-            var process = new Process
+            return File.Exists(ffmpegLocation)
+                ? ffmpegLocation + "|" + File.GetLastWriteTimeUtc(ffmpegLocation).Ticks.ToString(CultureInfo.InvariantCulture)
+                : ffmpegLocation;
+        }
+        catch
+        {
+            return ffmpegLocation;
+        }
+    }
+
+    private static bool ProbeRubberband(string ffmpegLocation)
+    {
+        try
+        {
+            using var process = new Process
             {
                 StartInfo =
                 {
-                    FileName = GetFfmpegLocation(),
-                    Arguments = "-filters",
+                    FileName = ffmpegLocation,
+                    Arguments = "-hide_banner -filters",
                     UseShellExecute = false,
                     CreateNoWindow = true,
                     RedirectStandardOutput = true,
@@ -872,6 +932,7 @@ public class FfmpegGenerator
 #pragma warning disable CA1416 // Validate platform compatibility
             _ = process.Start();
 #pragma warning restore CA1416 // Validate platform compatibility
+            var errorTask = process.StandardError.ReadToEndAsync();
             var output = process.StandardOutput.ReadToEnd();
             process.WaitForExit(5000);
             return output.Contains("rubberband");

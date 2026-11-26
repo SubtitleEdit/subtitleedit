@@ -1659,7 +1659,10 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
         var doVad = Se.Settings.Video.TextToSpeech.VadSilenceCompressionEnabled;
         var vadMaxSilence = Se.Settings.Video.TextToSpeech.VadMaxSilenceSeconds;
-        var doHighQualityStretch = Se.Settings.Video.TextToSpeech.HighQualityTimeStretchEnabled;
+        // Without librubberband in ffmpeg every high-quality stretch fails and is redone with
+        // atempo - two ffmpeg runs per line - so check the (cached) filter list once instead.
+        var doHighQualityStretch = Se.Settings.Video.TextToSpeech.HighQualityTimeStretchEnabled &&
+                                   await FfmpegGenerator.IsRubberbandAvailableAsync();
 
         // Step 1: Trim silence from start and end. A failed trim (misconfigured/failing ffmpeg)
         // must fall back to the untrimmed audio - adopting the missing output blindly made
