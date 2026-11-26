@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace LibSETests.SubtitleFormats;
@@ -148,6 +148,27 @@ public class PacSecondaryCodePageTest
 
         Assert.Equal(Pac.CodePageHebrew, pac.CodePage);
         Assert.Equal(HebrewRussian, loaded.Paragraphs.Select(p => p.Text));
+    }
+
+    /// <summary>
+    /// Saving what was opened (Ctrl+S in Subtitle Edit 5) writes both code pages again - the
+    /// Russian lines must not be written with the Hebrew code page.
+    /// </summary>
+    [Fact]
+    public void LoadedSecondaryCodePageRoundTrips()
+    {
+        var bytes = SavePac(HebrewRussian, Pac.CodePageHebrew, Pac.CodePageCyrillic);
+        var pac = new Pac();
+        var loaded = new Subtitle();
+        pac.LoadSubtitle(loaded, bytes);
+        Assert.Equal(Pac.CodePageCyrillic, pac.LoadedSecondaryCodePage);
+
+        using var ms = new MemoryStream();
+        new Pac { CodePage = pac.CodePage, SecondaryCodePage = pac.LoadedSecondaryCodePage }.Save("x.pac", ms, loaded);
+        var reloaded = new Subtitle();
+        new Pac().LoadSubtitle(reloaded, ms.ToArray());
+
+        Assert.Equal(HebrewRussian, reloaded.Paragraphs.Select(p => p.Text));
     }
 
     /// <summary>

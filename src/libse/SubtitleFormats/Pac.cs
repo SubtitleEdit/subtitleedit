@@ -1267,6 +1267,111 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public bool Save(string fileName, Stream stream, Subtitle subtitle)
         {
+            // No code page and no code page picker (Subtitle Edit 5): there are no file bytes to
+            // detect from when saving, and every subtitle was written with the Latin (Czech)
+            // fallback - Greek, Cyrillic, Hebrew, Chinese... came out as "?". Pick it from the
+            // text instead, for this save only: the instance can be shared (a format list).
+            if (CodePage != -1 || IsFpc || BatchMode || GetPacEncodingImplementation != null)
+            {
+                return SaveWithCodePage(fileName, stream, subtitle);
+            }
+
+            CodePage = GetCodePageFromText(subtitle);
+            try
+            {
+                return SaveWithCodePage(fileName, stream, subtitle);
+            }
+            finally
+            {
+                CodePage = -1;
+            }
+        }
+
+        /// <summary>
+        /// The code page for writing <paramref name="subtitle"/>: the script with the most
+        /// letters, Latin when no other script has more.
+        /// </summary>
+        public static int GetCodePageFromText(Subtitle subtitle)
+        {
+            var text = string.Join(" ", subtitle.Paragraphs.Select(p => p.Text));
+            int latin = 0, hangul = 0, kana = 0, han = 0;
+            foreach (var c in text)
+            {
+                if (!char.IsLetter(c))
+                {
+                    continue;
+                }
+
+                if (c < 0x0250)
+                {
+                    latin++;
+                }
+                else if (c >= 0xAC00 && c <= 0xD7A3)
+                {
+                    hangul++;
+                }
+                else if (c >= 0x3040 && c <= 0x30FF)
+                {
+                    kana++;
+                }
+                else if (c >= 0x4E00 && c <= 0x9FFF)
+                {
+                    han++;
+                }
+            }
+
+            if (hangul > 0 && hangul + han > latin)
+            {
+                return CodePageKorean;
+            }
+
+            if (kana > 0 && kana + han > latin)
+            {
+                return CodePageJapanese;
+            }
+
+            if (han > latin)
+            {
+                return CanEncode(EncodingChineseSimplified, text) ? CodePageChineseSimplified : CodePageChineseTraditional;
+            }
+
+            var best = CodePageLatin;
+            var bestCount = latin;
+            foreach (var codePage in new[] { CodePageGreek, CodePageCyrillic, CodePageHebrew, CodePageArabic, CodePageThai })
+            {
+                var count = CountScriptLetters(text, codePage);
+                if (count > bestCount)
+                {
+                    best = codePage;
+                    bestCount = count;
+                }
+            }
+
+            return best;
+        }
+
+        private static bool CanEncode(int encodingCodePage, string text)
+        {
+            try
+            {
+                var encoding = Encoding.GetEncoding(encodingCodePage, EncoderFallback.ExceptionFallback, DecoderFallback.ExceptionFallback);
+                encoding.GetBytes(text.Where(c => c >= 0x4E00 && c <= 0x9FFF).ToArray());
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// The secondary code page the last load used: the one set, or the one detected from the
+        /// flagged lines. -1 when there is none.
+        /// </summary>
+        public int LoadedSecondaryCodePage => SecondaryCodePage >= 0 ? SecondaryCodePage : _detectedSecondaryCodePage;
+
+        private bool SaveWithCodePage(string fileName, Stream stream, Subtitle subtitle)
+        {
             _fileName = fileName;
 
             // header

@@ -30032,6 +30032,14 @@ public partial class MainViewModel :
                 Ebu.EbuUiHelper ??= new UiEbuSaveHelper();
             }
 
+            // The format combo holds its own Pac instance with no code page - write a PAC with
+            // the code page(s) it was opened with (a Greek PAC was saved as Latin, all "?").
+            if (binaryFormat.GetType() == typeof(Pac) && _subtitle.OriginalFormat is Pac loadedPac &&
+                loadedPac.GetType() == typeof(Pac) && loadedPac.CodePage >= 0)
+            {
+                binaryFormat = new Pac { CodePage = loadedPac.CodePage, SecondaryCodePage = loadedPac.LoadedSecondaryCodePage };
+            }
+
             using var ms = new MemoryStream();
             if (!binaryFormat.Save(fileName, ms, GetSaveSubtitle(), batchMode: true))
             {

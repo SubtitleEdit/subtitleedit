@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace LibSETests.SubtitleFormats;
@@ -86,6 +86,26 @@ public class PacCodePageDetectionTest
         {
             File.Delete(path);
         }
+    }
+
+    /// <summary>
+    /// Saving with no code page set and no picker (Subtitle Edit 5's Save / Ctrl+S) wrote every
+    /// file with the Latin (Czech) fallback - Greek, Russian, Chinese... came out as "?". The code
+    /// page is now picked from the text, for that save only.
+    /// </summary>
+    [Theory]
+    [MemberData(nameof(Languages))]
+    public void SaveWithoutCodePagePicksItFromText(int codePage, string[] lines)
+    {
+        Assert.Null(Pac.GetPacEncodingImplementation);
+        var pac = new Pac();
+        using var ms = new MemoryStream();
+        pac.Save("x.pac", ms, MakeSubtitle(lines));
+        Assert.Equal(-1, pac.CodePage); // the format list's shared instance must not keep it
+
+        var loaded = new Subtitle();
+        new Pac { CodePage = codePage }.LoadSubtitle(loaded, ms.ToArray());
+        Assert.Equal(lines, loaded.Paragraphs.Select(p => p.Text));
     }
 
     /// <summary>The "Lang:" header decides - Screen's code, e.g. SIM = Simplified Chinese.</summary>
