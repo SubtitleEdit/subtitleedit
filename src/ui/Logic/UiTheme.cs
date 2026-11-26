@@ -6,7 +6,6 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Layout;
-using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Styling;
@@ -1156,13 +1155,23 @@ public static class UiTheme
         Application.Current.Styles.Add(_themeOverrideStyle);
     }
 
+    // A checked toggle icon follows the foreground of the presenter it sits in, so it matches
+    // the button's own text: the Fluent checked/hover/pressed/disabled foregrounds for plain
+    // toggles, and the on-accent color windows set for their own tool/segment/chip toggles.
+    // The blanket icon foreground above would otherwise keep it gray on the accent background.
     private static Style MakeCheckedToggleIconStyle() => new(x => x.OfType<ToggleButton>().Class(":checked")
         .Descendant().OfType<Optris.Icons.Avalonia.Icon>())
     {
         Setters =
         {
             new Setter(Optris.Icons.Avalonia.Icon.ForegroundProperty,
-                new DynamicResourceExtension("ToggleButtonForegroundChecked")),
+                new Binding(nameof(Avalonia.Controls.Presenters.ContentPresenter.Foreground))
+                {
+                    RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor)
+                    {
+                        AncestorType = typeof(Avalonia.Controls.Presenters.ContentPresenter),
+                    },
+                }),
         },
     };
 
