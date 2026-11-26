@@ -48,6 +48,58 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static readonly Regex SubRipLikeTimeCodeRegex = new Regex(@"\G\d+ \d+:\d+:\d+[.,:;]\d+ --> \d+:\d+:\d+[.,:;]\d+\b", RegexOptions.Compiled); // e.g.: 1 00:00:01.502 --> 00:00:03.604
         private static readonly Regex LooseTimeCodeRegex = new Regex(@"\G(\d+: *)?\d+ *: *\d+[.,:;] *\d+ *-{0,3}> *(\d+: *)?\d+ *: *\d+[.,:;] *\d+\b", RegexOptions.Compiled); // e.g.: 1 00:00:01.502 --> 00:00:03.604
 
+        private static readonly Regex WholeSecondRangeRegex = new Regex(
+            @"^\s*(?<open>[{\[])?(?<start>[0-9]{1,5}(?::[0-9]{2}){1,2})" +
+            @"(?(open)[}\]]\s*[{\[]|\s*(?:--?>|[-–—])\s*)" +
+            @"(?<end>[0-9]{1,5}(?::[0-9]{2}){1,2})(?(open)[}\]]|(?![0-9:.,;]))\s*(?<text>.*)$",
+            RegexOptions.Compiled);
+
+        private static readonly Regex SlashLineBreakRegex = new Regex(@"\S*://\S*|/{2,3}", RegexOptions.Compiled);
+        private static readonly Regex ColonHundredthsRegex = new Regex(@"^(?:[0-9]+:){3}[0-9]{2}$", RegexOptions.Compiled);
+        private static readonly Regex DotFramePairRegex = new Regex(@"^\s*[0-9]+:[0-9]{2}:[0-9]{2}\.[0-9]{2}(?:\s*,\s*|\s+)[0-9]+:[0-9]{2}:[0-9]{2}\.[0-9]{2}(?:,|\s)", RegexOptions.Compiled);
+        private static readonly Regex NumericCueIndexRegex = new Regex(@"^\s*[0-9]+\.\s*$", RegexOptions.Compiled);
+
+        private static readonly Regex LabelledTimeInRegex = new Regex(@"^\s*(?:#\s*)?(?<numbered>SUBTITLE:?\s+[0-9]+\s+)?TIME\s*IN\s*:\s*$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex LabelledTimeOutRegex = new Regex(@"^\s*(?:DURATION\s*:\s*(?<duration>[0-9]{1,2}:[0-9]{2})\s+)?TIME\s*OUT\s*:\s*$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex ShortFrameDurationRegex = new Regex(@"^[0-9]{1,2}:[0-9]{2}$", RegexOptions.Compiled);
+        private static readonly Regex NumberedDurationPrefixRegex = new Regex(@"^\s*[0-9]+(?:\s*-\s*[0-9]+|:)\s*$", RegexOptions.Compiled);
+
+        private const string SplitClockPattern = @"[0-9]{1,3}:[0-9]{2}:[0-9]{2}[:;.,][0-9]{2,3}";
+        private static readonly Regex SplitMarkerRegex = new Regex(
+            @"^(?:(?<clock>" + SplitClockPattern + @")|(?<spaced>[0-9]{1,3} [0-9]{2} [0-9]{2} [0-9]{2})|(?:-->>\s*|/)(?<frames>[0-9]+))(?=\s|$)\s*(?<text>.*)$",
+            RegexOptions.Compiled);
+        private static readonly Regex TrailingRangeRegex = new Regex(
+            @"^(?:#(?<start>" + SplitClockPattern + @"|[0-9]+),(?<end>" + SplitClockPattern + @"|[0-9]+)|<(?<start>" +
+            SplitClockPattern + @")><(?<end>" + SplitClockPattern + @")>)$", RegexOptions.Compiled);
+
+        private static readonly Regex SamiHeaderRegex = new Regex(@"^<SAMI(?:\s|>)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex WholeSecondStartRegex = new Regex(
+            @"^(?<clock>[0-9]{1,3}:[0-9]{2}:[0-9]{2})(?<separator>:(?![0-9])[ \t]*|[ \t]+|$)(?<text>.*)$",
+            RegexOptions.Compiled);
+
+        private const string ReportClock = @"[0-9]{2}:[0-9]{2}:[0-9]{2}[:.][0-9]{2}";
+        private static readonly Regex NumberedReportRegex = new Regex(
+            @"^\s*[0-9]+(?:[):]\s*|\s+)(?<start>" + ReportClock + @")\s+(?<end>" + ReportClock +
+            @")\s+(?:\[[0-9]+\]|[0-9]{2}:[0-9]{2}|Durée\s*:?\s*[0-9]{2}:[0-9]{2}\s+Lis.*\bNbc\s*:\s*[0-9]+|" +
+            ReportClock + @"\s+#F\s+[0-9A-F]+\s+#C)\s*$", RegexOptions.Compiled);
+        private static readonly Regex BracketedReportRegex = new Regex(
+            @"^\s*SUB\s+\[[0-9]+\s+[A-Z]\s+(?<start>" + ReportClock + @")>(?<end>" + ReportClock + @")\]\s*$",
+            RegexOptions.Compiled);
+        private static readonly Regex CompactFrameRangeRegex = new Regex(
+            @"^\s*(?<start>[0-9]{4}[.:][0-9]{2}|(?:[0-9]{2}\.){3}[0-9]{2})\s*[-–]\s*" +
+            @"(?<end>[0-9]{4}[.:][0-9]{2}|(?:[0-9]{2}\.){3}[0-9]{2})(?:\s+(?<text>.*)|$)$", RegexOptions.Compiled);
+        private static readonly Regex DecimalSecondsRangeRegex = new Regex(
+            @"^\s*(?:\[(?<start>[0-9]+\.[0-9]{2,3})\s+(?<end>[0-9]+\.[0-9]{2,3})\]\s*(?<text>.*)|" +
+            @"(?<start>[0-9]+\.[0-9]{2,3})\t+(?<end>[0-9]+\.[0-9]{2,3})\t*)$", RegexOptions.Compiled);
+
+        private static readonly Regex DropFrameSccRowRegex = new Regex(@"^\s*[0-9]+:[0-9]{2}:[0-9]{2}[;,][0-9]{2}\t", RegexOptions.Compiled);
+        private static readonly Regex IntegerCueRowRegex = new Regex(
+            @"^\s*(?:\{(?<start>[0-9]+)\}\{(?<end>[0-9]+)\}(?<text>.+)|" +
+            @"(?<start>[0-9]+)(?<milliseconds>\|\|)(?<end>[0-9]+)\|\|(?<text>.+)\|\||" +
+            @"(?<start>[0-9]+)\s+(?<end>[0-9]+)\s+(?<text>(?<rtf>\{\\uc[0-9].*\})))\s*$",
+            RegexOptions.Compiled);
+        private static readonly Regex FrameCsvRowRegex = new Regex(@"^\s*[0-9]+\s*,\s*[0-9]+\s*,\s*""", RegexOptions.Compiled);
+
         public bool UseFrames { get; set; }
 
         public Subtitle AutoGuessImport(List<string> lines, string fileName)
@@ -100,6 +152,30 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var firstNonEmptyLine = lines.FirstOrDefault(l => !string.IsNullOrWhiteSpace(l));
+            if (firstNonEmptyLine != null &&
+                firstNonEmptyLine.TrimStart('﻿', ' ', '\t').StartsWith(@"{\rtf", StringComparison.OrdinalIgnoreCase))
+            {
+                try
+                {
+                    var documentText = RichTextToPlainText.ConvertToText(string.Join(Environment.NewLine, lines));
+                    if (!string.IsNullOrWhiteSpace(documentText))
+                    {
+                        lines = documentText.SplitToLines();
+                        firstNonEmptyLine = lines.FirstOrDefault(l => !string.IsNullOrWhiteSpace(l));
+                    }
+                }
+                catch (Exception exception) when (exception is FormatException || exception is OverflowException)
+                {
+                    return new Subtitle();
+                }
+            }
+
+            var structuredSubtitle = TryImportStructuredText(lines, fileName, firstNonEmptyLine);
+            if (structuredSubtitle != null)
+            {
+                return structuredSubtitle;
+            }
+
             if (firstNonEmptyLine != null && firstNonEmptyLine.TrimStart('﻿', ' ', '\t').StartsWith('<'))
             {
                 var xmlSubtitle = new UnknownFormatImporterXml().AutoGuessImport(lines);
@@ -109,7 +185,58 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
-            var subtitle = ImportTimeCodesOnSameSeparateLine(lines);
+            if (firstNonEmptyLine?.StartsWith("# SWIFT INTERCHANGE FILE", StringComparison.OrdinalIgnoreCase) == true)
+            {
+                lines = JoinLabelledTimeLines(lines);
+            }
+
+            var beginMarker = lines.FindIndex(line => line.Trim().Equals("<begin subtitles>", StringComparison.OrdinalIgnoreCase));
+            if (beginMarker >= 0)
+            {
+                var endMarker = lines.FindIndex(beginMarker + 1, line => line.Trim().Equals("<end subtitles>", StringComparison.OrdinalIgnoreCase));
+                if (endMarker > beginMarker)
+                {
+                    lines = lines.GetRange(beginMarker + 1, endMarker - beginMarker - 1);
+                }
+            }
+
+            var unlabelledTable = ImportUnlabelledCueTable(lines, fileName);
+            if (unlabelledTable != null)
+            {
+                return unlabelledTable;
+            }
+
+            lines = NormalizeTimeRanges(lines);
+
+            var delimited = ImportTextAroundTimeMarkers(lines);
+            if (delimited.Paragraphs.Count > 1)
+            {
+                CleanUp(delimited);
+                if (delimited.Paragraphs.Count > 1 && lines.Count / delimited.Paragraphs.Count <= 25)
+                {
+                    delimited.Renumber();
+                    return delimited;
+                }
+            }
+
+            var subtitle = ImportWholeSecondRanges(lines);
+            if (subtitle.Paragraphs.Count > 1)
+            {
+                CleanUp(subtitle);
+                subtitle.Renumber();
+                if (subtitle.Paragraphs.Count > 1 && lines.Count / subtitle.Paragraphs.Count <= 25)
+                {
+                    return subtitle;
+                }
+            }
+
+            var wholeSecondStarts = ImportWholeSecondStarts(lines);
+            if (wholeSecondStarts.Paragraphs.Count > 1)
+            {
+                return wholeSecondStarts;
+            }
+
+            subtitle = ImportTimeCodesOnSameSeparateLine(lines);
             if (subtitle.Paragraphs.Count < 2)
             {
                 subtitle = ImportTimeCodesAndTextOnSameLineOnlySpaceAsSeparator(lines);
@@ -127,7 +254,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 subtitle = subTcOnAloneLines;
             }
 
+            var jsonHeader = firstNonEmptyLine?.TrimStart('﻿', ' ', '\t');
             var isJson = IsJson(lines);
+            var looksLikeJsonFile = !string.IsNullOrEmpty(jsonHeader) &&
+                (jsonHeader.StartsWith('{') || jsonHeader.StartsWith('[')) &&
+                fileName?.EndsWith(".json", StringComparison.OrdinalIgnoreCase) == true;
 
             if (subtitle.Paragraphs.Count < 2 && !isJson)
             {
@@ -159,7 +290,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 CleanUp(subtitle);
             }
 
-            if (subtitle.Paragraphs.Count < 2 || isJson)
+            if (subtitle.Paragraphs.Count < 2 || isJson || looksLikeJsonFile)
             {
                 var jsonSubtitle = new UnknownFormatImporterJson().AutoGuessImport(lines);
                 if (jsonSubtitle != null && jsonSubtitle.Paragraphs.Count > 2)
@@ -192,6 +323,528 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 var unknownCsvImporter = new UnknownFormatImporterCsv();
                 return unknownCsvImporter.AutoGuessImport(lines);
+            }
+
+            return subtitle;
+        }
+
+        private Subtitle ImportUnlabelledCueTable(List<string> lines, string fileName)
+        {
+            var firstIndex = lines.FindIndex(line => !string.IsNullOrWhiteSpace(line));
+            if (firstIndex < 0)
+            {
+                return null;
+            }
+
+            var first = lines[firstIndex].Trim();
+            var isFrameCsv = FrameCsvRowRegex.IsMatch(first);
+            if (isFrameCsv || (first.StartsWith('"') && fileName?.EndsWith(".csv", StringComparison.OrdinalIgnoreCase) == true))
+            {
+                return UnknownFormatImporterCsv.ImportUnlabelledRows(lines.Skip(firstIndex), isFrameCsv, UseFrames);
+            }
+
+            if (first.StartsWith('{'))
+            {
+                return null; // The existing frame parser handles ordinary brace-delimited rows.
+            }
+
+            // A bracketed metadata header may appear before a list of brace-delimited frames.
+            var subtitle = new Subtitle();
+            for (var index = firstIndex; index < lines.Count; index++)
+            {
+                var line = lines[index].Trim();
+                if (line.Length == 0)
+                {
+                    continue;
+                }
+
+                var match = IntegerCueRowRegex.Match(line);
+                if (!match.Success)
+                {
+                    if (index == firstIndex && line.StartsWith('[') && line.EndsWith(']'))
+                    {
+                        continue;
+                    }
+
+                    return null;
+                }
+
+                if (!int.TryParse(match.Groups["start"].Value, out var start) ||
+                    !int.TryParse(match.Groups["end"].Value, out var end) || end <= start)
+                {
+                    return null;
+                }
+
+                var text = match.Groups["text"].Value.Trim();
+                var isMilliseconds = match.Groups["milliseconds"].Success;
+                if (isMilliseconds)
+                {
+                    text = text.Replace(@"\~", Environment.NewLine);
+                }
+                else if (match.Groups["rtf"].Success)
+                {
+                    try
+                    {
+                        text = RichTextToPlainText.ConvertToText(@"{\rtf1" + text + "}").Trim();
+                    }
+                    catch (Exception exception) when (exception is FormatException || exception is OverflowException)
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    text = text.Replace("|", Environment.NewLine);
+                }
+
+                var startMs = !isMilliseconds && UseFrames ? SubtitleFormat.FramesToMilliseconds(start) : start;
+                var endMs = !isMilliseconds && UseFrames ? SubtitleFormat.FramesToMilliseconds(end) : end;
+                subtitle.Paragraphs.Add(new Paragraph(text, startMs, endMs));
+            }
+
+            if (subtitle.Paragraphs.Count < 2)
+            {
+                return null;
+            }
+
+            subtitle.Renumber();
+            return subtitle;
+        }
+
+        private static List<string> NormalizeTimeRanges(List<string> lines)
+        {
+            var replacements = new List<(int Index, string Line)>();
+            for (var index = 0; index < lines.Count; index++)
+            {
+                var line = lines[index];
+                var match = NumberedReportRegex.Match(line);
+                if (!match.Success)
+                {
+                    match = BracketedReportRegex.Match(line);
+                }
+
+                if (!match.Success)
+                {
+                    match = CompactFrameRangeRegex.Match(line);
+                }
+
+                if (match.Success)
+                {
+                    var start = ReadReportFrameTime(match.Groups["start"].Value);
+                    var end = ReadReportFrameTime(match.Groups["end"].Value);
+                    if (end > start)
+                    {
+                        replacements.Add((index, FormatRangeLine(start, end, match.Groups["text"].Value)));
+                    }
+
+                    continue;
+                }
+
+                match = DecimalSecondsRangeRegex.Match(line);
+                if (match.Success)
+                {
+                    var start = UnknownFormatImporterXml.TryParseTime(match.Groups["start"].Value);
+                    var end = UnknownFormatImporterXml.TryParseTime(match.Groups["end"].Value);
+                    if (start.HasValue && end > start && end <= TimeCode.MaxSupportedTotalMilliseconds)
+                    {
+                        replacements.Add((index, FormatRangeLine(start.Value, end.Value, match.Groups["text"].Value)));
+                    }
+                }
+            }
+
+            if (replacements.Count < 2)
+            {
+                return lines;
+            }
+
+            var normalized = new List<string>(lines);
+            foreach (var replacement in replacements)
+            {
+                normalized[replacement.Index] = replacement.Line;
+            }
+
+            return normalized;
+        }
+
+        private static double ReadReportFrameTime(string value)
+        {
+            var parts = value.Split('.', ':');
+            if (parts.Length == 2)
+            {
+                return int.Parse(parts[0]) * TimeCode.BaseUnit + SubtitleFormat.FramesToMillisecondsMax999(int.Parse(parts[1]));
+            }
+
+            return DecodeTime(parts).TotalMilliseconds;
+        }
+
+        private static string FormatRangeLine(double start, double end, string text)
+        {
+            return (new TimeCode(start).ToString(false) + " --> " + new TimeCode(end).ToString(false) + " " + text).TrimEnd();
+        }
+
+        private static Subtitle TryImportStructuredText(List<string> lines, string fileName, string firstNonEmptyLine)
+        {
+            var header = firstNonEmptyLine?.Trim().TrimStart('﻿');
+            if (string.IsNullOrEmpty(header))
+            {
+                return null;
+            }
+
+            // These signatures identify shared grammars with their own text escaping,
+            // style information, and timing rules.
+            SubtitleFormat format = null;
+            if (SamiHeaderRegex.IsMatch(header))
+            {
+                format = lines.Exists(line => line.Contains("<AVDicPlayer", StringComparison.Ordinal))
+                    ? (SubtitleFormat)new SamiAvDicPlayer()
+                    : new SamiModern();
+            }
+            else if (header.Equals("Scenarist_SCC V1.0", StringComparison.OrdinalIgnoreCase))
+            {
+                format = lines.Exists(line => DropFrameSccRowRegex.IsMatch(line))
+                    ? (SubtitleFormat)new ScenaristClosedCaptionsDropFrame()
+                    : new ScenaristClosedCaptions();
+            }
+            else if (header.StartsWith("File Format=MacCaption_MCC ", StringComparison.OrdinalIgnoreCase))
+            {
+                format = new MacCaption10();
+            }
+            else if (header.Equals("[Script Info]", StringComparison.OrdinalIgnoreCase) && SubStationAlpha.HasEvents(lines))
+            {
+                format = lines.Exists(line => line.Trim().Equals("[V4+ Styles]", StringComparison.OrdinalIgnoreCase) ||
+                    line.Trim().Equals("[V4++ Styles]", StringComparison.OrdinalIgnoreCase) ||
+                    (line.StartsWith("ScriptType:", StringComparison.OrdinalIgnoreCase) && line.TrimEnd().EndsWith('+')))
+                    ? (SubtitleFormat)new AdvancedSubStationAlpha()
+                    : new SubStationAlpha();
+            }
+
+            if (format == null)
+            {
+                return null;
+            }
+
+            var subtitle = new Subtitle();
+            format.LoadSubtitle(subtitle, lines, fileName);
+            if (subtitle.Paragraphs.Count == 0)
+            {
+                return null;
+            }
+
+            subtitle.OriginalFormat = format;
+            return subtitle;
+        }
+
+        private static Subtitle ImportWholeSecondStarts(List<string> lines)
+        {
+            var subtitle = new Subtitle();
+            var text = new StringBuilder();
+            Paragraph cue = null;
+            var separator = string.Empty;
+            foreach (var rawLine in lines)
+            {
+                var line = rawLine.Trim();
+                if (line.Length == 0)
+                {
+                    continue;
+                }
+
+                var marker = WholeSecondStartRegex.Match(rawLine.TrimStart());
+                if (marker.Success)
+                {
+                    var clock = marker.Groups["clock"].Value;
+                    var start = UnknownFormatImporterXml.TryParseTime(clock);
+                    var inlineText = marker.Groups["text"].Value.Trim();
+                    var possibleEnd = TimeCodeWithHoursRegex.Match(inlineText);
+                    if (start == null || (cue != null && start <= cue.StartTime.TotalMilliseconds) ||
+                        inlineText.StartsWith("-->", StringComparison.Ordinal) ||
+                        (possibleEnd.Success && IsOnlyTimeCodeSeparators(inlineText.Substring(0, possibleEnd.Index))))
+                    {
+                        return new Subtitle();
+                    }
+
+                    if (cue != null)
+                    {
+                        FinishWholeSecondCue(cue, text.ToString(), separator, start);
+                        subtitle.Paragraphs.Add(cue);
+                        text.Clear();
+                    }
+
+                    separator = marker.Groups["separator"].Value;
+                    cue = new Paragraph(string.Empty, start.Value, 0);
+                    text.Append(separator.StartsWith(":  ", StringComparison.Ordinal)
+                        ? inlineText.Replace("  ", Environment.NewLine)
+                        : inlineText);
+                }
+                else if (cue != null)
+                {
+                    if (text.Length > 0)
+                    {
+                        text.AppendLine();
+                    }
+
+                    text.Append(line);
+                }
+                else
+                {
+                    return new Subtitle();
+                }
+            }
+
+            if (cue != null)
+            {
+                FinishWholeSecondCue(cue, text.ToString(), separator, null);
+                subtitle.Paragraphs.Add(cue);
+                CleanUp(subtitle);
+                subtitle.Renumber();
+            }
+
+            return subtitle.Paragraphs.Count > 1 && lines.Count / subtitle.Paragraphs.Count <= 25 ? subtitle : new Subtitle();
+        }
+
+        private static void FinishWholeSecondCue(Paragraph cue, string text, string separator, double? nextStart)
+        {
+            cue.Text = text.Replace("|", Environment.NewLine);
+            var optimal = cue.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(cue.Text);
+            if (separator.Length == 0 || separator.Contains('\t'))
+            {
+                cue.EndTime.TotalMilliseconds = nextStart.HasValue ? nextStart.Value - 1
+                    : separator.Length == 0 ? cue.StartTime.TotalMilliseconds + 2500 : optimal;
+            }
+            else if (separator.StartsWith(":  ", StringComparison.Ordinal) && nextStart.HasValue)
+            {
+                var general = Configuration.Settings.General;
+                cue.EndTime.TotalMilliseconds = Math.Min(nextStart.Value - general.MinimumMillisecondsBetweenLines,
+                    cue.StartTime.TotalMilliseconds + general.SubtitleMaximumDisplayMilliseconds);
+            }
+            else
+            {
+                cue.EndTime.TotalMilliseconds = nextStart.HasValue ? Math.Min(optimal, nextStart.Value - 1) : optimal;
+            }
+        }
+
+        private Subtitle ImportTextAroundTimeMarkers(List<string> lines)
+        {
+            var subtitle = new Subtitle();
+            if (!lines.Exists(line => SplitMarkerRegex.IsMatch(line.Trim()) || TrailingRangeRegex.IsMatch(line.Trim())))
+            {
+                return subtitle;
+            }
+
+            var text = new StringBuilder();
+            double? start = null;
+            bool? timingFollowsText = null;
+            bool? timingPrecedesText = null;
+            double? pendingEnd = null;
+
+            foreach (var rawLine in lines)
+            {
+                var line = rawLine.Trim();
+                if (line.Length == 0 || (timingFollowsText == null && text.Length == 0 &&
+                    line.Equals("#PE2 Format file", StringComparison.OrdinalIgnoreCase)))
+                {
+                    continue;
+                }
+
+                var range = TrailingRangeRegex.Match(line);
+                if (range.Success && timingFollowsText != false && start == null && text.Length > 0)
+                {
+                    timingFollowsText = true;
+                    var dotMeansFrames = line.StartsWith('#');
+                    var rangeStart = DecodeSplitMarker(range.Groups["start"].Value, dotMeansFrames);
+                    var rangeEnd = DecodeSplitMarker(range.Groups["end"].Value, dotMeansFrames);
+                    if (rangeStart == null || rangeEnd == null || rangeEnd <= rangeStart)
+                    {
+                        return new Subtitle();
+                    }
+
+                    subtitle.Paragraphs.Add(new Paragraph(text.ToString(), rangeStart.Value, rangeEnd.Value));
+                    text.Clear();
+                    continue;
+                }
+
+                var marker = SplitMarkerRegex.Match(line);
+                if (marker.Success)
+                {
+                    if (pendingEnd.HasValue)
+                    {
+                        if (text.Length == 0)
+                        {
+                            return new Subtitle();
+                        }
+
+                        subtitle.Paragraphs.Add(new Paragraph(text.ToString(), start.Value, pendingEnd.Value));
+                        start = null;
+                        pendingEnd = null;
+                        text.Clear();
+                    }
+
+                    var clock = marker.Groups["clock"];
+                    var markerTime = clock.Success
+                        ? DecodeSplitMarker(clock.Value, false)
+                        : marker.Groups["spaced"].Success
+                            ? DecodeSplitMarker(marker.Groups["spaced"].Value.Replace(' ', ':'), false)
+                            : DecodeSplitMarker(marker.Groups["frames"].Value, false);
+                    if (markerTime == null)
+                    {
+                        return new Subtitle();
+                    }
+
+                    timingFollowsText ??= text.Length > 0;
+                    var inlineText = marker.Groups["text"].Value;
+                    if (start == null)
+                    {
+                        if (timingFollowsText == true && (text.Length == 0 || inlineText.Length > 0))
+                        {
+                            return new Subtitle();
+                        }
+
+                        start = markerTime;
+                        if (inlineText.Length > 0)
+                        {
+                            text.Append(SlashLineBreakRegex.Replace(inlineText,
+                                match => match.Value[0] == '/' ? Environment.NewLine : match.Value));
+                        }
+
+                        continue;
+                    }
+
+                    if (markerTime <= start || inlineText.Length > 0)
+                    {
+                        return new Subtitle();
+                    }
+
+                    timingPrecedesText ??= text.Length == 0;
+                    if (timingPrecedesText == true)
+                    {
+                        if (text.Length > 0 || timingFollowsText == true)
+                        {
+                            return new Subtitle();
+                        }
+
+                        pendingEnd = markerTime;
+                        continue;
+                    }
+
+                    if (text.Length == 0)
+                    {
+                        return new Subtitle();
+                    }
+
+                    subtitle.Paragraphs.Add(new Paragraph(text.ToString(), start.Value, markerTime.Value));
+                    text.Clear();
+                    start = null;
+                }
+                else
+                {
+                    if ((timingFollowsText == false && start == null) ||
+                        (timingFollowsText == true && start != null))
+                    {
+                        return new Subtitle();
+                    }
+
+                    if (text.Length > 0)
+                    {
+                        text.AppendLine();
+                    }
+
+                    text.Append(line);
+                }
+            }
+
+            if (pendingEnd.HasValue && text.Length > 0)
+            {
+                subtitle.Paragraphs.Add(new Paragraph(text.ToString(), start.Value, pendingEnd.Value));
+                return subtitle;
+            }
+
+            return start == null && text.Length == 0 ? subtitle : new Subtitle();
+        }
+
+        private double? DecodeSplitMarker(string value, bool dotMeansFrames)
+        {
+            if (int.TryParse(value, out var units))
+            {
+                return UseFrames ? SubtitleFormat.FramesToMilliseconds(units) : units;
+            }
+
+            return value.IndexOfAny(ExpectedSplitChars) < 0
+                ? (double?)null
+                : DecodeTime(SplitTimeCode(value, useDotFrames: dotMeansFrames)).TotalMilliseconds;
+        }
+
+        private static List<string> JoinLabelledTimeLines(List<string> lines)
+        {
+            var result = new List<string>();
+            string start = null;
+            foreach (var rawLine in lines)
+            {
+                var line = rawLine.Trim();
+                if (line.StartsWith("# TIMEIN ", StringComparison.OrdinalIgnoreCase))
+                {
+                    start = line.Substring(9).Trim();
+                }
+                else if (start != null && line.StartsWith("# TIMEOUT ", StringComparison.OrdinalIgnoreCase))
+                {
+                    result.Add("TIMEIN: " + start + " TIMEOUT: " + line.Substring(10).Trim());
+                    start = null;
+                }
+                else if (!line.StartsWith('#'))
+                {
+                    result.Add(rawLine);
+                }
+            }
+
+            return result;
+        }
+
+        private static Subtitle ImportWholeSecondRanges(List<string> lines)
+        {
+            var subtitle = new Subtitle();
+            Paragraph paragraph = null;
+            var text = new StringBuilder();
+            foreach (var line in lines)
+            {
+                if (string.IsNullOrWhiteSpace(line))
+                {
+                    continue;
+                }
+
+                var match = WholeSecondRangeRegex.Match(line);
+                if (match.Success)
+                {
+                    var start = UnknownFormatImporterXml.TryParseTime(match.Groups["start"].Value);
+                    var end = UnknownFormatImporterXml.TryParseTime(match.Groups["end"].Value);
+                    if (start.HasValue && end.HasValue && end > start)
+                    {
+                        if (paragraph != null)
+                        {
+                            paragraph.Text = text.ToString();
+                        }
+
+                        text.Clear();
+                        text.Append(match.Groups["text"].Value);
+                        paragraph = new Paragraph(string.Empty, start.Value, end.Value);
+                        subtitle.Paragraphs.Add(paragraph);
+                        continue;
+                    }
+                }
+
+                if (paragraph == null)
+                {
+                    break;
+                }
+
+                if (text.Length > 0)
+                {
+                    text.AppendLine();
+                }
+
+                text.Append(line.Trim());
+            }
+
+            if (paragraph != null)
+            {
+                paragraph.Text = text.ToString();
             }
 
             return subtitle;
@@ -246,7 +899,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 p.Text = p.Text.Replace("  ", " ");
                 p.Text = p.Text.Replace("  ", " ");
                 p.Text = p.Text.Replace("  ", " ");
-                p.Text = p.Text.Replace("|", Environment.NewLine).Replace("<p>", Environment.NewLine).Replace("</p>", Environment.NewLine).Trim();
+                p.Text = p.Text.Replace(" | ", Environment.NewLine).Replace("|", Environment.NewLine).Replace("<p>", Environment.NewLine).Replace("</p>", Environment.NewLine).Trim();
                 p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine).Trim();
                 p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine).Trim();
             }
@@ -509,6 +1162,24 @@ namespace Nikse.SubtitleEdit.Core.Common
             var subtitle = new Subtitle();
             var sb = new StringBuilder();
 
+            // A two-digit colon field can be hundredths when it exceeds the frame counter.
+            var hundredthsThreshold = Math.Max(50, Math.Ceiling(Configuration.Settings.General.CurrentFrameRate));
+            var useColonHundredths = lines.Any(line =>
+            {
+                var times = regexTimeCodes1.Matches(line);
+                return times.Count >= 2 &&
+                       ColonHundredthsRegex.IsMatch(times[0].Value) &&
+                       ColonHundredthsRegex.IsMatch(times[1].Value) &&
+                       (int.Parse(times[0].Value.Substring(times[0].Length - 2)) >= hundredthsThreshold ||
+                        int.Parse(times[1].Value.Substring(times[1].Length - 2)) >= hundredthsThreshold);
+            });
+            // A pair of dot-separated two-digit fields with slash-coded dialogue is a
+            // common frame-based export. Other dot-separated fractions remain decimal.
+            var useDotFrames = lines.Any(line => DotFramePairRegex.IsMatch(line) &&
+                SlashLineBreakRegex.Matches(line).Cast<Match>().Any(m => m.Value.StartsWith("//", StringComparison.Ordinal)));
+
+            var hasAlignmentHeader = lines.TakeWhile(line => !regexTimeCodes1.IsMatch(line))
+                .Any(line => IsAlignmentDirective(line));
             var isFirstLineNumber = false;
             var hasOnlyOneTimeCode = true;
             int count = -1;
@@ -525,9 +1196,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                 }
 
-                if (matches.Count == 2)
+                if (matches.Count >= 2)
                 {
                     hasOnlyOneTimeCode = false;
+                }
+
+                if (matches.Count == 2)
+                {
                     var start = matches[0].Value.Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
                     if (int.TryParse(start[0], out var i))
                     {
@@ -568,6 +1243,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     matches = regexTimeCodes2.Matches(line);
                 }
 
+                var hasDurationColumn = matches.Count >= 3 && HasMatchingDurationColumn(line, matches);
                 if (matches.Count == 1 && hasOnlyOneTimeCode)
                 {
                     var start = SplitTimeCode(matches[0].ToString());
@@ -600,10 +1276,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                     line = line.Trim();
                 }
-                else if (matches.Count == 2)
+                else if (matches.Count == 2 || hasDurationColumn)
                 {
-                    var start = SplitTimeCode(matches[0].ToString());
-                    var end = SplitTimeCode(matches[1].ToString());
+                    var start = SplitTimeCode(matches[0].Value, useColonHundredths, useDotFrames);
+                    var end = SplitTimeCode(matches[1].Value, useColonHundredths, useDotFrames);
                     if ((start.Length == 3 || start.Length == 4) && (end.Length == 3 || end.Length == 4))
                     {
                         if (p != null)
@@ -619,13 +1295,53 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                     var betweenStart = matches[0].Index + matches[0].Length;
                     var between = line.Substring(betweenStart, Math.Max(0, matches[1].Index - betweenStart));
-                    if (IsOnlyTimeCodeSeparators(between))
+                    var before = line.Substring(0, matches[0].Index);
+                    var timeInLabel = LabelledTimeInRegex.Match(before);
+                    var timeOutLabel = LabelledTimeOutRegex.Match(between);
+                    var labelledRange = timeInLabel.Success && timeOutLabel.Success;
+                    if (labelledRange && !timeInLabel.Groups["numbered"].Success && timeOutLabel.Groups["duration"].Success && p != null)
+                    {
+                        var duration = timeOutLabel.Groups["duration"].Value.Split(':');
+                        var durationMs = int.Parse(duration[0]) * TimeCode.BaseUnit +
+                            SubtitleFormat.FramesToMillisecondsMax999(int.Parse(duration[1]));
+                        if (durationMs > 0)
+                        {
+                            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + durationMs;
+                        }
+                    }
+                    var hasShortDurationBetweenTimes = between.StartsWith('\t') && between.EndsWith('\t') &&
+                        ShortFrameDurationRegex.IsMatch(between.Trim()) &&
+                        before.Trim().All(char.IsDigit) && matches[1].Index + matches[1].Length == line.TrimEnd().Length;
+                    if (labelledRange || hasShortDurationBetweenTimes || IsOnlyTimeCodeSeparators(between))
                     {
                         // drop "start --> end", "start - end", "[start --> end]" as one block so the
                         // arrow/dash between the time codes does not end up in the text
-                        var prefix = matches[0].Index < 9 ? string.Empty : line.Substring(0, matches[0].Index);
-                        line = prefix + line.Substring(matches[1].Index + matches[1].Length);
-                        line = line.Trim().TrimStart(']', ')', '}', '|');
+                        var prefix = labelledRange || hasShortDurationBetweenTimes || matches[0].Index < 9 ? string.Empty : before;
+                        var lastTimingColumn = matches[hasDurationColumn ? 2 : 1];
+                        var text = line.Substring(lastTimingColumn.Index + lastTimingColumn.Length).TrimStart();
+                        if (ShortFrameDurationRegex.IsMatch(text) && NumberedDurationPrefixRegex.IsMatch(before))
+                        {
+                            text = string.Empty;
+                        }
+
+                        var delimiter = between.Trim();
+                        if ((delimiter == "," && text.StartsWith(',')) ||
+                            (delimiter == "&" && text.StartsWith('#')))
+                        {
+                            text = text.Substring(1).TrimStart();
+                        }
+
+                        if (between.Contains('\t'))
+                        {
+                            text = text.Replace("\t", Environment.NewLine);
+                        }
+
+                        line = prefix + text.TrimStart(']', ')', '}', '|');
+                        var time = matches[0].Value;
+                        if (time.Length >= 4 && (time[time.Length - 3] == ':' || time[time.Length - 3] == ';' || useDotFrames))
+                        {
+                            line = SlashLineBreakRegex.Replace(line, match => match.Value[0] == '/' ? Environment.NewLine : match.Value);
+                        }
                     }
                     else
                     {
@@ -651,7 +1367,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                     line = line.Trim();
                 }
 
-                if (p != null && line.Length > 1)
+                if (p != null && line.Length > 0 &&
+                    !(NumericCueIndexRegex.IsMatch(line) && idx + 1 < lines.Count && regexTimeCodes1.Matches(lines[idx + 1]).Count >= 2) &&
+                    !(hasAlignmentHeader && IsAlignmentDirective(line)))
                 {
                     sb.AppendLine(line.Trim());
                 }
@@ -727,6 +1445,31 @@ namespace Nikse.SubtitleEdit.Core.Common
             return subtitle;
         }
 
+        private static bool IsAlignmentDirective(string line)
+        {
+            var assignment = line.IndexOf('=');
+            return assignment > 0 &&
+                   line.Substring(0, assignment).Trim().Equals("$HorzAlign", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool HasMatchingDurationColumn(string line, MatchCollection times)
+        {
+            var first = times[0];
+            var second = times[1];
+            var third = times[2];
+            if (line.Substring(first.Index + first.Length, second.Index - first.Index - first.Length) != "\t" ||
+                line.Substring(second.Index + second.Length, third.Index - second.Index - second.Length) != "\t" ||
+                third.Index + third.Length >= line.Length || line[third.Index + third.Length] != '\t')
+            {
+                return false;
+            }
+
+            var start = DecodeTime(SplitTimeCode(first.Value)).TotalMilliseconds;
+            var end = DecodeTime(SplitTimeCode(second.Value)).TotalMilliseconds;
+            var duration = DecodeTime(SplitTimeCode(third.Value)).TotalMilliseconds;
+            return duration > 0 && Math.Abs(end - start - duration) < 1;
+        }
+
         private static Subtitle ImportTimeCodesAndTextOnSameLineOnlySpaceAsSeparator(List<string> lines)
         {
             var regexTimeCodes1 = SpaceSeparatedTimeCodeWithHoursRegex;
@@ -776,6 +1519,11 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                     line = line.Trim();
                 }
+                if (matches.Count == 2 && lines[idx].Contains('\t'))
+                {
+                    line = line.Trim().Replace("\t", Environment.NewLine);
+                }
+
                 if (p != null && line.Length > 1)
                 {
                     sb.AppendLine(line.Trim());
@@ -1025,15 +1773,20 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// Splits a time code into parts. Two digits (or one) after a "." or "," are hundredths
         /// (or tenths) of a second, not frames: "00:00:01.50" is 1.500 s. Frames stay for ":"/";".
         /// </summary>
-        private static string[] SplitTimeCode(string timeCode)
+        private static string[] SplitTimeCode(string timeCode, bool useColonHundredths = false, bool useDotFrames = false)
         {
             var parts = timeCode.Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
             var lastSeparator = timeCode.TrimEnd().LastIndexOfAny(ExpectedSplitChars);
             if (parts.Length >= 3 && lastSeparator > 0 &&
-                (timeCode[lastSeparator] == '.' || timeCode[lastSeparator] == ',') &&
+                ((timeCode[lastSeparator] == '.' && !(useDotFrames && parts.Length == 4 && parts[3].Length == 2)) || timeCode[lastSeparator] == ',' ||
+                 (useColonHundredths && ColonHundredthsRegex.IsMatch(timeCode))) &&
                 parts[parts.Length - 1].Length <= 2)
             {
                 parts[parts.Length - 1] = parts[parts.Length - 1].PadRight(3, '0');
+            }
+            else if (parts.Length >= 3 && parts[parts.Length - 1].Length > 3)
+            {
+                parts[parts.Length - 1] = parts[parts.Length - 1].Substring(0, 3);
             }
 
             return parts;
@@ -1046,7 +1799,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             foreach (var ch in s)
             {
-                if (!char.IsWhiteSpace(ch) && "-–—>=~|[](){},;/".IndexOf(ch) < 0)
+                if (!char.IsWhiteSpace(ch) && "-–—>=~|[](){},;/&".IndexOf(ch) < 0)
                 {
                     return false;
                 }

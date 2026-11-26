@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.Common
@@ -56,37 +57,140 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return new Subtitle();
             }
 
+            var timeline = ReadTimelineCues(doc.DocumentElement);
+            if (timeline.Paragraphs.Count > 0)
+            {
+                return timeline;
+            }
+
             // D-Cinema interop writes the last time code part in 250ths of a second ("editable units")
             _use250TickTimeCodes = doc.DocumentElement.Name == "DCSubtitle";
 
             // group candidates per element name - the subtitle element is the name that
             // repeats with time codes, everything else (styles, regions, metadata) won't
-            var candidatesByName = new Dictionary<string, List<Candidate>>();
-            Walk(doc.DocumentElement, candidatesByName);
+            var candidatesByName = new Dictionary<(XmlNode Parent, string Name), List<Candidate>>();
+            var decimalTimingElements = FindDecimalTimingElements(doc.DocumentElement);
+            Walk(doc.DocumentElement, candidatesByName, decimalTimingElements);
 
             List<Candidate> best = null;
             var bestScore = 0;
-            var bestTextCount = 0;
-            foreach (var kvp in candidatesByName)
+            var bestTimedTextCount = 0;
+            foreach (var group in candidatesByName.Values)
             {
-                var textCount = kvp.Value.Count(c => !string.IsNullOrWhiteSpace(c.Text));
-                // a group that also knows when subtitles end beats one with bare start times
-                // (e.g. a layout/config element with an index that parses as a time)
-                var score = textCount * 2 + kvp.Value.Count(c => c.EndMs.HasValue || c.DurationMs.HasValue);
-                if (score > bestScore)
+                var textCount = group.Count(c => !string.IsNullOrWhiteSpace(c.Text));
+                if (textCount < 2)
+                {
+                    continue;
+                }
+
+                // Layout metadata can repeat more often than the captions. Prefer groups
+                // with at least two text cues whose start and end form a valid interval.
+                var timedTextCount = group.Count(c => !string.IsNullOrWhiteSpace(c.Text) &&
+                    (c.EndMs > c.StartMs || c.DurationMs > 0));
+                var hasExplicitIntervals = timedTextCount >= 2;
+                var bestHasExplicitIntervals = bestTimedTextCount >= 2;
+                var score = textCount * 2 + timedTextCount;
+                if ((hasExplicitIntervals && !bestHasExplicitIntervals) ||
+                    (hasExplicitIntervals == bestHasExplicitIntervals && score > bestScore))
                 {
                     bestScore = score;
-                    bestTextCount = textCount;
-                    best = kvp.Value;
+                    bestTimedTextCount = timedTextCount;
+                    best = group;
                 }
             }
 
-            if (best == null || bestTextCount < 2)
+            if (best == null)
             {
                 return new Subtitle();
             }
 
             return MakeSubtitle(best);
+        }
+
+        private static Subtitle ReadTimelineCues(XmlElement root)
+        {
+            var subtitle = new Subtitle();
+            if (root.Name == "xmeml")
+            {
+                foreach (XmlElement cue in root.SelectNodes(".//video/track/generatoritem"))
+                {
+                    var value = cue.SelectSingleNode(
+                        "effect/parameter[parameterid='str' or parameterid='str1' or parameterid='sourcetext' or parameterid='text']/value");
+                    if (value == null || string.IsNullOrWhiteSpace(value.InnerText) ||
+                        !int.TryParse(cue["start"]?.InnerText, out var startFrame) ||
+                        !int.TryParse(cue["end"]?.InnerText, out var endFrame) ||
+                        startFrame < 0 || endFrame <= startFrame)
+                    {
+                        continue;
+                    }
+
+                    var rate = cue["rate"] ?? cue.SelectSingleNode("ancestor::sequence[1]/rate") as XmlElement;
+                    if (!double.TryParse(rate?["timebase"]?.InnerText, NumberStyles.AllowDecimalPoint,
+                        CultureInfo.InvariantCulture, out var timebase) || timebase <= 0)
+                    {
+                        continue;
+                    }
+
+                    var isNtsc = string.Equals(rate["ntsc"]?.InnerText.Trim(), "TRUE", StringComparison.OrdinalIgnoreCase);
+                    var fps = SubtitleFormat.ToTimeCodeFrameRate(isNtsc ? timebase * 1000 / 1001 : timebase);
+                    subtitle.Paragraphs.Add(new Paragraph(string.Join(Environment.NewLine, value.InnerText.Trim().SplitToLines()),
+                        startFrame / fps * TimeCode.BaseUnit, endFrame / fps * TimeCode.BaseUnit));
+                }
+            }
+            else if (root.Name == "fcpxml")
+            {
+                foreach (XmlElement cue in root.SelectNodes(".//spine//title | .//spine//chapter-marker | .//spine//video[param[@name='Text']]"))
+                {
+                    var text = cue.Name switch
+                    {
+                        "chapter-marker" => cue.GetAttribute("value").Replace("\u2028", Environment.NewLine),
+                        "video" => (cue.SelectSingleNode("param[@name='Text']") as XmlElement)?.GetAttribute("value"),
+                        _ => cue["text"]?.InnerText ?? cue.GetAttribute("name"),
+                    };
+                    var startField = cue.Name == "chapter-marker" ? "start" : "offset";
+                    var start = ToFcpxmlTimelineTime(cue, TryParseTime(cue.GetAttribute(startField)));
+                    var duration = TryParseTime(cue.GetAttribute("duration"));
+                    if (!string.IsNullOrWhiteSpace(text) && start >= 0 && duration > 0)
+                    {
+                        subtitle.Paragraphs.Add(new Paragraph(text.Trim(), start.Value, start.Value + duration.Value));
+                    }
+                }
+            }
+
+            subtitle.Renumber();
+            return subtitle;
+        }
+
+        /// <summary>
+        /// An anchored fcpxml item's time is in its parent's local time:
+        /// timeline position = parent offset + (item time - parent start), applied up to the sequence.
+        /// </summary>
+        private static double? ToFcpxmlTimelineTime(XmlElement cue, double? localTime)
+        {
+            if (!localTime.HasValue)
+            {
+                return null;
+            }
+
+            var time = localTime.Value;
+            for (var parent = cue.ParentNode as XmlElement; parent != null && parent.Name != "sequence"; parent = parent.ParentNode as XmlElement)
+            {
+                if (!parent.HasAttribute("offset"))
+                {
+                    continue;
+                }
+
+                var parentOffset = TryParseTime(parent.GetAttribute("offset"));
+                if (!parentOffset.HasValue)
+                {
+                    return null;
+                }
+
+                var parentStart = parent.HasAttribute("start") ? TryParseTime(parent.GetAttribute("start")) : 0;
+                time = parentOffset.Value + time - (parentStart ?? 0);
+            }
+
+            return time;
         }
 
         private static Subtitle MakeSubtitle(List<Candidate> candidates)
@@ -138,15 +242,51 @@ namespace Nikse.SubtitleEdit.Core.Common
             return subtitle;
         }
 
-        private void Walk(XmlElement element, Dictionary<string, List<Candidate>> candidatesByName)
+        private static HashSet<(XmlNode Parent, string NamespaceUri, string LocalName)> FindDecimalTimingElements(XmlElement root)
         {
-            var candidate = TryGetCandidate(element);
+            // Bare numbers in a repeated cue element share a unit. A decimal value
+            // identifies seconds, so whole values in the same cues use seconds too.
+            var result = new HashSet<(XmlNode Parent, string NamespaceUri, string LocalName)>();
+            foreach (XmlElement element in root.SelectNodes(".//*[@*]"))
+            {
+                foreach (XmlAttribute field in element.Attributes)
+                {
+                    if (field.Value.Contains('.') && ClassifyTimeName(field.LocalName) != 0 && !IsMillisecondsField(field.LocalName) &&
+                        double.TryParse(field.Value.Trim(), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out _))
+                    {
+                        result.Add((element.ParentNode, element.NamespaceURI, element.LocalName));
+                        break;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private void Walk(XmlElement element, Dictionary<(XmlNode Parent, string Name), List<Candidate>> candidatesByName, HashSet<(XmlNode Parent, string NamespaceUri, string LocalName)> decimalTimingElements)
+        {
+            var candidate = TryGetCandidate(element, decimalTimingElements.Contains((element.ParentNode, element.NamespaceURI, element.LocalName)));
             if (candidate != null)
             {
-                if (!candidatesByName.TryGetValue(element.LocalName, out var list))
+                var candidateKey = (Parent: (XmlNode)null, Name: element.LocalName);
+                var indexStart = element.LocalName.Length;
+                while (indexStart > 0 && char.IsDigit(element.LocalName[indexStart - 1]))
+                {
+                    indexStart--;
+                }
+
+                if (indexStart > 0 && indexStart < element.LocalName.Length &&
+                    (candidate.EndMs > candidate.StartMs || candidate.DurationMs > 0))
+                {
+                    // Indexed records such as Data1, Data2 and Data3 belong to one
+                    // cue list only when they are siblings.
+                    candidateKey = (element.ParentNode, element.LocalName.Substring(0, indexStart));
+                }
+
+                if (!candidatesByName.TryGetValue(candidateKey, out var list))
                 {
                     list = new List<Candidate>();
-                    candidatesByName.Add(element.LocalName, list);
+                    candidatesByName.Add(candidateKey, list);
                 }
 
                 list.Add(candidate);
@@ -156,12 +296,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 if (child is XmlElement childElement)
                 {
-                    Walk(childElement, candidatesByName);
+                    Walk(childElement, candidatesByName, decimalTimingElements);
                 }
             }
         }
 
-        private Candidate TryGetCandidate(XmlElement element)
+        private Candidate TryGetCandidate(XmlElement element, bool bareTimesAreSeconds)
         {
             double? start = null;
             double? end = null;
@@ -170,7 +310,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             foreach (XmlAttribute attribute in element.Attributes)
             {
-                ReadTimeField(attribute.LocalName, attribute.Value, ref start, ref end, ref duration);
+                ReadTimeField(attribute.LocalName, attribute.Value, ref start, ref end, ref duration, bareTimesAreSeconds);
             }
 
             foreach (XmlNode child in element.ChildNodes)
@@ -197,6 +337,15 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                 }
 
+                if (el.LocalName.Equals("Parameters", StringComparison.OrdinalIgnoreCase))
+                {
+                    foreach (XmlElement parameter in el.SelectNodes("*[local-name()='Parameter']"))
+                    {
+                        ReadTimeField(parameter["Name"]?.InnerText ?? string.Empty,
+                            parameter["Value"]?.InnerText ?? string.Empty, ref start, ref end, ref duration);
+                    }
+                }
+
                 if (before != (start, end, duration))
                 {
                     timeChildNames.Add(el.LocalName);
@@ -209,6 +358,23 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var text = GetText(element, timeChildNames);
+            if (text.StartsWith("<![CDATA[", StringComparison.Ordinal))
+            {
+                if (text.EndsWith("]]>", StringComparison.Ordinal))
+                {
+                    text = text.Substring(9, text.Length - 12);
+                }
+                else if (text.EndsWith("]]", StringComparison.Ordinal))
+                {
+                    text = text.Substring(9, text.Length - 11);
+                }
+            }
+
+            text = EscapedLineBreakRegex.Replace(text, match => match.Groups["break"].Success ? Environment.NewLine : match.Value);
+            if (element.LocalName == "title" && element.ParentNode?.LocalName == "reel")
+            {
+                text = text.Replace("|", Environment.NewLine);
+            }
             if (string.IsNullOrWhiteSpace(text) && !end.HasValue && !duration.HasValue)
             {
                 // keep as an end marker only when it's a completely empty element
@@ -223,7 +389,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return new Candidate { StartMs = start.Value, EndMs = end, DurationMs = duration, Text = text };
         }
 
-        private void ReadTimeField(string name, string value, ref double? start, ref double? end, ref double? duration)
+        private void ReadTimeField(string name, string value, ref double? start, ref double? end, ref double? duration, bool bareTimesAreSeconds = false)
         {
             var kind = ClassifyTimeName(name);
             if (kind == 0)
@@ -231,7 +397,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return;
             }
 
-            var ms = TryParseTime(value, _use250TickTimeCodes);
+            var explicitlyMilliseconds = IsMillisecondsField(name);
+            double? ms = (bareTimesAreSeconds || explicitlyMilliseconds) &&
+                double.TryParse(value.Trim(), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var number)
+                    ? (explicitlyMilliseconds ? number : number * TimeCode.BaseUnit)
+                    : TryParseTime(value, _use250TickTimeCodes);
             if (!ms.HasValue)
             {
                 return;
@@ -269,7 +439,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 name == "to" ||
                 name == "hide" ||
                 name == "et" ||
+                name == "etime" ||
                 name == "secout" ||
+                name == "positionout" ||
+                name == "outcue" ||
+                name == "timecodeout" ||
+                name == "tc2" ||
                 name == "clear" ||
                 name.Contains("end", StringComparison.Ordinal) ||
                 name.Contains("stop", StringComparison.Ordinal) ||
@@ -287,7 +462,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 name == "offset" ||
                 name == "t" ||
                 name == "st" ||
+                name == "stime" ||
                 name == "secin" ||
+                name == "positionin" ||
+                name == "incue" ||
+                name == "timecodein" ||
+                name == "tc1" ||
                 name == "display" ||
                 name == "position" ||
                 name == "value" ||
@@ -301,6 +481,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return 0;
+        }
+
+        private static bool IsMillisecondsField(string name)
+        {
+            return name.EndsWith("ms", StringComparison.OrdinalIgnoreCase) ||
+                   name.EndsWith("milliseconds", StringComparison.OrdinalIgnoreCase);
         }
 
         private static string Normalize(string name)
@@ -461,6 +647,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return null;
         }
 
+        private static readonly Regex EscapedLineBreakRegex = new Regex(@"\S*:\\[^\s]+|(?<break>\\[nN]|<s\s*/>)", RegexOptions.Compiled);
         private static readonly string[] TextElementNames = { "text", "string", "content", "caption", "dialog", "dialogue", "sentence", "line", "sub" };
         private static readonly string[] WeakTextElementNames = { "comment", "name", "label" };
 
@@ -481,6 +668,23 @@ namespace Nikse.SubtitleEdit.Core.Common
             FindTextElements(element, timeChildNames, TextElementNames, textElements);
             if (textElements.Count == 0)
             {
+                var fields = element.SelectNodes(".//*[local-name()='Type' and normalize-space(.)='Text']/../*[local-name()='Data']");
+                if (fields.Count > 0)
+                {
+                    return string.Join(Environment.NewLine, fields.Cast<XmlElement>()
+                        .Select(field => field.InnerText.Trim().Replace("|", Environment.NewLine))
+                        .Where(text => text.Length > 0));
+                }
+            }
+
+            if (textElements.Count == 0)
+            {
+                var directName = element["Name"];
+                if (!string.IsNullOrWhiteSpace(directName?.InnerText))
+                {
+                    return directName.InnerText.Trim();
+                }
+
                 FindTextElements(element, timeChildNames, WeakTextElementNames, textElements);
             }
 
@@ -536,7 +740,21 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             foreach (XmlNode child in element.ChildNodes)
             {
-                if (child is XmlText || child is XmlCDataSection || child is XmlWhitespace || child is XmlSignificantWhitespace)
+                if (child is XmlCDataSection)
+                {
+                    var text = child.Value;
+                    if (text.StartsWith("<sub>", StringComparison.OrdinalIgnoreCase) &&
+                        text.EndsWith("</sub>", StringComparison.OrdinalIgnoreCase))
+                    {
+                        text = text.Substring(5, text.Length - 11);
+                    }
+
+                    // Escaped "\n" breaks are handled by EscapedLineBreakRegex, which keeps paths like "C:\new".
+                    sb.Append(text.Replace("<br>", Environment.NewLine)
+                        .Replace("<br/>", Environment.NewLine)
+                        .Replace("<br />", Environment.NewLine));
+                }
+                else if (child is XmlText || child is XmlWhitespace || child is XmlSignificantWhitespace)
                 {
                     sb.Append(child.Value);
                 }
@@ -544,7 +762,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     // LocalName, like the inline tags below - matching the prefixed Name
                     // dropped the line break in prefixed dialects (<tt:br/>).
-                    if (childElement.LocalName.Equals("br", StringComparison.OrdinalIgnoreCase))
+                    if (childElement.LocalName.Equals("br", StringComparison.OrdinalIgnoreCase) ||
+                        (childElement.LocalName.Equals("s", StringComparison.OrdinalIgnoreCase) && childElement.IsEmpty))
                     {
                         sb.AppendLine();
                     }

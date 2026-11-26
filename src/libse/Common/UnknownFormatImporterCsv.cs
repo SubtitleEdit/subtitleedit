@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -18,8 +19,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             public bool Play { get; set; }
         }
 
-        private readonly List<string> _startNames = new List<string> { "start", "start time", "in", "begin", "starttime", "start_time", "starttime", "startmillis", "start_millis", "startms", "start_ms", "startms", "startmilliseconds", "start_millisesonds", "startmilliseconds", "from", "fromtime", "from_ms", "fromms", "frommilliseconds", "from_milliseconds", "tc-in", "tc in", "show", "timecode", "start tc", "start-tc", "tc start", "tc-start" };
-        private readonly List<string> _endNames = new List<string> { "end", "end time", "out", "stop", "endtime", "end_time", "endtime", "endmillis", "end_millis", "endms", "end_ms", "endmilliseconds", "end_millisesonds", "endmilliseconds", "to", "totime", "to_ms", "toms", "tomilliseconds", "to_milliseconds", "tc-out", "tc out", "hide", "end tc", "end-tc", "tc end", "tc-end" };
+        private readonly List<string> _startNames = new List<string> { "start", "start time", "in", "begin", "starttime", "start_time", "starttime", "startmillis", "start_millis", "startms", "start_ms", "startms", "startmilliseconds", "start_millisesonds", "startmilliseconds", "from", "fromtime", "from_ms", "fromms", "frommilliseconds", "from_milliseconds", "tc-in", "tc in", "show", "timecode", "timecode in", "start time (hh:mm:ss:ff)", "start time in milliseconds", "start tc", "start-tc", "tc start", "tc-start" };
+        private readonly List<string> _endNames = new List<string> { "end", "end time", "out", "stop", "endtime", "end_time", "endtime", "endmillis", "end_millis", "endms", "end_ms", "endmilliseconds", "end_millisesonds", "endmilliseconds", "to", "totime", "to_ms", "toms", "tomilliseconds", "to_milliseconds", "tc-out", "tc out", "hide", "timecode out", "end time (hh:mm:ss:ff)", "end time in milliseconds", "end tc", "end-tc", "tc end", "tc-end" };
         private readonly List<string> _durationNames = new List<string> { "duration", "durationms", "dur" };
         private readonly List<string> _textNames = new List<string> { "text", "content", "value", "caption", "sentence", "dialog", "dialogue" };
         private readonly List<string> _characterNames = new List<string> { "speaker", "voice", "character", "role", "name", "actor", "rolle", "character name", "sprecher" };
@@ -45,7 +46,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return new Subtitle();
             }
 
-            var separator = DetectSeparator(lines);
+            var commentHeaderIndex = FindCommentHeader(lines);
+            if (commentHeaderIndex >= 0)
+            {
+                lines = lines.GetRange(commentHeaderIndex, lines.Count - commentHeaderIndex);
+                lines[0] = lines[0].TrimStart().Substring(1);
+            }
+
+            var separator = commentHeaderIndex >= 0 ? ',' : DetectSeparator(lines);
 
             // Split the header exactly like the data rows (quote-aware) and trim each cell:
             // a naive Split broke on a quoted separator inside a header name - skewing every
@@ -54,6 +62,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 .FirstOrDefault()?
                 .Select(p => p.Trim().Trim('"').ToLowerInvariant())
                 .ToList() ?? new List<string>();
+            if (commentHeaderIndex >= 0 && headers.Contains("position") && headers.Contains("comment"))
+            {
+                headers[headers.IndexOf("position")] = "start";
+                headers[headers.IndexOf("comment")] = "text";
+            }
+
             if (!HasValidHeader(headers))
             {
                 return new Subtitle();
@@ -70,6 +84,59 @@ namespace Nikse.SubtitleEdit.Core.Common
             return subtitle;
         }
 
+        internal static Subtitle ImportUnlabelledRows(IEnumerable<string> lines, bool integerTimes, bool useFrames)
+        {
+            var subtitle = new Subtitle();
+            foreach (var fields in CsvUtil.CsvSplitLinesLazy(lines, ','))
+            {
+                if (fields.All(string.IsNullOrWhiteSpace))
+                {
+                    continue;
+                }
+
+                Paragraph cue;
+                if (integerTimes && fields.Count == 3 &&
+                    int.TryParse(fields[0], out var first) && int.TryParse(fields[1], out var last) &&
+                    first >= 0 && last > first)
+                {
+                    var start = useFrames ? SubtitleFormat.FramesToMilliseconds(first) : first;
+                    var end = useFrames ? SubtitleFormat.FramesToMilliseconds(last) : last;
+                    cue = new Paragraph(fields[2].Replace("|", Environment.NewLine).Trim(), start, end);
+                }
+                else if (!integerTimes && fields.Count == 6 && int.TryParse(fields[0], out _) &&
+                         bool.TryParse(fields[5], out var play) && fields[1].Contains(':') && fields[2].Contains(':'))
+                {
+                    var start = UnknownFormatImporterXml.TryParseTime(fields[1]);
+                    var end = UnknownFormatImporterXml.TryParseTime(fields[2]);
+                    if (!start.HasValue || !end.HasValue || end <= start)
+                    {
+                        return null;
+                    }
+
+                    cue = new Paragraph(fields[4].Trim(), start.Value, end.Value)
+                    {
+                        Actor = fields[3],
+                        Effect = play ? "True" : "False",
+                    };
+                }
+                else
+                {
+                    return null;
+                }
+
+                subtitle.Paragraphs.Add(cue);
+            }
+
+            if (subtitle.Paragraphs.Count < 2)
+            {
+                return null;
+            }
+
+            subtitle.Renumber();
+            return subtitle;
+        }
+
+        private static readonly Regex NumberedLineHeader = new Regex(@"^line [1-9][0-9]*$", RegexOptions.Compiled);
         private static readonly Regex PlainNumberRegex = new Regex(@"^\d+([.,]\d+)?$", RegexOptions.Compiled);
 
         private static bool IsSupportedTime(string value)
@@ -320,6 +387,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             var endIndex = headers.IndexOf(_endNames.FirstOrDefault(headers.Contains));
             var durationIndex = headers.IndexOf(_durationNames.FirstOrDefault(headers.Contains));
             var textIndex = headers.IndexOf(_textNames.FirstOrDefault(headers.Contains));
+            var lineIndexes = textIndex < 0 && headers.Contains("line 1")
+                ? headers.Select((header, index) => (header, index))
+                    .Where(column => NumberedLineHeader.IsMatch(column.header))
+                    .Select(column => column.index)
+                    .ToList()
+                : new List<int>();
             var characterIndex = headers.IndexOf(_characterNames.FirstOrDefault(headers.Contains));
             var isHeader = true;
             var csvLines = new List<CsvLine>();
@@ -344,7 +417,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         !csvLine.Start.Contains(';') &&
                         TryParseNumber(csvLine.Start, out var n) && Math.Abs(n) <= TimeCode.MaxSupportedTotalMilliseconds)
                     {
-                        var msNames = new List<string> { "startmillis", "start_millis", "startms", "start_ms", "startms", "startmilliseconds", "start_millisesonds", "startmilliseconds", "from_ms", "fromms", "frommilliseconds", "from_milliseconds" };
+                        var msNames = new List<string> { "start time in milliseconds", "startmillis", "start_millis", "startms", "start_ms", "startms", "startmilliseconds", "start_millisesonds", "startmilliseconds", "from_ms", "fromms", "frommilliseconds", "from_milliseconds" };
                         if (msNames.Contains(headers[startIndex].ToLowerInvariant()))
                         {
                             csvLine.Start = new TimeCode(n).ToString(false);
@@ -362,7 +435,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         !csvLine.End.Contains(';') &&
                         TryParseNumber(csvLine.End, out var n) && Math.Abs(n) <= TimeCode.MaxSupportedTotalMilliseconds)
                     {
-                        var msNames = new List<string> { "endmillis", "end_millis", "endms", "end_ms", "endmilliseconds", "end_millisesonds", "endmilliseconds", "to_ms", "toms", "tomilliseconds", "to_milliseconds" };
+                        var msNames = new List<string> { "end time in milliseconds", "endmillis", "end_millis", "endms", "end_ms", "endmilliseconds", "end_millisesonds", "endmilliseconds", "to_ms", "toms", "tomilliseconds", "to_milliseconds" };
                         if (msNames.Contains(headers[endIndex].ToLowerInvariant()))
                         {
                             csvLine.End = new TimeCode(n).ToString(false);
@@ -391,6 +464,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                 if (textIndex >= 0 && textIndex < fields.Count)
                 {
                     csvLine.Text = fields[textIndex];
+                }
+
+                if (lineIndexes.Count > 0)
+                {
+                    csvLine.Text = string.Join(Environment.NewLine, lineIndexes
+                        .Where(index => index < fields.Count && !string.IsNullOrWhiteSpace(fields[index]))
+                        .Select(index => fields[index]));
                 }
 
                 if (characterIndex >= 0 && characterIndex < fields.Count)
@@ -434,6 +514,35 @@ namespace Nikse.SubtitleEdit.Core.Common
             return hits >= 2;
         }
 
+        private static int FindCommentHeader(List<string> lines)
+        {
+            for (var index = 0; index < lines.Count; index++)
+            {
+                var line = lines[index].TrimStart();
+                if (line.Length == 0)
+                {
+                    continue;
+                }
+
+                if (!line.StartsWith('#'))
+                {
+                    break;
+                }
+
+                // Position and duration columns identify marker lists whose CSV header
+                // is part of the introductory comment block.
+                var fields = CsvUtil.CsvSplitLinesLazy(new[] { line.Substring(1) }, ',').FirstOrDefault();
+                if (fields != null && HasField("Position") && HasField("Duration") && HasField("Comment"))
+                {
+                    return index;
+                }
+
+                bool HasField(string name) => fields.Any(field => field.Trim().Equals(name, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return -1;
+        }
+
         private static char DetectSeparator(List<string> lines)
         {
             const char defaultSeparator = ',';
@@ -447,10 +556,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             var noSpaceLines = lines.Where(p => !string.IsNullOrWhiteSpace(p)).ToList();
             foreach (var separator in potentialSeparators)
             {
-                var firstLineParts = noSpaceLines[0].Split(separator);
-                var secondLineParts = noSpaceLines[1].Split(separator);
-
-                if (firstLineParts.Length > 1 && secondLineParts.Length == firstLineParts.Length)
+                var rows = CsvUtil.CsvSplitLinesLazy(noSpaceLines, separator).Take(2).ToList();
+                if (rows.Count == 2 && rows[0].Count > 1 && rows[1].Count == rows[0].Count)
                 {
                     return separator;
                 }

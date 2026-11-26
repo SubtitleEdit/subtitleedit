@@ -40,6 +40,7 @@ public partial class ImportCsvXlsxCustomColumnsViewModel : ObservableObject
         "start", "start time", "in", "begin", "starttime", "start_time", "startmillis", "start_millis",
         "startms", "start_ms", "startmilliseconds", "start_milliseconds", "from", "fromtime",
         "from_ms", "fromms", "frommilliseconds", "from_milliseconds", "timecode",
+        "timecode in", "start time (hh:mm:ss:ff)", "start time in milliseconds",
         "tc-in", "tc in", "show", "start tc", "start-tc", "tc start", "tc-start",
     };
 
@@ -48,6 +49,7 @@ public partial class ImportCsvXlsxCustomColumnsViewModel : ObservableObject
         "end", "end time", "out", "stop", "endtime", "end_time", "endmillis", "end_millis",
         "endms", "end_ms", "endmilliseconds", "end_milliseconds", "to", "totime",
         "to_ms", "toms", "tomilliseconds", "to_milliseconds",
+        "timecode out", "end time (hh:mm:ss:ff)", "end time in milliseconds",
         "tc-out", "tc out", "hide", "end tc", "end-tc", "tc end", "tc-end",
     };
 
