@@ -242,15 +242,20 @@ public static class LlamaCppServerManager
         //   dialogue dashes and the line split, which Hy-MT2 turned into "–" and moved; Swedish
         //   ahead of Index 9B ("Sluta slingra dig"). 13-14 s per language, Japanese included
         //   (Hy-MT2 30B: 33 s). Danish is its weak spot ("Han gik bumpen", "Aflad en besked") -
-        //   Index-Translate 9B stays the better Danish pick. mradermacher's i1 quants
-        //   (IQ3_XXS 11.6 GB) were not tested; Tencent's GGUFs above IQ2 start at Q4_K_M (19.5 GB).
+        //   Index-Translate 9B stays the better Danish pick.
+        //   mradermacher's imatrix i1-IQ3_XXS (11.6 GB, the size of the old Hy-MT2 30B entry),
+        //   tested the same day, is what is listed: 9-11 s per language instead of 13-14 s, and at
+        //   least as good - German idioms closer ("Das Schiff ist längst abgefahren", "den Löffel
+        //   abgegeben", one typo "gieht"), Danish a little better ("brække benet", "Hun har en
+        //   sten i skoen"). Tencent's own GGUFs are IQ2 (13.1 GB, listed first in #17214) and then
+        //   Q4_K_M (19.5 GB). A downloaded IQ2 keeps working as a custom model (CreateCustomModel).
         // - 7B Q4_K_M: the most natural French of all, German mixed ("Das Schiff ist gesunken"),
         //   Danish weaker than the 30B (one stray "<br＞"). ~21 s, Japanese 67 s.
         // - 1.8B Q8_0: 9 s per language, but often wrong in Danish ("blive skudt i benet").
         // Replaces the Hy-MT2 entries; a downloaded Hy-MT2 file shows up as a custom model and
         // keeps the trained prompt and sampling through CreateCustomModel.
-        new LlamaCppModel("Hy-MT3 30B-A3B (IQ2) - 102 languages", "Hy-MT3-30B-A3B-IQ2.gguf", "13.1 GB",
-            "https://huggingface.co/tencent/Hy-MT3-30B-A3B-GGUF/resolve/main/Hy-MT3-30B-A3B-IQ2.gguf",
+        new LlamaCppModel("Hy-MT3 30B-A3B (IQ3_XXS) - 102 languages", "Hy-MT3-30B-A3B.i1-IQ3_XXS.gguf", "11.6 GB",
+            "https://huggingface.co/mradermacher/Hy-MT3-30B-A3B-i1-GGUF/resolve/main/Hy-MT3-30B-A3B.i1-IQ3_XXS.gguf",
             PromptTemplate: HyMtPromptTemplate, Temperature: 0.7, TopP: 1.0, TopK: 0, RepeatPenalty: 1.0),
         new LlamaCppModel("Hy-MT3 7B (Q4_K_M) - 102 languages", "Hy-MT3-7B-Q4_K_M.gguf", "5.1 GB",
             "https://huggingface.co/tencent/Hy-MT3-7B-GGUF/resolve/main/Hy-MT3-7B-Q4_K_M.gguf",
