@@ -2252,7 +2252,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// <summary>
         /// Screen's language codes, as written in the "Lang:" line of the story header (the same
         /// codes are used in CHK files) - e.g. SIM = Simplified Chinese, DKO = Korean DVB.
-        /// Latin languages are left to <see cref="CodePageDetectionOrder"/>.
+        /// The common Latin languages map to Latin: short all-caps Latin text can read as real
+        /// Greek words ("SE" = "ΣΕ"), so a header that names the language decides.
         /// </summary>
         private static readonly Dictionary<string, int> LanguageHeaderCodePages = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
         {
@@ -2268,6 +2269,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { "TUR", CodePageLatinTurkish },
             { "POR", CodePageLatinPortuguese }, { "DPT", CodePageLatinPortuguese },
             { "CSK", CodePageLatinCzech }, { "CZE", CodePageLatinCzech },
+            { "ESP", CodePageLatin }, { "SPA", CodePageLatin }, { "ENG", CodePageLatin }, { "FRA", CodePageLatin }, { "FRE", CodePageLatin },
+            { "DEU", CodePageLatin }, { "GER", CodePageLatin }, { "ITA", CodePageLatin }, { "NLD", CodePageLatin }, { "DUT", CodePageLatin },
+            { "DAN", CodePageLatin }, { "SWE", CodePageLatin }, { "NOR", CodePageLatin }, { "FIN", CodePageLatin }, { "CAT", CodePageLatin },
         };
 
         /// <summary>
@@ -2641,6 +2645,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     buffer[i + 4] == ':')
                 {
                     var start = i + 5;
+                    while (start < buffer.Length && start - (i + 5) < 3 && buffer[start] == 0x20)
+                    {
+                        start++; // "Lang: ESP"
+                    }
+
                     var end = start;
                     while (end < buffer.Length && end - start < 8 && buffer[end] > 0x20 && buffer[end] < 0x7F)
                     {
@@ -2662,13 +2671,34 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static bool IsPlausibleDecoding(int codePage, Subtitle subtitle)
         {
             int letters = 0, ascii = 0, hangul = 0, han = 0, kana = 0, script = 0;
+            int words = 0, mixedWords = 0;
             foreach (var p in subtitle.Paragraphs)
             {
-                foreach (var c in p.Text)
+                bool wordHasAscii = false, wordHasScript = false;
+                foreach (var c in p.Text + " ")
                 {
                     if (!char.IsLetter(c))
                     {
+                        if (wordHasAscii || wordHasScript)
+                        {
+                            words++;
+                            if (wordHasAscii && wordHasScript)
+                            {
+                                mixedWords++;
+                            }
+                        }
+
+                        wordHasAscii = wordHasScript = false;
                         continue;
+                    }
+
+                    if (c < 0x80)
+                    {
+                        wordHasAscii = true;
+                    }
+                    else if (IsInScript(codePage, c))
+                    {
+                        wordHasScript = true;
                     }
 
                     letters++;
@@ -2708,6 +2738,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     return kana > 0 && kana >= (kana + han) * 0.2;
                 case CodePageGreek:
                 case CodePageCyrillic:
+                    // Latin read with the Greek table keeps R and Z as they are ("ΠΟR", "ΝΑRZΟ");
+                    // real Greek or Cyrillic words don't mix in Latin letters
+                    if (mixedWords >= 2 && mixedWords * 10 > words)
+                    {
+                        return false;
+                    }
+
+                    return script > 0 && script >= letters * 0.6;
                 case CodePageHebrew:
                 case CodePageArabic:
                 case CodePageThai:
