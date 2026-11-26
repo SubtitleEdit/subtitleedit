@@ -404,4 +404,36 @@ public class UnknownFormatImporterEasyWinsTest
         Assert.Equal(4000, subtitle.Paragraphs[1].StartTime.TotalMilliseconds);
         Assert.Equal(6000, subtitle.Paragraphs[1].EndTime.TotalMilliseconds);
     }
+
+    [Fact]
+    public void FcpxmlAnchoredTitlesUseTimelineTime()
+    {
+        var subtitle = Import(
+            "<fcpxml version=\"1.8\"><library><event><project><sequence><spine>" +
+            "<gap offset=\"0s\" start=\"3600s\" duration=\"20s\">" +
+            "<title offset=\"3601s\" duration=\"2s\"><text><text-style>First</text-style></text></title></gap>" +
+            "<asset-clip offset=\"20s\" start=\"100s\" duration=\"20s\">" +
+            "<title lane=\"1\" offset=\"104s\" duration=\"2s\"><text><text-style>Second</text-style></text></title>" +
+            "</asset-clip></spine></sequence></project></event></library></fcpxml>",
+            "test.fcpxml");
+
+        Assert.Equal(2, subtitle.Paragraphs.Count);
+        Assert.Equal(1000, subtitle.Paragraphs[0].StartTime.TotalMilliseconds);
+        Assert.Equal(3000, subtitle.Paragraphs[0].EndTime.TotalMilliseconds);
+        Assert.Equal(24000, subtitle.Paragraphs[1].StartTime.TotalMilliseconds);
+        Assert.Equal(26000, subtitle.Paragraphs[1].EndTime.TotalMilliseconds);
+    }
+
+    [Fact]
+    public void XmlCDataKeepsWindowsPathBackslashes()
+    {
+        var subtitle = Import(
+            "<cues><cue start=\"1.5s\" end=\"3.5s\"><![CDATA[Open C:\\new\\file]]></cue>" +
+            "<cue start=\"4s\" end=\"6s\"><![CDATA[First\\nSecond]]></cue></cues>",
+            "test.xml");
+
+        Assert.Equal(2, subtitle.Paragraphs.Count);
+        Assert.Equal("Open C:\\new\\file", subtitle.Paragraphs[0].Text);
+        Assert.Equal("First" + Environment.NewLine + "Second", subtitle.Paragraphs[1].Text);
+    }
 }

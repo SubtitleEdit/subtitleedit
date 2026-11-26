@@ -148,7 +148,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         _ => cue["text"]?.InnerText ?? cue.GetAttribute("name"),
                     };
                     var startField = cue.Name == "chapter-marker" ? "start" : "offset";
-                    var start = TryParseTime(cue.GetAttribute(startField));
+                    var start = ToFcpxmlTimelineTime(cue, TryParseTime(cue.GetAttribute(startField)));
                     var duration = TryParseTime(cue.GetAttribute("duration"));
                     if (!string.IsNullOrWhiteSpace(text) && start >= 0 && duration > 0)
                     {
@@ -159,6 +159,38 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             subtitle.Renumber();
             return subtitle;
+        }
+
+        /// <summary>
+        /// An anchored fcpxml item's time is in its parent's local time:
+        /// timeline position = parent offset + (item time - parent start), applied up to the sequence.
+        /// </summary>
+        private static double? ToFcpxmlTimelineTime(XmlElement cue, double? localTime)
+        {
+            if (!localTime.HasValue)
+            {
+                return null;
+            }
+
+            var time = localTime.Value;
+            for (var parent = cue.ParentNode as XmlElement; parent != null && parent.Name != "sequence"; parent = parent.ParentNode as XmlElement)
+            {
+                if (!parent.HasAttribute("offset"))
+                {
+                    continue;
+                }
+
+                var parentOffset = TryParseTime(parent.GetAttribute("offset"));
+                if (!parentOffset.HasValue)
+                {
+                    return null;
+                }
+
+                var parentStart = parent.HasAttribute("start") ? TryParseTime(parent.GetAttribute("start")) : 0;
+                time = parentOffset.Value + time - (parentStart ?? 0);
+            }
+
+            return time;
         }
 
         private static Subtitle MakeSubtitle(List<Candidate> candidates)
@@ -717,7 +749,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                         text = text.Substring(5, text.Length - 11);
                     }
 
-                    sb.Append(text.Replace(@"\n", Environment.NewLine).Replace("<br>", Environment.NewLine)
+                    // Escaped "\n" breaks are handled by EscapedLineBreakRegex, which keeps paths like "C:\new".
+                    sb.Append(text.Replace("<br>", Environment.NewLine)
                         .Replace("<br/>", Environment.NewLine)
                         .Replace("<br />", Environment.NewLine));
                 }
