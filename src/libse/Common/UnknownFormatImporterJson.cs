@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -18,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "startMilliseconds", "start_millisesonds", "startmilliseconds",
             "from", "fromTime", "from_ms","fromms", "fromMilliseconds", "from_milliseconds", "show",
             "tStartMs", "displayTimeOffset", "milliseconds", "timestamp", "timestamp_begin", "time",
-            "offset", "offsetMs", "startOffset",
+            "offset", "offsetMs", "startOffset", "showTime",
             "t1", "st", "s"
         };
 
@@ -30,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "endMs", "end_ms", "endms",
             "endMilliseconds", "end_millisesonds", "endmilliseconds",
             "to", "toTime", "to_ms", "toms", "toMilliseconds", "to_milliseconds", "hide",
-            "tEndMs", "timestamp_end",
+            "tEndMs", "timestamp_end", "endOffset", "hideTime",
             "t2", "et", "e"
         };
 
@@ -46,7 +47,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static readonly string[] TextTags =
         {
             "text", "content", "value", "caption", "sentence", "dialog", "dialogue",
-            "line", "utf8", "tt", "t", "n"
+            "line", "body", "subtitle_content", "word", "utf8", "tt", "t", "n"
         };
 
         private class Fields
@@ -68,10 +69,23 @@ namespace Nikse.SubtitleEdit.Core.Common
                 sb.Append(s);
             }
 
-            var allText = sb.ToString().Trim();
+            return ImportJsonText(sb.ToString().Trim(), unwrapEnvelope: true);
+        }
+
+        private static Subtitle ImportJsonText(string allText, bool unwrapEnvelope)
+        {
             if (!allText.Contains("{", StringComparison.Ordinal))
             {
                 return new Subtitle();
+            }
+
+            if (unwrapEnvelope && allText.StartsWith('{') && allText.Contains("\"data\"", StringComparison.Ordinal))
+            {
+                var embedded = ImportEmbeddedData(allText);
+                if (embedded != null)
+                {
+                    return embedded;
+                }
             }
 
             var subtitle1 = ImportFromSegments(allText.Split('{', '}', '[', ']'));
@@ -96,6 +110,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                 // ignored
             }
 
+            var nested = ReadNestedClockCues(allText);
+            if (nested.Paragraphs.Count >= 2 &&
+                nested.Paragraphs.Count > Math.Max(subtitle1.Paragraphs.Count, Math.Max(subtitle2.Paragraphs.Count, subtitle3.Paragraphs.Count)))
+            {
+                nested.Renumber();
+                return nested;
+            }
+
             if (subtitle1.Paragraphs.Count >= subtitle2.Paragraphs.Count && subtitle1.Paragraphs.Count >= subtitle3.Paragraphs.Count)
             {
                 subtitle1.Renumber();
@@ -110,6 +132,108 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             subtitle3.Renumber();
             return FixTimeCodeMsOrSeconds(FixMissingEndTimes(subtitle3));
+        }
+
+        private static Subtitle ImportEmbeddedData(string json)
+        {
+            try
+            {
+                if (!(new JsonParser().Parse(json) is IDictionary<string, object> envelope) ||
+                    !envelope.TryGetValue("data", out var data))
+                {
+                    return null;
+                }
+
+                if (data is string embedded)
+                {
+                    embedded = embedded.Trim();
+                    if (embedded.StartsWith('{') || embedded.StartsWith('['))
+                    {
+                        var subtitle = ImportJsonText(embedded, unwrapEnvelope: false);
+                        return subtitle.Paragraphs.Count >= 2 ? subtitle : null;
+                    }
+                }
+                else if (data is IDictionary<string, object> container &&
+                         container.TryGetValue("websrt", out var value) && value is string srt)
+                {
+                    var subtitle = new Subtitle();
+                    return new SubRip().TryLoadAndDetect(subtitle, srt.SplitToLines(), string.Empty, keep: true)
+                        ? subtitle
+                        : null;
+                }
+            }
+            catch (ParserException)
+            {
+                // Leave malformed envelopes to the normal recovery heuristics.
+            }
+
+            return null;
+        }
+
+        private static Subtitle ReadNestedClockCues(string json)
+        {
+            var subtitle = new Subtitle();
+            if (!json.Contains(':') || !json.Contains("instances", StringComparison.OrdinalIgnoreCase))
+            {
+                return subtitle;
+            }
+
+            object root;
+            try
+            {
+                root = new JsonParser().Parse(json);
+            }
+            catch (ParserException)
+            {
+                return subtitle;
+            }
+
+            var nodes = new Stack<object>();
+            nodes.Push(root);
+            while (nodes.Count > 0)
+            {
+                var node = nodes.Pop();
+                if (node is IList<object> array)
+                {
+                    for (var index = array.Count - 1; index >= 0; index--)
+                    {
+                        nodes.Push(array[index]);
+                    }
+                }
+                else if (node is IDictionary<string, object> record)
+                {
+                    var text = TextTags.Select(tag => record.TryGetValue(tag, out var value) ? value as string : null)
+                        .FirstOrDefault(value => !string.IsNullOrWhiteSpace(value));
+                    if (text != null && record.TryGetValue("instances", out var value) && value is IList<object> instances)
+                    {
+                        foreach (var instance in instances.OfType<IDictionary<string, object>>())
+                        {
+                            var start = ReadClock(instance, "start");
+                            var end = ReadClock(instance, "end");
+                            if (start >= 0 && end > start)
+                            {
+                                subtitle.Paragraphs.Add(new Paragraph(HtmlLineBreakRegex.Replace(text, Environment.NewLine), start.Value, end.Value));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var child in record.Values.Reverse())
+                        {
+                            nodes.Push(child);
+                        }
+                    }
+                }
+            }
+
+            return subtitle;
+        }
+
+        private static double? ReadClock(IDictionary<string, object> record, string key)
+        {
+            return record.TryGetValue(key, out var value) && value is string time && time.Contains(':')
+                ? UnknownFormatImporterXml.TryParseTime(time)
+                : null;
         }
 
         private static Subtitle ImportFromSegments(string[] segments)
@@ -177,17 +301,27 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static Subtitle FixMissingEndTimes(Subtitle subtitle)
         {
-            if (subtitle.Paragraphs.Count < 2 ||
-                !subtitle.Paragraphs.All(p => Math.Abs(p.EndTime.TotalMilliseconds) < 0.001))
+            if (subtitle.Paragraphs.Count < 2)
             {
                 return subtitle;
             }
 
-            // start-time-only format (e.g. {"milliseconds":1500,"line":"..."})
+            // Fill missing endpoints and clamp estimated display durations when required.
             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
                 var paragraph = subtitle.Paragraphs[index];
                 var next = subtitle.GetParagraphOrDefault(index + 1);
+                if (paragraph.EndTime.TotalMilliseconds > 0)
+                {
+                    if (next != null && next.StartTime.TotalMilliseconds < paragraph.EndTime.TotalMilliseconds &&
+                        ReadKeyValue(paragraph.Style, "displayTimeOffset", out _) != null)
+                    {
+                        paragraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    }
+
+                    continue;
+                }
+
                 if (next != null)
                 {
                     paragraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
@@ -269,6 +403,15 @@ namespace Nikse.SubtitleEdit.Core.Common
             var end = NormalizeTime(ReadFirstTimeTag(s, EndTags));
             var duration = ReadFirstTimeTag(s, DurationTags);
             var text = ReadTextTag(s);
+            if (text == null && start != null && duration != null && ReadKeyValue(s, "time", out _) != null)
+            {
+                var name = ReadKeyValue(s, "name", out var quotedName);
+                if (quotedName)
+                {
+                    text = HtmlLineBreakRegex.Replace(name, Environment.NewLine);
+                }
+            }
+
             if (start == null && end == null && duration == null && text == null)
             {
                 return null;
@@ -310,7 +453,15 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (end == null && duration == null)
             {
                 // start-time-only - end times are computed at the end of the import
-                subtitle.Paragraphs.Add(new Paragraph(Json.DecodeJsonText(text), startSeconds * TimeCode.BaseUnit, 0) { Extra = times.Start, Style = times.Source });
+                var milliseconds = ReadKeyValue(times.Source, "milliseconds", out _) != null;
+                var displayOffset = ReadKeyValue(times.Source, "displayTimeOffset", out _) != null;
+                var startMs = milliseconds ? startSeconds : startSeconds * TimeCode.BaseUnit;
+                var sourceText = ReadKeyValue(times.Source, milliseconds ? "line" : "text", out var quotedText);
+                // These start-only schemas use the stored display text for duration estimation.
+                var endMs = milliseconds || displayOffset
+                    ? startMs + Utilities.GetOptimalDisplayMilliseconds(quotedText ? sourceText : text)
+                    : 0;
+                subtitle.Paragraphs.Add(new Paragraph(Json.DecodeJsonText(text), startMs, endMs) { Extra = times.Start, Style = times.Source });
             }
         }
 
@@ -556,10 +707,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             return null;
         }
 
+        private static readonly Regex HtmlLineBreakRegex =
+            new Regex(@"[ \t]*<br[ \t]*/?>[ \t]*",
+                RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
         private static string ReadTextTag(string s)
         {
             // text as an array of lines, e.g. "text": ["line 1", "line 2"]
-            foreach (var arrayTag in new[] { "text", "content", "lines" })
+            foreach (var arrayTag in new[] { "text", "content", "lines", "textLines" })
             {
                 var textLines = ReadStringArrayValue(s, arrayTag);
                 if (textLines != null && textLines.Count > 0)
@@ -577,9 +732,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var res = ReadKeyValue(s, tag, out var isStringValue);
                 if (isStringValue && !string.IsNullOrEmpty(res))
                 {
-                    return res
+                    return HtmlLineBreakRegex.Replace(res, Environment.NewLine)
                         .Replace("&#039;", "'")
-                        .Replace("<br />", Environment.NewLine)
                         .Replace("<br \\/>", Environment.NewLine);
                 }
             }
