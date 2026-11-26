@@ -103,6 +103,70 @@ public class PacCodePageDetectionTest
         }
     }
 
+    /// <summary>A space after the colon ("Lang: SIM") is still the header language.</summary>
+    [Fact]
+    public void LanguageHeaderWithSpaceDecides()
+    {
+        var path = SavePac(MakeSubtitle(new[] { "Lang: SIM", "Hello there.", "How are you?" }), Pac.CodePageLatin);
+        try
+        {
+            Assert.Equal(Pac.CodePageChineseSimplified, Pac.AutoDetectEncoding(File.ReadAllBytes(path)));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    private static readonly string[] SpanishCapsLines =
+    {
+        "8 DE FEBRERO DE 2003," + Environment.NewLine + "08:50 DE LA MAÑANA",
+        "UN ASESINO EN SERIE" + Environment.NewLine + "ATACA UNA TIENDA DE BROOKLYN",
+        "SE BUSCA POR ASESINATO",
+        "ASESINADO SIN MOTIVO",
+        "EL SOSPECHOSO" + Environment.NewLine + "HA SIDO CAPTADO POR UNA CÁMARA",
+        "SE BUSCA POR HOMICIDIO",
+        "CONDADO DE SISKIYOU",
+    };
+
+    /// <summary>
+    /// #17204: short all-caps Spanish read with the Greek table has real Greek words ("SE" =
+    /// "ΣΕ", "HA" = "ΘΑ") and no Spanish keyword hits - but keeps Latin R and Z ("ΠΟR").
+    /// </summary>
+    [Fact]
+    public void SpanishCapsIsNotDetectedAsGreek()
+    {
+        var path = SavePac(MakeSubtitle(SpanishCapsLines), Pac.CodePageLatin);
+        try
+        {
+            Assert.Equal(Pac.CodePageLatin, Pac.AutoDetectEncoding(path));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    /// <summary>#17204: "Lang: ESP" in the story header (with a space) means Latin.</summary>
+    [Fact]
+    public void SpanishLanguageHeaderDecidesLatin()
+    {
+        var lines = new[] { "STORY: 0001168019 OM" + Environment.NewLine + "LANG: ESP" }.Concat(SpanishCapsLines);
+        var path = SavePac(MakeSubtitle(lines), Pac.CodePageLatin);
+        try
+        {
+            Assert.Equal(Pac.CodePageLatin, Pac.AutoDetectEncoding(path));
+
+            var loaded = new Subtitle();
+            new Pac().LoadSubtitle(loaded, null, path);
+            Assert.Contains(loaded.Paragraphs, p => p.Text.Contains("CÁMARA"));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
     /// <summary>
     /// Icelandic has no keyword list match in the Latin language set before, and read with the
     /// Greek table (which remaps ASCII letters) it "detected" as Greek.
