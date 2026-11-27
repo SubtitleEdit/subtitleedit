@@ -3323,6 +3323,11 @@ public partial class SettingsViewModel : ObservableObject
         _mainViewModel?.ApplySettings(SettingsReplaced);
         SettingsReplaced = false;
 
+        // ApplySettings looks for a system FFmpeg when none is configured (an imported or reset
+        // settings file) and stores the path it finds. Take it into the field, or OK writes the
+        // empty field back over it - and that difference rebuilt the whole layout a second time.
+        FfmpegPath = Se.Settings.General.FfmpegPath;
+
         // Everything up to here is now applied, so this is the baseline the OK press must be
         // compared against - without it OK re-applies every change this Apply already made and
         // rebuilds the layout (and the video player) a second time (issue #14218).
