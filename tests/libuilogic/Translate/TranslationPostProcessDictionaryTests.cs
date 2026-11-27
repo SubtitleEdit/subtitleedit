@@ -61,7 +61,13 @@ public class TranslationPostProcessDictionaryTests
     [InlineData("Norwegian", "nb", "Sorry about that.", "Unnskyld det.", "Unnskyld.")]
     [InlineData("Norwegian", "nb", "Sorry to hear that.", "Unnskyld å høre det.", "Leit å høre.")]
     [InlineData("Norwegian", "nb", "You're welcome.", "Du er velkommen.", "Bare hyggelig.")]
-    public void ScandinavianFixesLiteralApologiesAndReplies(string name, string code, string source, string draft, string expected)
+    [InlineData("German", "de", "Sorry about that.", "Entschuldige das.", "Tut mir leid.")]
+    [InlineData("German", "de", "Sorry for your loss.", "Entschuldigung für Ihren Verlust.", "Mein Beileid.")]
+    [InlineData("German", "de", "You're welcome.", "Du bist willkommen.", "Gern geschehen.")]
+    [InlineData("Dutch", "nl", "Sorry about that.", "Sorry daarover.", "Sorry.")]
+    [InlineData("Dutch", "nl", "Sorry I'm late.", "Sorry, ik ben laat.", "Sorry dat ik te laat ben.")]
+    [InlineData("Dutch", "nl", "You're welcome.", "Je bent welkom.", "Graag gedaan.")]
+    public void FixesLiteralApologiesAndReplies(string name, string code, string source, string draft, string expected)
     {
         var rules = TranslationPostProcessDictionary.Get(new TranslationPair("English", "en"), new TranslationPair(name, code));
         Assert.NotNull(rules);
