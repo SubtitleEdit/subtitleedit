@@ -38,7 +38,30 @@
       {"source": "Call it a day.", "draft": "Slutt dagen.", "replacement": "Vi gir oss for i dag."},
       {"source": "Cheer up.", "draft": "Vær glad.", "replacement": "Opp med humøret."},
       {"source": "Hold on.", "draft": "Hold på.", "suggestions": ["Vent litt.", "Hold fast."], "note": "First: wait a moment. Second: hold on to something."},
-      {"source": "Go ahead.", "draft": "Gå videre.", "suggestions": ["Bare gjør det.", "Fortsett."], "note": "First: giving permission. Second: telling someone to carry on."}
+      {"source": "Go ahead.", "draft": "Gå videre.", "suggestions": ["Bare gjør det.", "Fortsett."], "note": "First: giving permission. Second: telling someone to carry on."},
+      {"source": "Sorry about that.", "draft": "Unnskyld det.", "replacement": "Unnskyld."},
+      {"source": "Sorry about that.", "draft": "Unnskyld om det.", "replacement": "Unnskyld."},
+      {"source": "Sorry to hear that.", "draft": "Unnskyld å høre det.", "replacement": "Leit å høre."},
+      {"source": "Sorry to hear that.", "draft": "Unnskyld å høre det", "replacement": "Leit å høre."},
+      {"source": "I'm sorry to hear that.", "draft": "Jeg er unnskyld å høre det.", "replacement": "Det var leit å høre."},
+      {"source": "Sorry for your loss.", "draft": "Unnskyld for tapet ditt.", "replacement": "Kondolerer."},
+      {"source": "Sorry for your loss.", "draft": "Unnskyld for ditt tap.", "replacement": "Kondolerer."},
+      {"source": "I'm sorry for your loss.", "draft": "Unnskyld for tapet ditt.", "replacement": "Jeg kondolerer."},
+      {"source": "Sorry I'm late.", "draft": "Unnskyld, jeg er sen.", "replacement": "Unnskyld at jeg er sent ute."},
+      {"source": "Sorry I'm late.", "draft": "Unnskyld jeg er sen.", "replacement": "Unnskyld at jeg er sent ute."},
+      {"source": "Sorry to bother you.", "draft": "Unnskyld å plage deg.", "replacement": "Unnskyld at jeg forstyrrer."},
+      {"source": "Sorry to bother you.", "draft": "Unnskyld å forstyrre deg.", "replacement": "Unnskyld at jeg forstyrrer."},
+      {"source": "You're welcome.", "draft": "Du er velkommen.", "replacement": "Bare hyggelig."},
+      {"source": "You're welcome.", "draft": "Du er velkommen", "replacement": "Bare hyggelig."},
+      {"source": "My bad.", "draft": "Min dårlige.", "replacement": "Min feil."},
+      {"source": "Never mind.", "draft": "Aldri sinn.", "replacement": "Glem det."},
+      {"source": "Never mind.", "draft": "Aldri mind.", "replacement": "Glem det."},
+      {"source": "What's up?", "draft": "Hva er opp?", "replacement": "Hva skjer?"},
+      {"source": "I'm fine.", "draft": "Jeg er fin.", "replacement": "Jeg har det fint."},
+      {"source": "I'm good.", "draft": "Jeg er god.", "suggestions": ["Jeg har det bra.", "Nei takk, jeg klarer meg."], "note": "First: saying how the speaker is. Second: declining an offer."},
+      {"source": "Take it easy.", "draft": "Ta det lett.", "replacement": "Ta det rolig."},
+      {"source": "No problem.", "draft": "Intet problem.", "replacement": "Ikke noe problem."},
+      {"source": "Makes sense.", "draft": "Gir mening.", "replacement": "Det gir mening."}
     ]
   }
 }
