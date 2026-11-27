@@ -2,7 +2,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.UiLogic.Translate;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.AutoCast;
 
@@ -16,17 +16,8 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.AutoCast;
 /// and no dialogue format expects it there. So the label comes out of the text and into the
 /// paragraph's actor field, which is where Subtitle Edit's cast already looks for it.
 /// </remarks>
-public static partial class SpeakerLabelParser
+public static class SpeakerLabelParser
 {
-    /// <summary>
-    /// "(Speaker 1)", "[SPEAKER 2]", "SPEAKER_00:", "Speaker 3:" - bracketed or followed by a
-    /// colon, at the very start of the line. Anything else is left alone: a line that merely
-    /// mentions a speaker is not a label, and guessing wrong silently renames somebody's dialogue.
-    /// </summary>
-    [GeneratedRegex(@"^\s*(?:[\(\[]\s*(?<name>speaker[ _-]*\d+)\s*[\)\]]|(?<name>speaker[ _-]*\d+)\s*:)\s*",
-        RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
-    private static partial Regex SpeakerPrefixRegex();
-
     /// <summary>
     /// Splits a diarized line into its speaker and the words actually spoken.
     /// </summary>
@@ -40,7 +31,7 @@ public static partial class SpeakerLabelParser
             return false;
         }
 
-        var match = SpeakerPrefixRegex().Match(text);
+        var match = SpeakerLabelPrefix.Regex().Match(text);
         if (!match.Success)
         {
             return false;

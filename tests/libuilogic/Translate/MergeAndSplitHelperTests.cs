@@ -82,6 +82,64 @@ public class MergeAndSplitHelperTests
         Assert.True(string.IsNullOrEmpty(rows[1].TranslatedText));
     }
 
+    private sealed class RecordingTranslator : IAutoTranslator
+    {
+        public string Reply { get; set; } = string.Empty;
+        public List<string> Requests { get; } = new();
+
+        public string Name => "RecordingTranslator";
+        public string Url => "https://example.com";
+        public string Error { get; set; } = string.Empty;
+        public int MaxCharacters => 1500;
+
+        public void Initialize()
+        {
+        }
+
+        public List<TranslationPair> GetSupportedSourceLanguages() => new() { new TranslationPair("English", "en") };
+
+        public List<TranslationPair> GetSupportedTargetLanguages() => new() { new TranslationPair("Bosnian", "bs") };
+
+        public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+        {
+            Requests.Add(text);
+            return Task.FromResult(Reply);
+        }
+    }
+
+    [Fact]
+    public async Task SpeakerLabels_AreNotSentAndEveryRowGetsItsOwnBack()
+    {
+        // #17224: WhisperX-style labels went to the engine inside a merged sentence, the engine
+        // moved them, and the split left "[SPEAKER_00] :" in the middle of a row.
+        var rows = MakeRows(
+            "[SPEAKER_00] : Ever since then, vaccines get approved" + Environment.NewLine + "once they produce antibodies, and to this",
+            "[SPEAKER_00] : day, the efficacy tests are done on the" + Environment.NewLine + "general population after the vaccines are",
+            "[SPEAKER_00] : distributed to the public.");
+        var translator = new RecordingTranslator
+        {
+            Reply = "Od tada se vakcine odobravaju nakon što proizvedu antitijela, i do danas se testovi efikasnosti rade na opštoj populaciji nakon što se vakcine distribuiraju javnosti.",
+        };
+
+        var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+            rows,
+            new TranslationPair("English", "en"),
+            new TranslationPair("Bosnian", "bs"),
+            0,
+            translator,
+            forceSingleLineMode: false,
+            CancellationToken.None);
+
+        Assert.Equal(3, count);
+        Assert.Single(translator.Requests);
+        Assert.DoesNotContain("SPEAKER", translator.Requests[0]);
+        foreach (var row in rows)
+        {
+            Assert.StartsWith("[SPEAKER_00] : ", row.TranslatedText);
+            Assert.Equal(row.TranslatedText.IndexOf("SPEAKER", StringComparison.Ordinal), row.TranslatedText.LastIndexOf("SPEAKER", StringComparison.Ordinal));
+        }
+    }
+
     private static ObservableCollection<TranslateRow> MakeRows(params string[] texts)
     {
         var rows = new ObservableCollection<TranslateRow>();
