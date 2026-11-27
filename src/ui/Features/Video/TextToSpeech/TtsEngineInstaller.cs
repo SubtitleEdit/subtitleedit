@@ -560,6 +560,34 @@ public static class TtsEngineInstaller
                 startDownloadModels: (vm, key) => vm.StartDownloadVoxtralTtsAudioCppModels(key));
         }
 
+        if (engine is IrodoriTtsCrispAsr)
+        {
+            if (!await TtsVoiceInstaller.EnsureCrispAsrForIrodori(window, windowService))
+            {
+                return false;
+            }
+
+            if (IrodoriTtsCrispAsr.AreModelsInstalled())
+            {
+                return true;
+            }
+
+            var answer = await MessageBox.Show(
+                window,
+                string.Format(Se.Language.Video.TextToSpeech.DownloadXModelsQuestion, engine.Name),
+                string.Format(Se.Language.Video.TextToSpeech.XRequiresModelsSizeYDownload, engine.Name, "820 MB"),
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question);
+            if (answer != MessageBoxResult.Yes)
+            {
+                return false;
+            }
+
+            var download = await windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(
+                window, vm => vm.StartDownloadIrodoriTtsModels());
+            return download.OkPressed && IrodoriTtsCrispAsr.AreModelsInstalled();
+        }
+
         if (engine is ZonosTtsCrispAsr)
         {
             if (!await TtsVoiceInstaller.EnsureCrispAsrForZonos(window, windowService, forceRedownload: false))
@@ -1064,6 +1092,11 @@ public static class TtsEngineInstaller
     }
     public static string GetModelDownloadSizeText(ITtsEngine? engine, string? modelKey)
     {
+        if (engine is IrodoriTtsCrispAsr)
+        {
+            return "~820 MB";
+        }
+
         if (engine == null || string.IsNullOrEmpty(modelKey))
         {
             return string.Empty;

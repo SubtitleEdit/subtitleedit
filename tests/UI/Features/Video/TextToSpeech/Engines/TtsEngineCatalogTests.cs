@@ -57,6 +57,20 @@ public class TtsEngineCatalogTests
     }
 
     [Fact]
+    public void IndexTts15IsOnlyAvailableThroughLegacyRestore()
+    {
+        var engines = TtsEngineCatalog.CreateAll(null!);
+
+        Assert.DoesNotContain(engines, e => e is IndexTtsCrispAsr);
+        Assert.Contains(engines, e => e is IndexTts25AudioCpp);
+
+        var restored = Assert.IsType<IndexTtsCrispAsr>(
+            TtsEngineCatalog.CreateLegacyEngine("IndexTTS (CrispASR)"));
+        Assert.Equal("IndexTTS (CrispASR)", restored.Name);
+        Assert.True(restored.SupportsVoiceCloning);
+    }
+
+    [Fact]
     public void ZonosIsOfferedButNotAsACloningEngine()
     {
         // CrispASR's zonos3 backend (ZONOS3-Mini) takes a speaker only as a precomputed

@@ -148,6 +148,11 @@ public static class ActorVoiceDetector
                 case SupertonicCrispAsr when !File.Exists(SupertonicCrispAsr.GetCrispAsrExecutable()):
                     continue;
 
+                case IrodoriTtsCrispAsr when !File.Exists(IrodoriTtsCrispAsr.Executable)
+                    || !IrodoriTtsCrispAsr.IsRuntimeSupported()
+                    || !IrodoriTtsCrispAsr.AreModelsInstalled():
+                    continue;
+
                 // Lists its one fixed speaker always, since it stopped posing as a cloning engine.
                 case ZonosTtsCrispAsr when !File.Exists(ZonosTtsCrispAsr.GetCrispAsrExecutable())
                     || !ZonosTtsCrispAsr.AreModelsInstalled():

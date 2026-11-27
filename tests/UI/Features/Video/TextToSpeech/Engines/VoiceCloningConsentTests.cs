@@ -163,6 +163,7 @@ public class VoiceCloningConsentTests
         [typeof(HiggsTtsAudioCpp)] = () => new IndexTtsVoice("Ada", "/voices/ada.wav"),
         [typeof(KugelAudioAudioCpp)] = () => new IndexTtsVoice("Ada", "/voices/ada.wav"),
         [typeof(IndexTts25AudioCpp)] = () => new IndexTtsVoice("Ada", "/voices/ada.wav"),
+        [typeof(IrodoriTtsCrispAsr)] = () => new IrodoriTtsVoice("Ada", "/voices/ada.wav"),
         [typeof(IndexTtsCrispAsr)] = () => new IndexTtsVoice("Ada", "/voices/ada.wav"),
         [typeof(MossTtsCrispAsr)] = () => new MossTtsVoice("Ada", "/voices/ada.wav"),
         [typeof(OmniVoiceCrispAsr)] = () => new OmniVoiceCrispAsrVoice("Ada", "/voices/ada.wav"),

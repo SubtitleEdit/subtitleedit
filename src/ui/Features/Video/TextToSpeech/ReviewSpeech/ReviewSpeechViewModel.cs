@@ -411,6 +411,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 // starting from the stripped copy silently dropped italics and line breaks
                 // from every line the user touched. Synthesis strips at the point of use.
                 Text = p.Paragraph.Text,
+                SpokenText = p.SpokenText,
                 Voice = p.Voice == null ? string.Empty : p.Voice.ToString(),
                 Speed = Math.Round(p.SpeedFactor, 2).ToString(CultureInfo.CurrentCulture),
                 Cps = Math.Round(p.Paragraph.GetCharactersPerSecond(), 2).ToString(CultureInfo.CurrentCulture),
@@ -1012,6 +1013,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 VoiceFileName = ExportVoiceReference(line.StepResult.Voice, referenceFolder, exportedReferences),
                 SpeedFactor = line.StepResult.SpeedFactor,
                 Text = line.Text,
+                SpokenText = TtsSpokenText.NormalizeOverride(line.SpokenText),
                 Include = line.Include,
             });
         }
@@ -1343,7 +1345,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(line.Text))
+        var spokenText = TtsSpokenText.Resolve(line.Text, line.SpokenText);
+        if (string.IsNullOrWhiteSpace(spokenText))
         {
             if (Window != null)
             {
@@ -1442,9 +1445,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
             try
             {
                 var speakResult = await TtsInstructionSwap.RunAsync(engine, instruction, () =>
-                    // Strip markup here the way the main generate path does - the row text is
-                    // the subtitle's own text, and engines vocalize "<i>" or garble on tags.
-                    engine.Speak(Utilities.UnbreakLine(HtmlUtil.RemoveHtmlTags(line.Text, alsoSsaTags: true)),
+                    engine.Speak(spokenText,
                         _waveFolder, voice, language, region, model, _cancellationToken));
 
                 if (speakResult.Error || string.IsNullOrEmpty(speakResult.FileName) || !File.Exists(speakResult.FileName))
@@ -1622,6 +1623,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
         foreach (var row in Lines)
         {
             row.StepResult.Text = row.Text;
+            row.StepResult.SpokenText = TtsSpokenText.NormalizeOverride(row.SpokenText);
         }
 
         StepResults = Lines.Where(p => p.Include).Select(p => p.StepResult).ToArray();
@@ -1712,6 +1714,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
             {
                 Paragraph = p,
                 Text = item.Text,
+                SpokenText = item.SpokenText,
                 CurrentFileName = currentFile,
                 SpeedFactor = 1.0f,
                 Voice = item.Voice,
@@ -1728,6 +1731,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
             {
                 Paragraph = p,
                 Text = item.Text,
+                SpokenText = item.SpokenText,
                 CurrentFileName = item.CurrentFileName,
                 SpeedFactor = 1.0f,
                 Voice = item.Voice,
@@ -1771,6 +1775,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
         {
             Paragraph = p,
             Text = item.Text,
+            SpokenText = item.SpokenText,
             CurrentFileName = outputFileName2,
             SpeedFactor = (float)factor,
             Voice = item.Voice,

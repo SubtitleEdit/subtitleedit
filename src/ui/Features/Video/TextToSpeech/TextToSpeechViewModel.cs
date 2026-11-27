@@ -137,6 +137,7 @@ public partial class TextToSpeechViewModel : ObservableObject
     public Subtitle? MergedSubtitle { get; private set; }
 
     private Subtitle _subtitle = new();
+    private readonly Dictionary<Paragraph, string> _spokenTextOverrides = new(ReferenceEqualityComparer.Instance);
 
     // The source-language subtitle, when one is loaded - the transcript of what the video says.
     private Subtitle? _originalSubtitle;
@@ -215,6 +216,40 @@ public partial class TextToSpeechViewModel : ObservableObject
         Engines = new ObservableCollection<ITtsEngine>(TtsEngineCatalog.CreateAll(ttsDownloadService));
     }
 
+    [RelayCommand]
+    private async Task EditSpokenText()
+    {
+        if (Window == null || _subtitle.Paragraphs.Count == 0)
+        {
+            return;
+        }
+
+        var rows = _subtitle.Paragraphs.Select(paragraph =>
+            new SpokenTextWindow.Row(paragraph, _spokenTextOverrides.GetValueOrDefault(paragraph))).ToArray();
+        if (!await new SpokenTextWindow(rows).ShowDialog<bool>(Window))
+        {
+            return;
+        }
+
+        _spokenTextOverrides.Clear();
+        foreach (var row in rows)
+        {
+            SetSpokenText(row.Paragraph, row.SpokenText);
+        }
+    }
+
+    private void SetSpokenText(Paragraph paragraph, string? text)
+    {
+        if (TtsSpokenText.NormalizeOverride(text) is { } spokenText)
+        {
+            _spokenTextOverrides[paragraph] = spokenText;
+        }
+        else
+        {
+            _spokenTextOverrides.Remove(paragraph);
+        }
+    }
+
     private void OnTimerOnElapsed(object? sender, ElapsedEventArgs args)
     {
         lock (_playLock)
@@ -230,6 +265,23 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
     }
 
+    private ITtsEngine? RestoreEngine(string? name)
+    {
+        if (Engines.FirstOrDefault(e => string.Equals(e.Name, name, StringComparison.OrdinalIgnoreCase)) is { } engine)
+        {
+            return engine;
+        }
+
+        // Only offer a legacy engine once saved settings or session data refer to it.
+        var legacyEngine = TtsEngineCatalog.CreateLegacyEngine(name);
+        if (legacyEngine != null)
+        {
+            Engines.Add(legacyEngine);
+        }
+
+        return legacyEngine;
+    }
+
     private void LoadSettings()
     {
         // Migrate the pre-rename engine name so users who had "Chatterbox TTS" saved
@@ -241,7 +293,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             savedEngine = "Chatterbox TTS (CrispASR)";
         }
 
-        var lastEngine = Engines.FirstOrDefault(e => e.Name == savedEngine);
+        var lastEngine = RestoreEngine(savedEngine);
         if (lastEngine != null)
         {
             SelectedEngine = lastEngine;
@@ -1122,6 +1174,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         Subtitle? originalSubtitle = null)
     {
         _subtitle = subtitle;
+        _spokenTextOverrides.Clear();
         _subtitle.RemoveEmptyLines();
         _originalSubtitle = originalSubtitle;
         _originalByStartMs = null;
@@ -1197,6 +1250,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 var actorKey = saved.Actor.Trim();
                 if (actorNames.Contains(actorKey))
                 {
+                    RestoreEngine(saved.EngineName);
                     _actorVoiceMappings.Add(new ActorVoiceMapping
                     {
                         Actor = actorKey,
@@ -1331,6 +1385,15 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             merged.Paragraphs.Add(line.ToParagraph(_subtitle.OriginalFormat));
         }
+
+        // Spoken-text overrides are keyed by paragraph instance; move them to the new paragraphs.
+        var remapped = TtsSpokenText.RemapAfterMerge(_subtitle.Paragraphs, _spokenTextOverrides, merged.Paragraphs);
+        _spokenTextOverrides.Clear();
+        foreach (var (paragraph, spokenText) in remapped)
+        {
+            _spokenTextOverrides[paragraph] = spokenText;
+        }
+
         _subtitle = merged;
         MergedSubtitle = merged;
     }
@@ -1531,6 +1594,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         if (keepAlive is not MossTtsCrispAsr)
         {
             MossTtsCrispAsr.StopServer();
+        }
+        if (keepAlive is not IrodoriTtsCrispAsr)
+        {
+            IrodoriTtsCrispAsr.StopServer();
         }
         if (keepAlive is not ZonosTtsCrispAsr)
         {
@@ -1779,10 +1846,11 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             var sizeText = GetModelDownloadSizeText(engine, SelectedModel);
             var sizeSuffix = string.IsNullOrEmpty(sizeText) ? string.Empty : $" ({sizeText})";
+            var downloadName = engine is IrodoriTtsCrispAsr ? engine.Name : SelectedModel;
             var answer = await MessageBox.Show(
                 Window,
-                string.Format(Se.Language.General.ReDownloadX, SelectedModel),
-                Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XAlreadyDownloadedYRedownload, SelectedModel, sizeSuffix),
+                string.Format(Se.Language.General.ReDownloadX, downloadName),
+                Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XAlreadyDownloadedYRedownload, downloadName, sizeSuffix),
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
 
@@ -1864,6 +1932,9 @@ public partial class TextToSpeechViewModel : ObservableObject
             case MossTtsCrispAsr:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadMossTtsCrispAsrModels(MossTtsCrispAsr.ResolveModelKey(SelectedModel)));
                 break;
+            case IrodoriTtsCrispAsr:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadIrodoriTtsModels(forceRedownload: true));
+                break;
             case ZonosTtsCrispAsr:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadZonosTtsCrispAsrModels());
                 break;
@@ -1903,6 +1974,11 @@ public partial class TextToSpeechViewModel : ObservableObject
     // get a green/grey dot per model; cloud engines (ElevenLabs, Mistral) have nothing to install.
     public DownloadDotStatus GetModelDotStatus(ITtsEngine? engine, string? modelKey)
     {
+        if (engine is IrodoriTtsCrispAsr)
+        {
+            return IrodoriTtsCrispAsr.AreModelsInstalled() ? DownloadDotStatus.UpToDate : DownloadDotStatus.NotInstalled;
+        }
+
         if (string.IsNullOrEmpty(modelKey))
         {
             return DownloadDotStatus.None;
@@ -2039,7 +2115,12 @@ public partial class TextToSpeechViewModel : ObservableObject
         await Task.Run(() => StopOtherCrispAsrServers(engine));
 
         var text = Se.Settings.Video.TextToSpeech.VoiceTestText;
-        if (string.IsNullOrEmpty(text))
+        if (engine is IrodoriTtsCrispAsr &&
+            (string.IsNullOrWhiteSpace(text) || text == "Hello, how are you doing?"))
+        {
+            text = "こんにちは。音声のテストです。";
+        }
+        else if (string.IsNullOrEmpty(text))
         {
             text = "This is a test";
         }
@@ -2672,6 +2753,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             _actorVoiceMappings.Clear();
             _actorVoiceMappings.AddRange(importExport.ActorVoiceMappings);
+            foreach (var mapping in _actorVoiceMappings)
+            {
+                RestoreEngine(mapping.EngineName);
+            }
         }
 
         // Resolve each line's Voice against the engine that *generated* it (per-line
@@ -2686,7 +2771,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             .Distinct(StringComparer.OrdinalIgnoreCase);
         foreach (var engineName in engineNames)
         {
-            var matchingEngine = Engines.FirstOrDefault(e => string.Equals(e.Name, engineName, StringComparison.OrdinalIgnoreCase));
+            var matchingEngine = RestoreEngine(engineName);
             if (matchingEngine == null)
             {
                 continue;
@@ -2725,6 +2810,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             stepResults.Add(new TtsStepResult
             {
                 Text = item.Text,
+                SpokenText = item.SpokenText,
                 CurrentFileName = ResolveImportedAudioFileName(item.AudioFileName, jsonFolder),
                 Paragraph = paragraph,
                 SpeedFactor = item.SpeedFactor <= 0 ? 1.0f : item.SpeedFactor,
@@ -3666,7 +3752,10 @@ public partial class TextToSpeechViewModel : ObservableObject
                 }
                 resultList.Add(new TtsStepResult
                 {
-                    Text = resolution.Text,
+                    // The subtitle's own (cleaned) text; what was actually spoken lives in
+                    // SpokenText when the user set an override.
+                    Text = TtsSpokenText.Clean(GetSubtitleTextWithoutVoiceTags(paragraph)),
+                    SpokenText = _spokenTextOverrides.GetValueOrDefault(paragraph),
                     CurrentFileName = speakResult.FileName,
                     Paragraph = paragraph,
                     SpeedFactor = 1.0f,
@@ -4304,20 +4393,20 @@ public partial class TextToSpeechViewModel : ObservableObject
     // out of the text so the engine doesn't speak the tag. Falls back to the global engine/voice
     // when the paragraph has no actor, the mapping points at an unknown engine, or that engine's
     // voice list couldn't be loaded.
+    private string GetSubtitleTextWithoutVoiceTags(Paragraph paragraph) =>
+        _castKind == ActorVoiceDetector.CastKind.WebVttVoices
+            ? ActorVoiceDetector.StripWebVttVoiceTags(paragraph.Text)
+            : paragraph.Text;
+
     private ResolvedVoice ResolveVoiceForParagraph(Paragraph paragraph, CastContext ctx, ITtsEngine defaultEngine, Voice defaultVoice)
     {
         var actor = ActorVoiceDetector.GetParagraphActor(paragraph, _castKind);
-        var rawText = _castKind == ActorVoiceDetector.CastKind.WebVttVoices
-            ? ActorVoiceDetector.StripWebVttVoiceTags(paragraph.Text)
-            : paragraph.Text;
+        var rawText = GetSubtitleTextWithoutVoiceTags(paragraph);
         // Strip formatting markup (<i>…</i>, <font …>, {\an8}, …) before synthesis. TTS engines
         // don't interpret subtitle tags, and some — notably MOSS-TTS (CrispASR) — vocalize them
         // ("<i>" spoken as "I") or run away into garbled audio rather than ignoring them (#12757).
         // No engine should ever receive them, so strip HTML + SSA/ASS tags centrally.
-        var cleanText = HtmlUtil.RemoveHtmlTags(rawText, alsoSsaTags: true);
-        // Unbreak line endings centrally so every engine sees a single flowing line —
-        // many TTS engines otherwise insert weird pauses on \r\n.
-        var text = Utilities.UnbreakLine(cleanText);
+        var text = TtsSpokenText.Resolve(rawText, _spokenTextOverrides.GetValueOrDefault(paragraph));
 
         // Fallbacks must carry the panel's instruction, not "": TtsInstructionSwap swaps the
         // engine's saved instruction to whatever is passed here for the duration of the Speak
@@ -4455,6 +4544,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                         {
                             Paragraph = p,
                             Text = item.Text,
+                            SpokenText = item.SpokenText,
                             CurrentFileName = item.CurrentFileName,
                             SpeedFactor = 1.0f,
                             Voice = item.Voice,
@@ -4472,6 +4562,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                         {
                             Paragraph = p,
                             Text = item.Text,
+                            SpokenText = item.SpokenText,
                             CurrentFileName = currentFile,
                             SpeedFactor = 1.0f,
                             Voice = item.Voice,
@@ -4489,6 +4580,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                         {
                             Paragraph = p,
                             Text = item.Text,
+                            SpokenText = item.SpokenText,
                             CurrentFileName = item.CurrentFileName,
                             SpeedFactor = 1.0f,
                             Voice = item.Voice,
@@ -4515,6 +4607,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                     {
                         Paragraph = p,
                         Text = item.Text,
+                        SpokenText = item.SpokenText,
                         CurrentFileName = outputFileName2,
                         SpeedFactor = (float)factor,
                         Voice = item.Voice,
@@ -4577,6 +4670,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                         {
                             Paragraph = p,
                             Text = item.Text,
+                            SpokenText = item.SpokenText,
                             CurrentFileName = item.CurrentFileName,
                             SpeedFactor = 1.0f,
                             Voice = item.Voice,
@@ -4671,6 +4765,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 {
                     Paragraph = item.Paragraph,
                     Text = item.Text,
+                    SpokenText = item.SpokenText,
                     CurrentFileName = processedFile,
                     SpeedFactor = item.SpeedFactor,
                     Voice = item.Voice,
@@ -4754,6 +4849,11 @@ public partial class TextToSpeechViewModel : ObservableObject
         if (result.OkPressed)
         {
             CollectReviewTextChanges(result.TextChanges);
+            foreach (var row in result.Lines)
+            {
+                SetSpokenText(row.StepResult.Paragraph, row.SpokenText);
+            }
+
             return result.StepResults;
         }
 
@@ -5230,7 +5330,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 IsEngineSettingsVisible = true;
                 IsModelDownloadVisible = true;
             }
-            else if (SelectedEngine is ZonosTtsCrispAsr)
+            else if (SelectedEngine is ZonosTtsCrispAsr or IrodoriTtsCrispAsr)
             {
                 // Minimal engine: one fixed model set (no model dropdown) and no settings
                 // dialog. Show only the model-download button so the user can fetch the files.

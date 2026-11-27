@@ -3,6 +3,7 @@
 public class TtsImportExportItem
 {
     public string Text { get; set; }
+    public string? SpokenText { get; set; }
     public long StartMs { get; set; }
     public long EndMs { get; set; }
     public string AudioFileName { get; set; }

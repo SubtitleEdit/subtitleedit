@@ -108,6 +108,7 @@ public static class VoiceCloningConsent
         CosyVoice3Voice v => !string.IsNullOrEmpty(v.FilePath),
         DotsTtsVoice v => !string.IsNullOrEmpty(v.FilePath),
         F5TtsVoice v => !string.IsNullOrEmpty(v.FilePath),
+        IrodoriTtsVoice v => !string.IsNullOrEmpty(v.FilePath),
         IndexTtsVoice v => !string.IsNullOrEmpty(v.FilePath),
         MossTtsVoice v => !string.IsNullOrEmpty(v.FilePath),
         OmniVoice v => !string.IsNullOrEmpty(v.FilePath),
