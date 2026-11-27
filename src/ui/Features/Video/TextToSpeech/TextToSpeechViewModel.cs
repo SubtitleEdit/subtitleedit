@@ -1385,6 +1385,15 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             merged.Paragraphs.Add(line.ToParagraph(_subtitle.OriginalFormat));
         }
+
+        // Spoken-text overrides are keyed by paragraph instance; move them to the new paragraphs.
+        var remapped = TtsSpokenText.RemapAfterMerge(_subtitle.Paragraphs, _spokenTextOverrides, merged.Paragraphs);
+        _spokenTextOverrides.Clear();
+        foreach (var (paragraph, spokenText) in remapped)
+        {
+            _spokenTextOverrides[paragraph] = spokenText;
+        }
+
         _subtitle = merged;
         MergedSubtitle = merged;
     }

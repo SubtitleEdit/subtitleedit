@@ -33,6 +33,32 @@ public class TtsSpokenTextTests
     }
 
     [Fact]
+    public void OverridesSurviveMergeContinuationLines()
+    {
+        var first = new Paragraph("御茶ノ水まで", 0, 1000);
+        var second = new Paragraph("<i>迎えに来て</i>", 1100, 2000);
+        var third = new Paragraph("烏丸通り", 3000, 4000);
+        var fourth = new Paragraph("ありがとう", 5000, 6000);
+        var overrides = new Dictionary<Paragraph, string>(ReferenceEqualityComparer.Instance)
+        {
+            [first] = "おちゃのみずまで",
+            [third] = "からすま通り",
+        };
+
+        // The merge builds every paragraph anew - even the ones it did not merge.
+        var merged = new Paragraph("御茶ノ水まで 迎えに来て", 0, 2000);
+        var thirdCopy = new Paragraph(third);
+        var fourthCopy = new Paragraph(fourth);
+
+        var remapped = TtsSpokenText.RemapAfterMerge(
+            new[] { first, second, third, fourth }, overrides, new[] { merged, thirdCopy, fourthCopy });
+
+        Assert.Equal("おちゃのみずまで 迎えに来て", remapped[merged]);
+        Assert.Equal("からすま通り", remapped[thirdCopy]);
+        Assert.False(remapped.ContainsKey(fourthCopy));
+    }
+
+    [Fact]
     public void PickerIncludesIrodoriAsACloneCapableJapaneseEngine()
     {
         var engine = Assert.Single(TtsEngineCatalog.CreateAll(null!).OfType<IrodoriTtsCrispAsr>());
