@@ -551,6 +551,12 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             ApplyVideoFlip();
         }
 
+        // Same for the front center audio filter (#17233) - af is global too.
+        if (SessionFrontCenterAudioOnly)
+        {
+            ApplyFrontCenterAudio();
+        }
+
         var pendingFileName = Interlocked.Exchange(ref _pendingLoadFileName, null);
         if (string.IsNullOrEmpty(pendingFileName))
         {
@@ -3304,6 +3310,50 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         }
 
         _appliedVideoFlip = flip;
+        return true;
+    }
+
+    /// <summary>
+    /// Play only the front center channel (#17233), like SE 4 did for "Use only front center
+    /// channel for 5.1 audio". Set by the owner from that setting and the active audio track -
+    /// only when the track has a front center channel, as "pan=mono|c0=FC" fails on stereo.
+    /// Shared by every mpv player so a fullscreen/undocked player made later plays the same.
+    /// </summary>
+    public static bool SessionFrontCenterAudioOnly { get; set; }
+
+    private const string FrontCenterAudioFilterLabel = "@se_fc";
+    private bool _appliedFrontCenterAudioOnly;
+
+    /// <summary>
+    /// Applies <see cref="SessionFrontCenterAudioOnly"/> as a labeled mpv audio filter, so
+    /// turning it off leaves any other audio filters alone.
+    /// </summary>
+    public bool ApplyFrontCenterAudio()
+    {
+        if (!IsCoreUp)
+        {
+            return false;
+        }
+
+        var on = SessionFrontCenterAudioOnly;
+        if (on == _appliedFrontCenterAudioOnly)
+        {
+            return true;
+        }
+
+        if (!on)
+        {
+            DoMpvCommand("af", "remove", FrontCenterAudioFilterLabel);
+            _appliedFrontCenterAudioOnly = false;
+            return true;
+        }
+
+        if (DoMpvCommand("af", "add", FrontCenterAudioFilterLabel + ":lavfi=[pan=mono|c0=FC]") < 0)
+        {
+            return false;
+        }
+
+        _appliedFrontCenterAudioOnly = true;
         return true;
     }
 

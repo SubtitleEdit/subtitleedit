@@ -895,6 +895,11 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         public bool WheelToSeek { get; set; } = true;
         public bool IsSmpteTimingEnabled { get; set; }
 
+        /// <summary>
+        /// Shows "FC" after the time code while only the front center audio channel plays (#17233).
+        /// </summary>
+        public bool IsFrontCenterAudioOnly { get; set; }
+
         private bool _surfaceLeftButtonDown;
 
         private void OnMainGridPointerPressed(object? sender, PointerPressedEventArgs e)
@@ -1678,6 +1683,11 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 }
 
                 var postFix = IsSmpteTimingEnabled ? " (SMPTE)" : string.Empty;
+                if (IsFrontCenterAudioOnly)
+                {
+                    postFix += " FC";
+                }
+
                 double pos;
                 if (_isUserMovingPositionSlider)
                 {
