@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
@@ -129,26 +130,20 @@ public static class CrispAsrGpuFallback
     public static string Describe(IReadOnlyList<string> missingLibraries)
     {
         var nl = Environment.NewLine;
-        var message = "The CUDA build of Crisp ASR is installed, but this run used the CPU: its CUDA backend " +
-                      $"({CudaLibraryFileName}) could not be loaded.{nl}{nl}";
+        var l = Se.Language.Video.AudioToText;
+        var message = string.Format(l.CrispAsrGpuFallbackX, CudaLibraryFileName) + nl + nl;
 
         if (missingLibraries.Count == 0)
         {
-            return message +
-                   "Check that the NVIDIA driver is installed and working (\"nvidia-smi\" should list the GPU), and " +
-                   "that the CUDA toolkit is installed. Or download the speech to text engine again and choose the " +
-                   "Vulkan build, which only needs the GPU driver.";
+            return message + l.CrispAsrGpuFallbackCheckDriver;
         }
 
         var cudaMajor = missingLibraries.Any(p => p.EndsWith(".so.13", StringComparison.Ordinal)) ? "13" :
                         missingLibraries.Any(p => p.EndsWith(".so.12", StringComparison.Ordinal)) ? "12" : null;
-        var toolkit = cudaMajor == null ? "the CUDA toolkit" : $"the CUDA {cudaMajor} toolkit";
+        var toolkit = cudaMajor == null ? "CUDA" : $"CUDA {cudaMajor}";
 
         return message +
-               $"Missing libraries: {string.Join(", ", missingLibraries)}{nl}{nl}" +
-               "The Linux CUDA build does not include the CUDA runtime. Install " + toolkit + " from your " +
-               "distribution (it provides libcudart and libcublas). If your distribution ships a different CUDA " +
-               "version, download the speech to text engine again and choose the CUDA build that matches it, or " +
-               "choose Vulkan, which only needs the GPU driver.";
+               string.Format(l.CrispAsrGpuFallbackMissingLibrariesX, string.Join(", ", missingLibraries)) + nl + nl +
+               string.Format(l.CrispAsrGpuFallbackInstallToolkitX, toolkit);
     }
 }
