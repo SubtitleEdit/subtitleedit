@@ -253,6 +253,10 @@ public class LanguageTextToSpeech
     public string XRequiresModelsSizeYDownload { get; set; }
     public string RequiresXDownloadAndUse { get; set; }
     public string RequiresXSelectBuild { get; set; }
+    public string SpokenText { get; set; }
+    public string EditSpokenText { get; set; }
+    public string SpokenTextPlaceholder { get; set; }
+    public string SpokenTextHint { get; set; }
     public string ZonosRequiresModels { get; set; }
     public string CosyVoiceXRequiresModels { get; set; }
     public string AllTalkRequiresServer { get; set; }
@@ -296,6 +300,10 @@ public class LanguageTextToSpeech
         XRequiresModelsSizeYDownload = "\"{0}\" requires models ({1}).\n\nDownload models?";
         RequiresXDownloadAndUse = "\"Text to speech\" requires {0}.\n\nDownload and use {0}?";
         RequiresXSelectBuild = "\"Text to speech\" requires {0}.\n\nSelect a build to download:";
+        SpokenText = "Spoken text";
+        EditSpokenText = "Edit spoken text...";
+        SpokenTextPlaceholder = "Use subtitle text";
+        SpokenTextHint = "Leave blank to read the subtitle. Add kana readings or Irodori style markers such as 👂 (whisper), ⏸️ (pause), or 🤭 (chuckle).";
         ZonosRequiresModels = "\"Zonos TTS (CrispASR)\" requires the ZONOS3-Mini model, codec and preset voices (~1.1 GB).\n\nDownload models?";
         CosyVoiceXRequiresModels = "\"CosyVoice3 (CrispASR)\" ({0}) requires LLM + flow + hift + s3tok + campplus + voice-bank GGUFs (all sized into the total above).\n\nDownload models?";
         AllTalkRequiresServer = "\"AllTalk\" text to speech requires a running local AllTalk web server.\n\nRead more?";

@@ -116,7 +116,9 @@ public class TextToSpeechWindow : Window
             ToolTip.SetTip(buttonCast, Se.Language.Video.TextToSpeech.SetupCastHint);
         }
 
-        var panel = TtsMainEditorLook.Horizontal(buttonImport, buttonCast);
+        var buttonSpokenText = EditorChrome.MakeActionButton("fa-solid fa-pen", Se.Language.Video.TextToSpeech.EditSpokenText, vm.EditSpokenTextCommand)
+            .WithBindIsEnabled("!" + nameof(vm.IsGenerating));
+        var panel = TtsMainEditorLook.Horizontal(buttonImport, buttonCast, buttonSpokenText);
         panel.Spacing = 2;
         return new Border
         {
@@ -275,6 +277,8 @@ public class TextToSpeechWindow : Window
                 return StatusDots.From(engine.IsInstalled(null).Result, OmniVoiceCrispAsr.GetEngineUpdateStatus());
             case MossTtsCrispAsr:
                 return StatusDots.From(engine.IsInstalled(null).Result, MossTtsCrispAsr.GetEngineUpdateStatus());
+            case IrodoriTtsCrispAsr:
+                return StatusDots.From(engine.IsInstalled(null).Result, ZonosTtsCrispAsr.GetEngineUpdateStatus());
             case ZonosTtsCrispAsr:
                 return StatusDots.From(engine.IsInstalled(null).Result, ZonosTtsCrispAsr.GetEngineUpdateStatus());
             case OmniVoiceTtsCpp:

@@ -59,6 +59,14 @@ public static class TtsEngineCatalog
     }
 
     /// <summary>
+    /// Restores a legacy engine by its persisted name for an existing TTS session.
+    /// </summary>
+    internal static ITtsEngine? CreateLegacyEngine(string? name) =>
+        string.Equals(name, IndexTtsCrispAsr.EngineName, StringComparison.OrdinalIgnoreCase)
+            ? new IndexTtsCrispAsr()
+            : null;
+
+    /// <summary>
     /// The engines that can clone a speaker from a reference recording, i.e. the ones whose
     /// <see cref="ITtsEngine.SupportsVoiceCloning"/> is true - in display order, and never
     /// including an engine that <see cref="CreateAll"/> hides.
@@ -158,15 +166,13 @@ public static class TtsEngineCatalog
 
             // No comparable published numbers.
 
-            // IndexTTS-1.5 (CrispASR) - the generation before IndexTTS 2 / 2.5 above.
-            new IndexTtsCrispAsr(),
-
             // Pocket TTS (CrispASR) - Kyutai's 100M model, the smallest and fastest cloning
             // engine here (one 124-365 MB GGUF per language, RTF ~0.1 on CPU). Six languages;
             // per-request reference resolution, so voice changes need no server restart.
             new PocketTtsCrispAsr(),
 
             new ChatterboxTtsCpp(),
+            new IrodoriTtsCrispAsr(),
 
             // F5-TTS (CrispASR) hidden: CrispASR 0.6.12 has no GPU backend for f5-tts, so
             // synthesis runs the fixed 32-step Euler ODE through a 22-layer DiT + Vocos on

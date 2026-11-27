@@ -12,6 +12,7 @@ public partial class ReviewRow : ObservableObject
     [ObservableProperty] private string _cps;
     [ObservableProperty] private string _speed;
     [ObservableProperty] private string _text;
+    [ObservableProperty] private string? _spokenText;
     [ObservableProperty] private bool _hasHistory;
     [ObservableProperty] private bool _isPlaying;
     [ObservableProperty] private bool _isPlayingEnabled;

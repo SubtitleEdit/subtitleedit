@@ -128,6 +128,12 @@ public static class TtsVoiceInstaller
             extraCapabilityCheck: null,
             minVersionNote: "v0.8.33 or newer");
 
+    public static Task<bool> EnsureCrispAsrForIrodori(Window? window, IWindowService windowService)
+        => EnsureCrispAsrAsync(window, windowService, forceRedownload: false,
+            engineDisplayName: IrodoriTtsCrispAsr.EngineName,
+            extraCapabilityCheck: IrodoriTtsCrispAsr.IsRuntimeSupported,
+            minVersionNote: "v0.8.55 or newer");
+
     /// <summary>
     /// Ensures the CrispASR runtime that Zonos TTS (CrispASR) runs on is installed.
     /// The zonos3 backend (ZONOS3-Mini) ships in CrispASR v0.8.55 and newer; older builds abort

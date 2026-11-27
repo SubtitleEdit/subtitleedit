@@ -30,6 +30,7 @@ public static class VoiceFileRename
             CosyVoice3Voice v => v.FilePath,
             DotsTtsVoice v => v.FilePath,
             F5TtsVoice v => v.FilePath,
+            IrodoriTtsVoice v => v.FilePath,
             IndexTtsVoice v => v.FilePath,
             MossTtsVoice v => v.FilePath,
             OmniVoice v => v.FilePath,

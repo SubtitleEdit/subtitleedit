@@ -72,6 +72,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     private Task? _downloadTaskMossTtsCrispAsrModels;
     private Task? _downloadTaskMossTtsCrispAsrVoices;
     private Task? _downloadTaskOmniVoiceCrispAsrModels;
+    private Task? _downloadTaskIrodoriTtsModels;
     private Task? _downloadTaskZonosTtsCrispAsrModels;
     private Task? _downloadTaskSupertonicCrispAsrModels;
     private Task? _downloadTaskOmniVoice;
@@ -126,6 +127,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     private readonly IVoxCPM2CrispAsrDownloadService _voxCPM2CrispAsrDownloadService;
     private readonly IMossTtsCrispAsrDownloadService _mossTtsCrispAsrDownloadService;
     private readonly IOmniVoiceCrispAsrDownloadService _omniVoiceCrispAsrDownloadService;
+    private readonly IIrodoriTtsCrispAsrDownloadService _irodoriDownloadService;
     private readonly IZonosTtsCrispAsrDownloadService _zonosTtsCrispAsrDownloadService;
     private readonly ISupertonicCrispAsrDownloadService _supertonicCrispAsrDownloadService;
     private readonly IOmniVoiceDownloadService _omniVoiceDownloadService;
@@ -174,6 +176,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         IVoxCPM2CrispAsrDownloadService voxCPM2CrispAsrDownloadService,
         IMossTtsCrispAsrDownloadService mossTtsCrispAsrDownloadService,
         IOmniVoiceCrispAsrDownloadService omniVoiceCrispAsrDownloadService,
+        IIrodoriTtsCrispAsrDownloadService irodoriDownloadService,
         IZonosTtsCrispAsrDownloadService zonosTtsCrispAsrDownloadService,
         ISupertonicCrispAsrDownloadService supertonicCrispAsrDownloadService,
         IOmniVoiceDownloadService omniVoiceDownloadService)
@@ -207,6 +210,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         _voxCPM2CrispAsrDownloadService = voxCPM2CrispAsrDownloadService;
         _mossTtsCrispAsrDownloadService = mossTtsCrispAsrDownloadService;
         _omniVoiceCrispAsrDownloadService = omniVoiceCrispAsrDownloadService;
+        _irodoriDownloadService = irodoriDownloadService;
         _zonosTtsCrispAsrDownloadService = zonosTtsCrispAsrDownloadService;
         _supertonicCrispAsrDownloadService = supertonicCrispAsrDownloadService;
         _omniVoiceDownloadService = omniVoiceDownloadService;
@@ -1690,6 +1694,19 @@ public partial class DownloadTtsViewModel : ObservableObject
                 Close();
             }
 
+            if (_downloadTaskIrodoriTtsModels is { IsCompletedSuccessfully: true })
+            {
+                _timer.Stop();
+                OkPressed = true;
+                Close();
+            }
+            else if (_downloadTaskIrodoriTtsModels is { IsFaulted: true } failedIrodoriDownload)
+            {
+                _timer.Stop();
+                ProgressText = Se.Language.General.DownloadFailed;
+                Error = failedIrodoriDownload.Exception?.GetBaseException().Message ?? Se.Language.General.UnknownError;
+            }
+
             if (_downloadTaskZonosTtsCrispAsrModels is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
@@ -3085,6 +3102,18 @@ public partial class DownloadTtsViewModel : ObservableObject
 
         _downloadTaskSidonAudioCppModel =
             _sidonAudioCppDownloadService.DownloadModel(downloadProgress, _cancellationTokenSource.Token);
+    }
+
+    public void StartDownloadIrodoriTtsModels(bool forceRedownload = false)
+    {
+        TitleText = string.Format(Se.Language.General.DownloadingX, IrodoriTtsCrispAsr.EngineName);
+        var progress = new Progress<float>(fraction =>
+        {
+            var percentage = (int)Math.Round(fraction * 100.0);
+            ProgressValue = percentage;
+            ProgressText = string.Format(Se.Language.General.DownloadingXPercent, percentage);
+        });
+        _downloadTaskIrodoriTtsModels = _irodoriDownloadService.DownloadModels(progress, forceRedownload, _cancellationTokenSource.Token);
     }
 
     public void StartDownloadZonosTtsCrispAsrModels()

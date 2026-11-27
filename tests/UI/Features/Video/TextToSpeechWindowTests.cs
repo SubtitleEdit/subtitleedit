@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.LogicalTree;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Download;
@@ -59,6 +60,29 @@ public class TextToSpeechWindowTests : IDisposable
         var window = BuildWindow();
 
         Assert.NotNull(window.Content);
+    }
+
+    [AvaloniaFact]
+    public void SpokenTextEditorBindsToTheSelectedCueWithoutChangingTheSubtitle()
+    {
+        var first = new SpokenTextWindow.Row(new Paragraph("御茶ノ水", 0, 3000), null);
+        var second = new SpokenTextWindow.Row(new Paragraph("烏丸通り", 3000, 5000), "からすま通り");
+        var window = new SpokenTextWindow(new[] { first, second });
+        _windows.Add(window);
+        window.Show();
+        var list = Assert.Single(window.GetLogicalDescendants().OfType<ListBox>());
+        var fields = window.GetLogicalDescendants().OfType<TextBox>().ToArray();
+        var subtitle = Assert.Single(fields, field => field.IsReadOnly);
+        var spoken = Assert.Single(fields, field => !field.IsReadOnly);
+
+        Assert.Equal("御茶ノ水", subtitle.Text);
+        spoken.SetCurrentValue(TextBox.TextProperty, "👂おちゃのみず");
+        Assert.Equal("👂おちゃのみず", first.SpokenText);
+        Assert.Equal("御茶ノ水", first.Paragraph.Text);
+
+        list.SelectedIndex = 1;
+        Assert.Equal("からすま通り", spoken.Text);
+        Assert.Equal("烏丸通り", subtitle.Text);
     }
 
     [AvaloniaFact]

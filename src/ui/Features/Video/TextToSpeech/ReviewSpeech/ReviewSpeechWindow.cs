@@ -273,7 +273,23 @@ public class ReviewSpeechWindow : Window
 
         grid.Add(header, 0, 0);
         grid.Add(EditorChrome.MakeListFrame(lineGrid), 1, 0);
-        grid.Add(textBox, 2, 0);
+        var spokenTextLabel = Se.Language.Video.TextToSpeech.SpokenText;
+        var spokenText = new TextBox
+        {
+            AcceptsReturn = true,
+            TextWrapping = TextWrapping.Wrap,
+            MinHeight = 42,
+            PlaceholderText = Se.Language.Video.TextToSpeech.SpokenTextPlaceholder,
+            [!TextBox.TextProperty] = new Binding(nameof(vm.SelectedLine) + "." + nameof(ReviewRow.SpokenText))
+            {
+                Mode = BindingMode.TwoWay,
+            },
+        }.WithAccessibleName(spokenTextLabel);
+        grid.Add(new StackPanel
+        {
+            Spacing = 4,
+            Children = { textBox, new TextBlock { Text = spokenTextLabel }, spokenText },
+        }, 2, 0);
         return grid;
     }
 

@@ -33,7 +33,9 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// </summary>
 public class IndexTtsCrispAsr : ITtsEngine
 {
-    public string Name => "IndexTTS (CrispASR)";
+    internal const string EngineName = "IndexTTS (CrispASR)";
+
+    public string Name => EngineName;
     public string Description => "IndexTTS-1.5 (Bilibili / IndexTeam) with voice cloning, via CrispASR";
     public bool HasLanguageParameter => false;
     public bool HasApiKey => false;

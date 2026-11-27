@@ -7,6 +7,7 @@ public class TtsStepResult
 {
     public Paragraph Paragraph { get; set; }
     public string Text { get; set; }
+    public string? SpokenText { get; set; }
     public string CurrentFileName { get; set; }
     public float SpeedFactor { get; set; }
     public Voice? Voice { get; set; }
