@@ -54,6 +54,20 @@ public class TranslationPostProcessDictionaryTests
         Assert.Equal(expected, rules.Match(source, draft)?.Replacement);
     }
 
+    [Theory]
+    [InlineData("Swedish", "sv", "Sorry about that.", "Ursäkta det.", "Förlåt.")]
+    [InlineData("Swedish", "sv", "Sorry for your loss.", "Ledsen för din förlust.", "Jag beklagar sorgen.")]
+    [InlineData("Swedish", "sv", "You're welcome.", "Du är välkommen.", "Varsågod.")]
+    [InlineData("Norwegian", "nb", "Sorry about that.", "Unnskyld det.", "Unnskyld.")]
+    [InlineData("Norwegian", "nb", "Sorry to hear that.", "Unnskyld å høre det.", "Leit å høre.")]
+    [InlineData("Norwegian", "nb", "You're welcome.", "Du er velkommen.", "Bare hyggelig.")]
+    public void ScandinavianFixesLiteralApologiesAndReplies(string name, string code, string source, string draft, string expected)
+    {
+        var rules = TranslationPostProcessDictionary.Get(new TranslationPair("English", "en"), new TranslationPair(name, code));
+        Assert.NotNull(rules);
+        Assert.Equal(expected, rules.Match(source, draft)?.Replacement);
+    }
+
     [Fact]
     public void UserOverridesReloadAndCanRemoveBundledRules()
     {

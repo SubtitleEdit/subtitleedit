@@ -46,7 +46,28 @@
       {"source": "Hang on.", "draft": "Håll ut.", "suggestions": ["Vänta lite.", "Håll i dig."], "note": "First: wait a moment. Second: hold on to something."},
       {"source": "Never mind.", "draft": "Ingen fara.", "replacement": "Glöm det."},
       {"source": "Cheer up.", "draft": "Var glad.", "replacement": "Upp med hakan."},
-      {"source": "My bad.", "draft": "Jag hade fel.", "replacement": "Mitt fel."}
+      {"source": "My bad.", "draft": "Jag hade fel.", "replacement": "Mitt fel."},
+      {"source": "Sorry about that.", "draft": "Ursäkta det.", "replacement": "Förlåt."},
+      {"source": "Sorry about that.", "draft": "Förlåt det.", "replacement": "Förlåt."},
+      {"source": "Sorry about that.", "draft": "Förlåt om det.", "replacement": "Förlåt."},
+      {"source": "Sorry to hear that.", "draft": "Förlåt att höra det.", "replacement": "Tråkigt att höra."},
+      {"source": "Sorry to hear that.", "draft": "Ursäkta att höra det.", "replacement": "Tråkigt att höra."},
+      {"source": "I'm sorry to hear that.", "draft": "Jag är ledsen att höra det.", "replacement": "Det var tråkigt att höra."},
+      {"source": "Sorry for your loss.", "draft": "Förlåt för din förlust.", "replacement": "Jag beklagar sorgen."},
+      {"source": "Sorry for your loss.", "draft": "Ursäkta för din förlust.", "replacement": "Jag beklagar sorgen."},
+      {"source": "Sorry for your loss.", "draft": "Ledsen för din förlust.", "replacement": "Jag beklagar sorgen."},
+      {"source": "I'm sorry for your loss.", "draft": "Jag är ledsen för din förlust.", "replacement": "Jag beklagar sorgen."},
+      {"source": "Sorry to bother you.", "draft": "Förlåt att störa dig.", "replacement": "Ursäkta att jag stör."},
+      {"source": "Sorry to bother you.", "draft": "Ursäkta att störa dig.", "replacement": "Ursäkta att jag stör."},
+      {"source": "You're welcome.", "draft": "Du är välkommen.", "replacement": "Varsågod."},
+      {"source": "You're welcome.", "draft": "Du är välkommen", "replacement": "Varsågod."},
+      {"source": "My bad.", "draft": "Min dåliga.", "replacement": "Mitt fel."},
+      {"source": "Never mind.", "draft": "Aldrig sinne.", "replacement": "Strunt i det."},
+      {"source": "Never mind.", "draft": "Aldrig mind.", "replacement": "Strunt i det."},
+      {"source": "What's up?", "draft": "Vad är upp?", "replacement": "Läget?"},
+      {"source": "I'm fine.", "draft": "Jag är fin.", "replacement": "Jag mår bra."},
+      {"source": "Makes sense.", "draft": "Gör mening.", "replacement": "Det låter vettigt."},
+      {"source": "That makes sense.", "draft": "Det gör mening.", "replacement": "Det låter vettigt."}
     ]
   }
 }
