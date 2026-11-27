@@ -114,6 +114,8 @@ public class LanguageMainMenu
     public string GenerateImportShotChanges { get; set; }
     public string ListShotChanges { get; set; }
     public string UndockVideoControls { get; set; }
+    public string UndockVideoOnly { get; set; }
+    public string UndockWaveformOnly { get; set; }
     public string DockVideoControls { get; set; }
 
     public string Synchronization { get; set; }
@@ -252,6 +254,8 @@ public class LanguageMainMenu
         TextToSpeech = "_Text to speech...";
         VideoOcr = "OCR burned-i_n subtitle...";
         UndockVideoControls = "_Undock video controls";
+        UndockVideoOnly = "Undock video only";
+        UndockWaveformOnly = "Undock waveform only";
         ListShotChanges = "List s_hot changes...";
         GenerateImportShotChanges = "Generate/import s_hot changes...";
         DockVideoControls = "_Dock video controls";

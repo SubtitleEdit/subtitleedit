@@ -516,6 +516,8 @@ public static class ShortcutsMain
         { nameof(MainViewModel.WaveformGuessStartAndEndCommand),  Se.Language.Options.Shortcuts.WaveformGuessStartAndEnd },
         { nameof(MainViewModel.ShowShotChangesListCommand),  Se.Language.General.ShowShotChangesList },
         { nameof(MainViewModel.VideoUndockControlsCommand),  Se.Language.Options.Shortcuts.UndockVideoControls },
+        { nameof(MainViewModel.VideoUndockVideoOnlyCommand),  Se.Language.Options.Shortcuts.UndockVideoOnly },
+        { nameof(MainViewModel.VideoUndockWaveformOnlyCommand),  Se.Language.Options.Shortcuts.UndockWaveformOnly },
         { nameof(MainViewModel.VideoRedockControlsCommand),  Se.Language.Options.Shortcuts.RedockVideoControls },
         { nameof(MainViewModel.VideoGenerateBlankCommand),  Se.Language.Options.Shortcuts.GenerateBlankVideo },
         { nameof(MainViewModel.VideoReEncodeCommand),  Se.Language.Options.Shortcuts.ReencodeVideo},
@@ -1021,6 +1023,8 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.ShowShotChangesSubtitlesCommand, nameof(vm.ShowShotChangesSubtitlesCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.ShowShotChangesListCommand, nameof(vm.ShowShotChangesListCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.VideoUndockControlsCommand, nameof(vm.VideoUndockControlsCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.VideoUndockVideoOnlyCommand, nameof(vm.VideoUndockVideoOnlyCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.VideoUndockWaveformOnlyCommand, nameof(vm.VideoUndockWaveformOnlyCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.VideoRedockControlsCommand, nameof(vm.VideoRedockControlsCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.VideoGenerateBlankCommand, nameof(vm.VideoGenerateBlankCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.VideoReEncodeCommand, nameof(vm.VideoReEncodeCommand), ShortcutCategory.General, ShortcutGroup.Video);

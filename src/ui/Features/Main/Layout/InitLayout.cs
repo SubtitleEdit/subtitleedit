@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
+using Nikse.SubtitleEdit.Features.Shared.Undocked;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -1285,6 +1286,100 @@ public static partial class InitLayout
     {
         CleanupOldContent(vm.ContentGrid);
         vm.ContentGrid.Children.Add(InitListViewAndEditBox.MakeLayoutListViewAndEditBox(mainPage, vm));
+    }
+
+    /// <summary>
+    /// The main window's layout while video and/or waveform are undocked (#17218): with both
+    /// undocked only the list and edit box are left; with only the video undocked the waveform
+    /// stays docked below the list; with only the waveform undocked the video stays to the right.
+    /// </summary>
+    internal static void MakeLayoutForUndockMode(MainView mainPage, MainViewModel vm, UndockMode mode)
+    {
+        switch (mode)
+        {
+            case UndockMode.VideoOnly:
+                MakeLayoutWaveformBelowList(mainPage, vm);
+                break;
+            case UndockMode.WaveformOnly:
+                MakeLayoutVideoRightOfList(mainPage, vm);
+                break;
+            default:
+                MakeLayoutWithoutVideoKeepVideo(mainPage, vm);
+                break;
+        }
+    }
+
+    private static void MakeLayoutWaveformBelowList(MainView mainPage, MainViewModel vm)
+    {
+        var contentGrid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition(GridLength.Star),
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(GridLength.Star),
+            }
+        };
+
+        var topContent = new Border { Child = InitListViewAndEditBox.MakeLayoutListViewAndEditBox(mainPage, vm) };
+        Grid.SetRow(topContent, 0);
+        contentGrid.Children.Add(topContent);
+
+        var splitter = new GridSplitter
+        {
+            Height = UiUtil.SplitterWidthOrHeight,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        Grid.SetRow(splitter, 1);
+        contentGrid.Children.Add(splitter);
+
+        var bottomContent = new Border
+        {
+            Child = InitWaveform.MakeWaveform(vm),
+            VerticalAlignment = VerticalAlignment.Stretch,
+            Height = double.NaN,
+        };
+        Grid.SetRow(bottomContent, 2);
+        contentGrid.Children.Add(bottomContent);
+
+        CleanupOldContent(vm.ContentGrid);
+        vm.ContentGrid.Children.Add(contentGrid);
+        contentGrid.RowDefinitions[2].Height = new GridLength(WaveFormHeight, GridUnitType.Pixel);
+    }
+
+    private static void MakeLayoutVideoRightOfList(MainView mainPage, MainViewModel vm)
+    {
+        var contentGrid = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(GridLength.Star),
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(GridLength.Star),
+            }
+        };
+
+        var left = new Border { Child = InitListViewAndEditBox.MakeLayoutListViewAndEditBox(mainPage, vm) };
+        Grid.SetColumn(left, 0);
+        contentGrid.Children.Add(left);
+
+        var splitter = new GridSplitter
+        {
+            Width = UiUtil.SplitterWidthOrHeight,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Stretch
+        };
+        Grid.SetColumn(splitter, 1);
+        contentGrid.Children.Add(splitter);
+
+        // Carries the open video and its position over from the docked player it replaces.
+        var right = new Border { Child = InitVideoPlayer.MakeLayoutVideoPlayer(vm) };
+        Grid.SetColumn(right, 2);
+        contentGrid.Children.Add(right);
+
+        CleanupOldContent(vm.ContentGrid);
+        vm.ContentGrid.Children.Add(contentGrid);
     }
 
     internal static bool LayoutHasNoVideo(int layoutNumber)

@@ -196,6 +196,8 @@ public class LanguageSettingsShortcuts
     public string BurnIn { get;  set; }
     public string GenerateTransparent { get;  set; }
     public string UndockVideoControls { get; set; }
+    public string UndockVideoOnly { get; set; }
+    public string UndockWaveformOnly { get; set; }
     public string RedockVideoControls { get; set; }
     public string GenerateBlankVideo { get; set; }
     public string ReencodeVideo { get; set; }
@@ -560,6 +562,8 @@ public class LanguageSettingsShortcuts
         BurnIn = "Generate video with burned-in subtitles";
         GenerateTransparent = "Generate transparent video with subtitles";
         UndockVideoControls = "Un-dock video controls";
+        UndockVideoOnly = "Un-dock video only";
+        UndockWaveformOnly = "Un-dock waveform only";
         RedockVideoControls = "Re-dock video controls";
         GenerateBlankVideo = "Generate blank video";
         ReencodeVideo = "Re-encode video";
