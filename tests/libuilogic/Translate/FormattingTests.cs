@@ -143,4 +143,47 @@ public class FormattingTests
 
         Assert.Equal(input, text);
     }
+
+    [Theory]
+    [InlineData("[SPEAKER_00] : It also created outbreaks.", "[SPEAKER_00] : ")]
+    [InlineData("SPEAKER_01: It also created outbreaks.", "SPEAKER_01: ")]
+    [InlineData("(Speaker 1) It also created outbreaks.", "(Speaker 1) ")]
+    [InlineData("[SPEAKER 2] It also created outbreaks.", "[SPEAKER 2] ")]
+    public void SpeakerLabel_IsNotSentAndComesBack(string input, string label)
+    {
+        var formatting = new Formatting();
+
+        var text = formatting.SetTagsAndReturnTrimmed(input, "en");
+
+        Assert.Equal("It also created outbreaks.", text);
+        Assert.Equal(label + "Također je stvorio epidemije.", formatting.ReAddFormatting("Također je stvorio epidemije."));
+    }
+
+    [Fact]
+    public void SpeakerLabel_InsideAssaTags_ComesBackInsideThem()
+    {
+        var formatting = new Formatting();
+
+        var text = formatting.SetTagsAndReturnTrimmed(@"{\an8}[SPEAKER_00] : Hello.", "en");
+
+        Assert.Equal("Hello.", text);
+        Assert.Equal(@"{\an8}[SPEAKER_00] : Zdravo.", formatting.ReAddFormatting("Zdravo."));
+    }
+
+    [Fact]
+    public void SpeakerLabelOnly_IsKeptVerbatim()
+    {
+        var formatting = new Formatting();
+
+        Assert.Equal("...", formatting.SetTagsAndReturnTrimmed("[SPEAKER_00] :", "en"));
+        Assert.Equal("[SPEAKER_00] :", formatting.ReAddFormatting("..."));
+    }
+
+    [Fact]
+    public void MentionOfSpeakerMidLine_IsNotALabel()
+    {
+        var formatting = new Formatting();
+
+        Assert.Equal("Ask speaker 1: why?", formatting.SetTagsAndReturnTrimmed("Ask speaker 1: why?", "en"));
+    }
 }

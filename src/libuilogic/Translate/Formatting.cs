@@ -47,6 +47,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate
         private bool RemovePeriod { get; set; }
         private bool HasReset { get; set; }
         private string? ReplaceAllText { get; set; }
+        private string SpeakerLabel { get; set; } = string.Empty;
 
         private static readonly Regex OverrideBlock = new Regex(@"\{\\[^}]*\}", RegexOptions.Compiled);
         private static readonly Regex DrawingMode = new Regex(@"\{[^}]*\\p[1-9]", RegexOptions.Compiled);
@@ -102,6 +103,21 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate
             }
 
             text = MoveLineGlobalBlocksToStart(text);
+
+            // Diarization speaker label ("[SPEAKER_00] : ..."). Sent to the engine, it was moved
+            // around inside a merged sentence and the split then left it mid-row (#17224). It is
+            // taken off here and put back in front of this row's translation.
+            if (SpeakerLabelPrefix.TrySplit(text, out var speakerLabel, out var spokenText))
+            {
+                if (string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(spokenText, true)))
+                {
+                    ReplaceAllText = input;
+                    return "...";
+                }
+
+                SpeakerLabel = speakerLabel.TrimStart();
+                text = spokenText.Trim();
+            }
 
             // ASSA reset tag
             if (text.Contains("\\r}", StringComparison.Ordinal) ||
@@ -297,6 +313,8 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate
             {
                 text = Font + text + "</font>";
             }
+
+            text = SpeakerLabel + text;
 
             // ASSA reset tag
             if (HasReset)
