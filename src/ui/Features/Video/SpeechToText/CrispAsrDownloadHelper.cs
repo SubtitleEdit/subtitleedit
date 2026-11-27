@@ -178,7 +178,10 @@ public static class CrispAsrDownloadHelper
         var answer = await MessageBox.Show(
             owner,
             Se.Language.General.CrispAsrCudaBuild,
-            Environment.NewLine + Se.Language.General.CrispAsrCudaBuildInfo,
+            Environment.NewLine + Se.Language.General.CrispAsrCudaBuildInfo +
+            (OperatingSystem.IsLinux()
+                ? Environment.NewLine + Environment.NewLine + Se.Language.General.CrispAsrCudaBuildInfoLinux
+                : string.Empty),
             gpuHint,
             MessageBoxButtons.Cancel,
             MessageBoxIcon.Question,

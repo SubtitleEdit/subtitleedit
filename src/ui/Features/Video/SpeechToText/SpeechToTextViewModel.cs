@@ -182,6 +182,9 @@ public partial class SpeechToTextViewModel : ObservableObject
     private readonly List<string> _filesToDelete = new();
     private string? _sttTempFolder;
     private readonly ConcurrentQueue<string> _outputText = new();
+
+    /// <summary>The CUDA-fell-back-to-CPU warning (#17216) is shown once per app session.</summary>
+    private static bool _crispAsrGpuFallbackShown;
     private long _startTicks = 0;
     private long _runStartTicks;
     private double _endSeconds;
@@ -2946,6 +2949,19 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
         }
 
+        // A Linux CUDA build without the system CUDA runtime falls back to the CPU without a word
+        // (#17216). Logged for every run, shown once per session for single-file runs.
+        string? crispAsrGpuFallback = null;
+        if (OperatingSystem.IsLinux() &&
+            GetEffectiveSelectedEngine() is ICrispAsrEngine gpuCheckEngine &&
+            CrispAsrGpuFallback.IsCudaCpuFallback(_outputText))
+        {
+            var missing = await Task.Run(() =>
+                CrispAsrGpuFallback.FindMissingLibraries(gpuCheckEngine.GetAndCreateWhisperFolder()));
+            crispAsrGpuFallback = CrispAsrGpuFallback.Describe(missing);
+            Se.WriteToolsLog(crispAsrGpuFallback, true);
+        }
+
         if (_abort)
         {
             // User cancelled mid-run. Leave the dialog open so they can adjust
@@ -2966,6 +2982,13 @@ public partial class SpeechToTextViewModel : ObservableObject
             var settings = Se.Settings.Tools.AudioToText;
             IsTranscribeEnabled = true;
             HideProgressBar();
+
+            if (crispAsrGpuFallback != null && !_crispAsrGpuFallbackShown && Window != null)
+            {
+                _crispAsrGpuFallbackShown = true;
+                await MessageBox.Show(Window, Se.Language.Video.AudioToText.CrispAsrGpuNotUsed,
+                    crispAsrGpuFallback, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
 
             if (_loadedFromStdOut)
             {

@@ -977,6 +977,7 @@ public class LanguageGeneral
     public string VulkanDriverRequiredContinue { get; set; }
     public string CrispAsrCudaBuild { get; set; }
     public string CrispAsrCudaBuildInfo { get; set; }
+    public string CrispAsrCudaBuildInfoLinux { get; set; }
     public string GpuDetectedX { get; set; }
     public string GpuNoneDetected { get; set; }
     public string GpuRecommendedBuildX { get; set; }
@@ -1043,6 +1044,7 @@ public class LanguageGeneral
         VulkanDriverRequiredContinue = "The Vulkan build needs a Vulkan-capable GPU driver.\n\nWithout it audio.cpp cannot start at all. Pick the CPU build instead if you are unsure.\n\nContinue with Vulkan download?";
         CrispAsrCudaBuild = "CrispASR CUDA build";
         CrispAsrCudaBuildInfo = "CUDA 12 works with most current NVIDIA drivers.\n\nPick CUDA 13 only if your driver stack is built for CUDA 13.";
+        CrispAsrCudaBuildInfoLinux = "On Linux the CUDA runtime is not included: install the CUDA toolkit (libcudart, libcublas) with the same major version as the build you pick.";
         GpuDetectedX = "Detected: {0}";
         GpuNoneDetected = "No GPU with a usable driver was detected.";
         GpuRecommendedBuildX = "Recommended for this computer: {0}";
