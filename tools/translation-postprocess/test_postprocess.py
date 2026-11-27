@@ -8,8 +8,11 @@ from postprocess import DICTIONARIES, DECORATION, load_rules, process
 
 
 def subrip(cues, first_second=0, newline="\n", *, bom=False):
+    def stamp(second, millisecond):
+        return f"00:{second // 60:02}:{second % 60:02},{millisecond:03}"
+
     blocks = [
-        f"{i + 1}{newline}00:00:{i + first_second:02},000 --> 00:00:{i + first_second:02},999{newline}{text}"
+        f"{i + 1}{newline}{stamp(i + first_second, 0)} --> {stamp(i + first_second, 999)}{newline}{text}"
         for i, text in enumerate(cues)
     ]
     content = (2 * newline).join(blocks) + newline
