@@ -10894,6 +10894,9 @@ public partial class MainViewModel :
             // back once both windows exist.
             var windowToReactivate = GetActiveWindowOtherThanMainAndUndocked();
 
+            // Leaving a mode with the video undocked (a shortcut still works while the menu items
+            // are hidden): there is no docked player for the rebuild to carry over (#17218).
+            var wasVideoUndocked = IsVideoUndocked;
             _undockMode = mode;
             AreVideoControlsUndocked = true;
             var undockVideo = UndockModeHelper.IsVideoUndocked(mode);
@@ -10959,6 +10962,13 @@ public partial class MainViewModel :
             }
 
             InitLayout.MakeLayoutForUndockMode(MainView!, this, mode);
+            if (!undockVideo && wasVideoUndocked && !string.IsNullOrEmpty(_videoFileName) && VideoPlayerControl != null)
+            {
+                // The undocked player was closed above, so the docked one the layout just built
+                // is empty - open the video in it where the undocked one was.
+                OpenVideoInRebuiltDockedPlayer(VideoPlayerControl, _videoFileName, position, volume);
+            }
+
             if (Se.Settings.Appearance.RightToLeft && Window != null)
             {
                 // The rebuilt layout starts left to right; re-apply the mode.
@@ -10978,6 +10988,23 @@ public partial class MainViewModel :
                     }
                 }, DispatcherPriority.Background);
             }
+        });
+    }
+
+    /// <summary>
+    /// Opens <paramref name="videoFileName"/> at <paramref name="position"/> in a docked player a
+    /// layout rebuild just made empty - the same steps InitVideoPlayer.MakeLayoutVideoPlayer takes
+    /// when it carries a video over from the player it replaces.
+    /// </summary>
+    private static void OpenVideoInRebuiltDockedPlayer(VideoPlayerControl control, string videoFileName, double position, double volume)
+    {
+        control.BeginPositionRestore(position);
+        Dispatcher.UIThread.Post(async () =>
+        {
+            await control.Open(videoFileName, position);
+            control.Volume = volume;
+            await control.WaitForPlayersReadyAsync();
+            await control.RestorePositionAsync(position);
         });
     }
 
@@ -31293,8 +31320,11 @@ public partial class MainViewModel :
                         {
                             if (Se.Settings.General.UndockVideoControls)
                             {
-                                UndockControls(GetSavedUndockMode());
-                                skipLoadVideo = true;
+                                // The undocked video window opens the video itself; with only the
+                                // waveform undocked the docked player needs the normal open (#17218).
+                                var undockMode = GetSavedUndockMode();
+                                UndockControls(undockMode);
+                                skipLoadVideo = UndockModeHelper.IsVideoUndocked(undockMode);
                             }
 
                             InitLayout.RestoreLayoutPositions(Se.Settings.Appearance.CurrentLayoutPositions, ContentGrid.Children.FirstOrDefault() as Grid);
