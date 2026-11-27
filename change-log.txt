@@ -3,6 +3,33 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.5.0-beta15 (27th of November 2026)
+
+* Video menu: undock video only or waveform only - thx v2901061-bit
+* Grid: hover a tinted cell to see why it is flagged - thx raducufediuc-blip
+* Timeline tracks: own bar color and font size settings - thx hisui3393
+* Point sync: mark synced lines, and leave out the original's display-only rows - thx fraternl
+* Auto-translate: Hy-MT3 replaces Hy-MT2 in llama.cpp translate models - thx Oplay66
+* Unknown subtitle import: more report, table, RTF, JSON and XML layouts recognized
+* PAC: Spanish all-caps no longer detected as Greek, and save with the right code page - thx enricvp75
+* Grid column widths are kept when the layout is rebuilt; retry an empty audio track list - thx v2901061-bit
+* Crisp ASR: warn when the Linux CUDA build falls back to CPU - thx Varnyth
+* Piper: newer voices (e.g. Urdu) download again - thx arifsidiqi52-hash
+* Waveform: font fallback per character run fixes boxes for CJK Extension B - thx sojey
+* Paste and auto-break: no spaces when joining CJK/Thai lines
+* Toggle buttons: checked icon contrast across themes - thx pdjdev
+* Adobe Encore export: count line breaks correctly - thx unsafePtr
+* Settings: OK after Apply keeps the detected FFmpeg path
+* Advanced TTS settings open faster (ffmpeg rubberband probe cached)
+* Update whisper.cpp to v1.9.6
+* Update German translation - thx FunkyKnilch
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+* Update Ukrainian translation - thx Oleghishak
+
+-----------------------------------------------------------------------------------------------------
+
 v5.5.0-beta14 (25th of November 2026)
 
 * Auto-translate: editable post-processing dictionaries (39 bundled), with suggestions shown beside the engine draft
