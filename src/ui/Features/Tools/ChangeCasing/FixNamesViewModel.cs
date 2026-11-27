@@ -85,6 +85,9 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
             .Select(n => new FixNameItem(n.Name, n.IsChecked))
             .ToList();
 
+        // Refresh (after editing extra names) must not undo the user's own check/uncheck choices (#17243).
+        KeepUserChecks(names, Names);
+
         foreach (var item in names)
         {
             // Single notification point: checkbox clicks, the space toggle and
@@ -95,6 +98,69 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
 
         Names.Clear();
         Names.AddRange(names);
+    }
+
+    /// <summary>
+    /// Names that were already listed keep the check state the user gave them; only names new to
+    /// the list get the default from <see cref="FixNamesLogic.FindNames"/>.
+    /// </summary>
+    internal static void KeepUserChecks(IEnumerable<FixNameItem> newNames, IEnumerable<FixNameItem> oldNames)
+    {
+        var previous = new Dictionary<string, bool>(StringComparer.Ordinal);
+        foreach (var old in oldNames)
+        {
+            previous[old.Name] = old.IsChecked;
+        }
+
+        foreach (var item in newNames)
+        {
+            if (previous.TryGetValue(item.Name, out var isChecked))
+            {
+                item.IsChecked = isChecked;
+            }
+        }
+    }
+
+    // Line numbers the user unchecked in the preview. Kept across preview rebuilds (Refresh, name
+    // toggles) so an unchecked line stays unchecked, also when it drops out of the preview and comes
+    // back later (#17243).
+    private readonly HashSet<int> _disabledLines = new();
+
+    /// <summary>
+    /// Updates the remembered unchecked preview lines from the current preview. Lines not in the
+    /// current preview keep what was remembered for them. Must run on the UI thread.
+    /// </summary>
+    internal static void UpdateDisabledLines(ISet<int> disabledLines, IEnumerable<FixNameHitItem> hits)
+    {
+        foreach (var hit in hits)
+        {
+            if (hit.IsEnabled)
+            {
+                disabledLines.Remove(hit.LineIndex);
+            }
+            else
+            {
+                disabledLines.Add(hit.LineIndex);
+            }
+        }
+    }
+
+    internal static List<FixNameHitItem> BuildHits(Subtitle subtitle, string[] activeNames, ISet<int> disabledLines, CancellationToken token = default)
+    {
+        var hits = new List<FixNameHitItem>();
+
+        foreach (var p in subtitle.Paragraphs)
+        {
+            token.ThrowIfCancellationRequested();
+            var text = FixNamesLogic.ApplyNames(p.Text, activeNames);
+
+            if (text != p.Text)
+            {
+                hits.Add(new FixNameHitItem(p.Text, p.Number, p.Text, text, !disabledLines.Contains(p.Number)));
+            }
+        }
+
+        return hits;
     }
 
     private CancellationTokenSource? _cancellationTokenSource;
@@ -125,11 +191,14 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
 
             // Snapshot on the UI thread - FindAllNames mutates Names there, so the
             // background computation below must not enumerate the live collection.
-            var activeNames = await Dispatcher.UIThread.InvokeAsync(() =>
-                Names.Where(n => n.IsChecked).Select(n => n.Name).ToArray());
+            var (activeNames, disabledLines) = await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                UpdateDisabledLines(_disabledLines, Hits);
+                return (Names.Where(n => n.IsChecked).Select(n => n.Name).ToArray(), new HashSet<int>(_disabledLines));
+            });
             token.ThrowIfCancellationRequested();
 
-            GeneratePreview(activeNames, token);
+            GeneratePreview(activeNames, disabledLines, token);
         }
         catch (OperationCanceledException)
         {
@@ -151,19 +220,9 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
         _cancellationTokenSource = null;
     }
 
-    private void GeneratePreview(string[] activeNames, CancellationToken token)
+    private void GeneratePreview(string[] activeNames, ISet<int> disabledLines, CancellationToken token)
     {
-        var hits = new List<FixNameHitItem>();
-
-        foreach (var p in _subtitle.Paragraphs)
-        {
-            var text = FixNamesLogic.ApplyNames(p.Text, activeNames);
-
-            if (text != p.Text)
-            {
-                hits.Add(new FixNameHitItem(p.Text, p.Number, p.Text, text, true));
-            }
-        }
+        var hits = BuildHits(_subtitle, activeNames, disabledLines, token);
 
         Dispatcher.UIThread.Invoke(() =>
         {
