@@ -16162,6 +16162,13 @@ public partial class MainViewModel :
         _errorBrush = new ImmutableSolidColorBrush(_errorColor);
         SubtitleTextInfoHelper.RefreshErrorBrush();
         RefreshGridColumnsFromSettings();
+        if (useSavedLayoutAndZoom)
+        {
+            // An import or a reset brought its own column widths - don't let the rebuild below
+            // carry the on-screen ones over them (#17217).
+            SubtitleGridColumnManager = null;
+        }
+
         if (AreVideoControlsUndocked)
         {
             VideoUndockControls();
@@ -32149,14 +32156,33 @@ public partial class MainViewModel :
         _shortcutManager.ClearKeys();
     }
 
+    // How often, and how far apart, an empty track list is read again while the file is still
+    // loading - 20 x 500 ms on top of the 2.5 s ready wait of the open (#17217).
+    private const int AudioTrackReloadMaxAttempts = 20;
+    private const int AudioTrackReloadDelayMs = 500;
+
     private void LoadAudioTrackMenuItems()
     {
+        LoadAudioTrackMenuItems(0);
+    }
+
+    private void LoadAudioTrackMenuItems(int attempt)
+    {
+        var videoFileName = _videoFileName;
         try
         {
             var vp = GetVideoPlayerControl();
             if (vp?.VideoPlayer != null)
             {
                 var audioTracks = vp.VideoPlayer.GetAudioTracks();
+                if (audioTracks.Count == 0 && vp.VideoPlayer.Duration <= 0.001 && TryScheduleAudioTrackReload(videoFileName, attempt))
+                {
+                    // The player has not parsed the file yet - the open only waits 2.5 s for it,
+                    // and a slow first open (cold cache, large file, network drive) takes longer.
+                    // Hiding the picker now left it hidden for good, nothing read the list again (#17217).
+                    return;
+                }
+
                 if (audioTracks.Count == 0)
                 {
                     Dispatcher.UIThread.Post(() =>
@@ -32178,7 +32204,9 @@ public partial class MainViewModel :
                 var selectedTrack = audioTracks.FirstOrDefault(p => p.FfIndex == (_audioTrack?.FfIndex ?? -1));
                 if (selectedTrack == null)
                 {
-                    _audioTrack = audioTracks[0];
+                    // Follow the player's own choice (the container's default track, #13233),
+                    // like the open does when it gets the track list in time.
+                    _audioTrack = audioTracks.FirstOrDefault(p => p.IsSelected) ?? audioTracks[0];
                 }
 
                 Dispatcher.UIThread.Post(() =>
@@ -32253,9 +32281,37 @@ public partial class MainViewModel :
         }
         catch (Exception exception)
         {
+            // A layout rebuild can dispose the player this was reading - the new one is
+            // probably still loading, so try that one again before giving up (#17217).
+            if (TryScheduleAudioTrackReload(videoFileName, attempt))
+            {
+                return;
+            }
+
             Se.LogError(exception, "UpdateAudioTrackMenuItems failed");
             Dispatcher.UIThread.Post(() => { IsAudioTracksVisible = AudioTraksMenuItem.Items.Count > 1; });
         }
+    }
+
+    private bool TryScheduleAudioTrackReload(string? videoFileName, int attempt)
+    {
+        if (string.IsNullOrEmpty(videoFileName) || attempt >= AudioTrackReloadMaxAttempts)
+        {
+            return false;
+        }
+
+        _ = Task.Run(async () =>
+        {
+            await Task.Delay(AudioTrackReloadDelayMs);
+
+            // Another video was opened (or the video closed) meanwhile - its own open reads its tracks.
+            if (videoFileName == _videoFileName)
+            {
+                LoadAudioTrackMenuItems(attempt + 1);
+            }
+        });
+
+        return true;
     }
 
     private void InitializeWaveformDisplayMode()

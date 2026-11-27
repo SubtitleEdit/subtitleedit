@@ -58,6 +58,11 @@ public static partial class InitListViewAndEditBox
     {
         mainPage.DataContext = vm;
 
+        // The widths were only stored on exit, so every rebuild (Options/OK, layout switch,
+        // re-dock) restored the widths of the last session and dropped the ones the user had
+        // dragged since (#17217). Carry the outgoing grid's widths over to the new one.
+        SaveSubtitleGridColumnWidths(vm.SubtitleGridColumnManager);
+
         // Unhook events from the old SubtitleGrid if it exists
         if (vm.SubtitleGrid != null)
         {
