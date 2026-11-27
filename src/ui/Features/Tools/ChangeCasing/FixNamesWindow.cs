@@ -16,6 +16,7 @@ public class FixNamesWindow : Window
 {
 
     private FixNamesViewModel _vm;
+    private TableView? _hitsView;
 
     public FixNamesWindow(FixNamesViewModel vm)
     {
@@ -65,7 +66,7 @@ public class FixNamesWindow : Window
                 new RowDefinition(GridLength.Auto), // extra names
             },
         };
-        namesContent.Add(MakeNamesView(vm), 0, 0);
+        namesContent.Add(MakeNamesView(vm, OnNameSelectionChanged), 0, 0);
         namesContent.Add(EditorChrome.MakeLabeledRow(lang.ExtraNames, gridExtraNames, 90), 1, 0);
 
         // Hits
@@ -86,7 +87,7 @@ public class FixNamesWindow : Window
             },
         };
         sections.Add(MakeFillSection(lang.FixNames, labelNamesCount, namesContent, true), 0, 0);
-        sections.Add(MakeFillSection(Se.Language.General.Preview, labelHits, MakeHitsView(vm), false), 1, 0);
+        sections.Add(MakeFillSection(Se.Language.General.Preview, labelHits, MakeHitsView(vm, out _hitsView), false), 1, 0);
 
         // OK and Cancel buttons
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
@@ -94,6 +95,8 @@ public class FixNamesWindow : Window
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
         Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
+
+        vm.HitsRefreshed += (_, _) => SelectHitForSelectedName();
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
@@ -125,7 +128,37 @@ public class FixNamesWindow : Window
         };
     }
 
-    private static Border MakeNamesView(FixNamesViewModel vm)
+    private void OnNameSelectionChanged(TableView namesView)
+    {
+        _vm.SelectedName = namesView.SelectedItem as FixNameItem;
+        SelectHitForSelectedName();
+    }
+
+    /// <summary>
+    /// Selects and shows the first preview line the selected name changes (#17229), so the
+    /// context ("US" the country or the pronoun?) can be checked before applying.
+    /// </summary>
+    private void SelectHitForSelectedName()
+    {
+        var hitsView = _hitsView;
+        if (hitsView == null)
+        {
+            return;
+        }
+
+        var hit = _vm.FindFirstHitForSelectedName();
+        if (hit == null)
+        {
+            return;
+        }
+
+        TableViewExtras.PrePositionScroll(hitsView, _vm.Hits.IndexOf(hit));
+        hitsView.SelectedItem = hit;
+        hitsView.ScrollIntoView(hit);
+        TableViewExtras.EnsureRowFullyVisible(hitsView, hit);
+    }
+
+    private static Border MakeNamesView(FixNamesViewModel vm, System.Action<TableView> selectionChanged)
     {
         // The DataGrid this replaces used DataGridCheckboxMultiSelect for extended
         // selection + Space toggling; shift/ctrl multi-select is native ListBox behavior
@@ -156,6 +189,7 @@ public class FixNamesWindow : Window
 
         TableViewExtras.AddSpaceToggle<FixNameItem>(dataGrid,
             item => item.IsChecked, (item, v) => item.IsChecked = v);
+        dataGrid.SelectionChanged += (_, _) => selectionChanged(dataGrid);
 
         var flyout = new MenuFlyout();
         flyout.Items.Add(new MenuItem { Header = Se.Language.General.SelectAll, Command = vm.NamesSelectAllCommand });
@@ -166,9 +200,10 @@ public class FixNamesWindow : Window
         return EditorChrome.MakeListFrame(dataGrid, clearListBackground: true);
     }
 
-    private static Border MakeHitsView(FixNamesViewModel vm)
+    private static Border MakeHitsView(FixNamesViewModel vm, out TableView hitsView)
     {
         var dataGrid = TableViewExtras.MakeTableView().WithAccessibleName(Se.Language.General.Preview);
+        hitsView = dataGrid;
         dataGrid.Height = double.NaN;
         dataGrid.ItemsSource = vm.Hits;
         dataGrid.DataContext = vm;
@@ -184,7 +219,7 @@ public class FixNamesWindow : Window
         });
         dataGrid.Columns.Add(new SeTableViewColumn
         {
-            Header = Se.Language.General.Name,
+            Header = Se.Language.General.LineNumber,
             Binding = new Binding(nameof(FixNameHitItem.LineIndexDisplay)),
             Width = new GridLength(140),
             CellTheme = UiUtil.TableViewCellTheme,

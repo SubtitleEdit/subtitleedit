@@ -25,6 +25,17 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private string _extraNames;
 
     public Window? Window { get; set; }
+
+    /// <summary>
+    /// The name selected in the names list; the preview follows it to the first line it changes
+    /// (like SE4), also after the preview is regenerated.
+    /// </summary>
+    public FixNameItem? SelectedName { get; set; }
+
+    /// <summary>
+    /// Raised on the UI thread after <see cref="Hits"/> has been replaced by a new preview.
+    /// </summary>
+    public event EventHandler? HitsRefreshed;
     public bool OkPressed { get; private set; }
     public string Info { get; private set; }
     public Subtitle Subtitle { get; private set; }
@@ -167,7 +178,25 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
             Hits.Clear();
             Hits.AddRange(hits);
             _previewPending = false;
+            HitsRefreshed?.Invoke(this, EventArgs.Empty);
         });
+    }
+
+    /// <summary>
+    /// The first preview line the selected name changes, or null when it changes none (e.g. the
+    /// name is unchecked, so it is not part of the preview). Uses the same rule that created the
+    /// hit, so "US" does not match inside "USB".
+    /// </summary>
+    internal FixNameHitItem? FindFirstHitForSelectedName()
+    {
+        var name = SelectedName?.Name;
+        if (string.IsNullOrEmpty(name))
+        {
+            return null;
+        }
+
+        var names = new[] { name };
+        return Hits.FirstOrDefault(hit => FixNamesLogic.ApplyNames(hit.Before, names) != hit.Before);
     }
 
     [RelayCommand]
