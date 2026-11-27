@@ -107,6 +107,10 @@ public class LanguageAudioToText
     public string NoTranscriptionResult { get; set; }
     public string CrispAsrNoSubtitles { get; set; }
     public string CrispAsrGpuNotUsed { get; set; }
+    public string CrispAsrGpuFallbackX { get; set; }
+    public string CrispAsrGpuFallbackCheckDriver { get; set; }
+    public string CrispAsrGpuFallbackMissingLibrariesX { get; set; }
+    public string CrispAsrGpuFallbackInstallToolkitX { get; set; }
     public string CouldNotGenerateAudioFileX { get; set; }
     public string NoVideoFile { get; set; }
     public string NoVideoFileFound { get; set; }
@@ -151,6 +155,10 @@ public class LanguageAudioToText
         NoTranscriptionResult = "No transcription result";
         CrispAsrNoSubtitles = "Crisp ASR finished without generating subtitles. Please check the tools log for engine output.";
         CrispAsrGpuNotUsed = "GPU not used";
+        CrispAsrGpuFallbackX = "The CUDA build of Crisp ASR is installed, but this run used the CPU: its CUDA backend ({0}) could not be loaded.";
+        CrispAsrGpuFallbackCheckDriver = "Check that the NVIDIA driver is installed and working (\"nvidia-smi\" should list the GPU), and that the CUDA toolkit is installed. Or download the speech to text engine again and choose the Vulkan build, which only needs the GPU driver.";
+        CrispAsrGpuFallbackMissingLibrariesX = "Missing libraries: {0}";
+        CrispAsrGpuFallbackInstallToolkitX = "The Linux CUDA build does not include the CUDA runtime. Install the {0} toolkit from your distribution (it provides libcudart and libcublas). If your distribution ships a different CUDA version, download the speech to text engine again and choose the CUDA build that matches it, or choose Vulkan, which only needs the GPU driver.";
         CouldNotGenerateAudioFileX = "Could not generate the audio file (ffmpeg exit code {0}).\nPlease check the tools log for the ffmpeg output.";
         NoVideoFile = "No video file";
         NoVideoFileFound = "No video file found!";
