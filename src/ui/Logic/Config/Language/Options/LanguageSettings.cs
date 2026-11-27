@@ -322,6 +322,7 @@ public class LanguageSettings
     public string GridGoToSubtitleAndPause { get; set; }
     public string GridGoToSubtitleAndPlay { get; set; }
     public string GridGoToSubtitleAndPauseAndFocusTextBox { get; set; }
+    public string GridFocusTextBox { get; set; }
     public string GridGoToSubtitleAndPlayAndFocusTextBox { get; set; }
     public string SubtitleListActionVideoGoToPositionAndPlayCurrentAndPause { get; set; }
     public string SubtitleListActionVideoGoToPositionMinus1SecAndPause { get; set; }
@@ -729,6 +730,7 @@ public class LanguageSettings
         GridGoToSubtitleAndPause = "Go to subtitle and pause";
         GridGoToSubtitleAndPlay = "Go to subtitle and play";
         GridGoToSubtitleAndPauseAndFocusTextBox = "Go to subtitle and pause and focus text box";
+        GridFocusTextBox = "Focus text box (keep video position)";
         GridGoToSubtitleAndPlayAndFocusTextBox = "Go to subtitle and play and focus text box";
         SubtitleListActionVideoGoToPositionAndPlayCurrentAndPause = "Go to video position, play current, and pause";
         SubtitleListActionVideoGoToPositionMinus1SecAndPause = "Go to video position - 1 s and pause";

@@ -9,4 +9,9 @@ public enum SubtitleSingleClickActionType
     GoToSubtitleAndSetVideoPosition,
     GoToSubtitleAndPauseAndFocusTextBox,
     GoToSubtitleAndPlayAndFocusTextBox,
+
+    /// <summary>
+    /// Focus the text box with the caret at the end, without touching the video (#17218).
+    /// </summary>
+    FocusTextBox,
 }
