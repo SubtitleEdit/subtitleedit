@@ -39,7 +39,29 @@
       {"source": "You're telling me.", "draft": "Je vertelt het mij.", "replacement": "Wat je zegt."},
       {"source": "Says who?", "draft": "Zegt wie?", "replacement": "Wie zegt dat?"},
       {"source": "Watch it.", "draft": "Kijk het.", "suggestions": ["Pas op.", "Kijk ernaar."], "note": "First: a warning. Second: watching a film or show."},
-      {"source": "Cheer up.", "draft": "Wees blij.", "replacement": "Kop op."}
+      {"source": "Cheer up.", "draft": "Wees blij.", "replacement": "Kop op."},
+      {"source": "Sorry about that.", "draft": "Sorry daarover.", "replacement": "Sorry."},
+      {"source": "Sorry about that.", "draft": "Het spijt me daarover.", "replacement": "Het spijt me."},
+      {"source": "I'm sorry about that.", "draft": "Ik ben sorry daarover.", "replacement": "Het spijt me."},
+      {"source": "Sorry to hear that.", "draft": "Spijt om dat te horen.", "replacement": "Wat vervelend om te horen."},
+      {"source": "I'm sorry to hear that.", "draft": "Ik ben sorry om dat te horen.", "replacement": "Wat vervelend om te horen."},
+      {"source": "Sorry for your loss.", "draft": "Sorry voor je verlies.", "replacement": "Gecondoleerd."},
+      {"source": "Sorry for your loss.", "draft": "Sorry voor uw verlies.", "replacement": "Gecondoleerd."},
+      {"source": "I'm sorry for your loss.", "draft": "Het spijt me voor je verlies.", "replacement": "Gecondoleerd."},
+      {"source": "Sorry I'm late.", "draft": "Sorry, ik ben laat.", "replacement": "Sorry dat ik te laat ben."},
+      {"source": "Sorry I'm late.", "draft": "Sorry ik ben laat.", "replacement": "Sorry dat ik te laat ben."},
+      {"source": "You're welcome.", "draft": "Je bent welkom.", "replacement": "Graag gedaan."},
+      {"source": "You're welcome.", "draft": "U bent welkom.", "replacement": "Graag gedaan."},
+      {"source": "You're welcome.", "draft": "Je bent welkom", "replacement": "Graag gedaan."},
+      {"source": "My bad.", "draft": "Mijn slechte.", "replacement": "Mijn fout."},
+      {"source": "Never mind.", "draft": "Nooit geest.", "replacement": "Laat maar."},
+      {"source": "Never mind.", "draft": "Nooit mind.", "replacement": "Laat maar."},
+      {"source": "What's up?", "draft": "Wat is op?", "suggestions": ["Hoe is het?", "Wat is er?"], "note": "First: a greeting. Second: asking what is wrong."},
+      {"source": "I'm fine.", "draft": "Ik ben fijn.", "replacement": "Het gaat goed."},
+      {"source": "Take it easy.", "draft": "Neem het makkelijk.", "replacement": "Rustig aan."},
+      {"source": "Take it easy.", "draft": "Neem het gemakkelijk.", "replacement": "Rustig aan."},
+      {"source": "Makes sense.", "draft": "Maakt zin.", "replacement": "Dat is logisch."},
+      {"source": "That makes sense.", "draft": "Dat maakt zin.", "replacement": "Dat is logisch."}
     ]
   }
 }

@@ -50,7 +50,31 @@
       {"source": "Never mind.", "draft": "Kein Problem.", "replacement": "Schon gut."},
       {"source": "Cut it out.", "draft": "Mach das nicht.", "replacement": "Hör auf damit."},
       {"source": "Go ahead.", "draft": "Los geht's.", "suggestions": ["Nur zu.", "Mach weiter."], "note": "First: giving permission. Second: telling someone to carry on."},
-      {"source": "Get real.", "draft": "Mach realistisch.", "replacement": "Sei realistisch."}
+      {"source": "Get real.", "draft": "Mach realistisch.", "replacement": "Sei realistisch."},
+      {"source": "Sorry about that.", "draft": "Entschuldige das.", "replacement": "Tut mir leid."},
+      {"source": "Sorry about that.", "draft": "Entschuldigung darüber.", "replacement": "Tut mir leid."},
+      {"source": "Sorry about that.", "draft": "Leid darüber.", "replacement": "Tut mir leid."},
+      {"source": "I'm sorry about that.", "draft": "Ich bin leid darüber.", "replacement": "Das tut mir leid."},
+      {"source": "Sorry to hear that.", "draft": "Entschuldigung, das zu hören.", "replacement": "Das tut mir leid zu hören."},
+      {"source": "Sorry to hear that.", "draft": "Leid, das zu hören.", "replacement": "Das tut mir leid zu hören."},
+      {"source": "Sorry for your loss.", "draft": "Entschuldigung für Ihren Verlust.", "replacement": "Mein Beileid."},
+      {"source": "Sorry for your loss.", "draft": "Entschuldigung für deinen Verlust.", "replacement": "Mein Beileid."},
+      {"source": "I'm sorry for your loss.", "draft": "Entschuldigung für Ihren Verlust.", "replacement": "Mein herzliches Beileid."},
+      {"source": "Sorry I'm late.", "draft": "Entschuldigung, ich bin spät.", "replacement": "Entschuldigung, dass ich zu spät bin."},
+      {"source": "Sorry I'm late.", "draft": "Tut mir leid, ich bin spät.", "replacement": "Tut mir leid, dass ich zu spät bin."},
+      {"source": "Sorry to bother you.", "draft": "Entschuldigung, Sie zu belästigen.", "replacement": "Entschuldigen Sie die Störung."},
+      {"source": "Sorry to bother you.", "draft": "Entschuldigung, dich zu belästigen.", "replacement": "Entschuldige die Störung."},
+      {"source": "You're welcome.", "draft": "Du bist willkommen.", "replacement": "Gern geschehen."},
+      {"source": "You're welcome.", "draft": "Sie sind willkommen.", "replacement": "Gern geschehen."},
+      {"source": "You're welcome.", "draft": "Du bist willkommen", "replacement": "Gern geschehen."},
+      {"source": "My bad.", "draft": "Mein Schlechtes.", "replacement": "Mein Fehler."},
+      {"source": "My bad.", "draft": "Meine Schlechte.", "replacement": "Mein Fehler."},
+      {"source": "Never mind.", "draft": "Niemals Geist.", "replacement": "Schon gut."},
+      {"source": "Never mind.", "draft": "Nie Geist.", "replacement": "Schon gut."},
+      {"source": "What's up?", "draft": "Was ist oben?", "replacement": "Was geht?"},
+      {"source": "What's up?", "draft": "Was ist hoch?", "replacement": "Was geht?"},
+      {"source": "I'm fine.", "draft": "Ich bin fein.", "replacement": "Mir geht's gut."},
+      {"source": "I'm good.", "draft": "Ich bin gut.", "suggestions": ["Mir geht's gut.", "Nein danke, passt schon."], "note": "First: saying how the speaker is. Second: declining an offer."}
     ]
   }
 }
