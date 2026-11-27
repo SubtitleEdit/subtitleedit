@@ -73,6 +73,12 @@ public class TranslationPostProcessDictionaryTests
     [InlineData("Spanish", "es", "Sorry about that.", "Lo siento acerca de eso.", "Lo siento.")]
     [InlineData("Spanish", "es", "Sorry I'm late.", "Lo siento, estoy tarde.", "Perdón por llegar tarde.")]
     [InlineData("Spanish", "es", "You're welcome.", "Eres bienvenido.", "De nada.")]
+    [InlineData("Italian", "it", "Sorry about that.", "Scusa per quello.", "Scusa.")]
+    [InlineData("Italian", "it", "Makes sense.", "Fa senso.", "Ha senso.")]
+    [InlineData("Italian", "it", "You're welcome.", "Sei benvenuto.", "Prego.")]
+    [InlineData("Portuguese", "pt", "Sorry about that.", "Desculpe sobre isso.", "Desculpe.")]
+    [InlineData("Brazilian Portuguese", "pt-BR", "You're welcome.", "Você é bem-vindo.", "De nada.")]
+    [InlineData("European Portuguese", "pt-PT", "Sorry for your loss.", "Desculpa pela tua perda.", "Os meus pêsames.")]
     public void FixesLiteralApologiesAndReplies(string name, string code, string source, string draft, string expected)
     {
         var rules = TranslationPostProcessDictionary.Get(new TranslationPair("English", "en"), new TranslationPair(name, code));

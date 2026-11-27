@@ -19,7 +19,30 @@
       {"source": "Thank you.", "draft": "Obrigado", "replacement": "Obrigado."},
       {"source": "Thank you.", "draft": "Obrigada", "replacement": "Obrigada."},
       {"source": "Who are you?", "draft": "Quem és tu", "replacement": "Quem és tu?"},
-      {"source": "I don't know.", "draft": "Não sei", "replacement": "Não sei."}
+      {"source": "I don't know.", "draft": "Não sei", "replacement": "Não sei."},
+      {"source": "Sorry about that.", "draft": "Desculpa sobre isso.", "replacement": "Desculpa."},
+      {"source": "Sorry about that.", "draft": "Desculpe sobre isso.", "replacement": "Desculpe."},
+      {"source": "Sorry about that.", "draft": "Lamento sobre isso.", "replacement": "Lamento."},
+      {"source": "Sorry to hear that.", "draft": "Desculpa ouvir isso.", "replacement": "Lamento ouvir isso."},
+      {"source": "Sorry to hear that.", "draft": "Desculpe ouvir isso.", "replacement": "Lamento ouvir isso."},
+      {"source": "Sorry for your loss.", "draft": "Desculpa pela tua perda.", "replacement": "Os meus pêsames."},
+      {"source": "Sorry for your loss.", "draft": "Desculpe pela sua perda.", "replacement": "Os meus pêsames."},
+      {"source": "I'm sorry for your loss.", "draft": "Desculpa pela tua perda.", "replacement": "Os meus pêsames."},
+      {"source": "Sorry I'm late.", "draft": "Desculpa, estou tarde.", "replacement": "Desculpa o atraso."},
+      {"source": "Sorry I'm late.", "draft": "Desculpe, estou tarde.", "replacement": "Desculpe o atraso."},
+      {"source": "You're welcome.", "draft": "És bem-vindo.", "replacement": "De nada."},
+      {"source": "You're welcome.", "draft": "Tu és bem-vindo.", "replacement": "De nada."},
+      {"source": "You're welcome.", "draft": "És bem-vinda.", "replacement": "De nada."},
+      {"source": "You're welcome.", "draft": "Você é bem-vindo.", "replacement": "De nada."},
+      {"source": "My bad.", "draft": "Meu mau.", "replacement": "A culpa é minha."},
+      {"source": "My bad.", "draft": "O meu mau.", "replacement": "A culpa é minha."},
+      {"source": "Never mind.", "draft": "Nunca mente.", "replacement": "Deixa lá."},
+      {"source": "What's up?", "draft": "O que está acima?", "suggestions": ["Então?", "O que se passa?"], "note": "First: a greeting. Second: asking what is wrong."},
+      {"source": "I'm fine.", "draft": "Sou bem.", "replacement": "Estou bem."},
+      {"source": "I'm fine.", "draft": "Eu sou bem.", "replacement": "Estou bem."},
+      {"source": "I'm good.", "draft": "Sou bom.", "suggestions": ["Estou bem.", "Não é preciso, estou bem."], "note": "First: saying how the speaker is. Second: declining an offer."},
+      {"source": "Take it easy.", "draft": "Leva isso fácil.", "replacement": "Vai com calma."},
+      {"source": "Take it easy.", "draft": "Leve isso fácil.", "replacement": "Vai com calma."}
     ]
   }
 }
