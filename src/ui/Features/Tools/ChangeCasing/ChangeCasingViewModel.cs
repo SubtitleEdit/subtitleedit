@@ -154,19 +154,15 @@ public partial class ChangeCasingViewModel : ObservableObject
             if (NormalCasingFixNames)
             {
                 var result = await ShowFixNames(_subtitle, fixCasing.NoOfLinesChanged);
+
+                // Cancel on the names step cancels the whole change casing, not only the name fixes (#17234)
+                OkPressed = result.OkPressed;
                 if (result.OkPressed)
                 {
                     Subtitle = result.Subtitle;
                     Info = result.Info;
                 }
-                else
-                {
-                    // Cancelling the names step only skips the name fixes - the normal casing
-                    // was already confirmed with OK on this dialog, so it still applies (as in SE4)
-                    Subtitle = _subtitle;
-                }
 
-                OkPressed = true;
                 Window?.Close();
                 return;
             }
