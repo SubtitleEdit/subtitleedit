@@ -144,6 +144,19 @@ To keep VAD and only change how it behaves, put `--vad` in the advanced paramete
 
 If a Crisp ASR run with VAD comes back with no lines at all - Silero can reject a short clip as non-speech - Subtitle Edit retries once with VAD suppressed before reporting an empty result.
 
+### Crisp ASR GPU builds on Linux
+
+On Linux x64 the Crisp ASR download asks for a build: CPU, Vulkan, CUDA (12 or 13) or ROCm.
+
+- **CUDA**: the Linux CUDA build does **not** include the CUDA runtime (the Windows build does). Install the CUDA toolkit from your distribution - it provides `libcudart` and `libcublas` - and pick the CUDA build with the same major version: CUDA 12 needs `libcudart.so.12` / `libcublas.so.12`, CUDA 13 needs the `.so.13` pair. Check the installed version with your package manager (for example `pacman -Q cuda` on Arch-based distributions).
+- **Vulkan** only needs the GPU driver, so it is the easiest GPU option when you do not want to install CUDA.
+
+Without the right runtime, the CUDA build does not fail - it quietly runs on the CPU, which is much slower. Subtitle Edit detects this after the run, writes it to the tools log and shows a *GPU not used* warning (once per session) that names the missing libraries. To check by hand:
+
+```bash
+ldd ~/.config/"Subtitle Edit"/CrispASR/libggml-cuda.so | grep "not found"
+```
+
 ## Isolate speech (Crisp ASR)
 
 With a Crisp ASR engine selected, **Isolate speech (slow)** splits the speech from music and sound effects before the audio is transcribed. The engine - and its voice activity detection - then only hears the dialogue.
