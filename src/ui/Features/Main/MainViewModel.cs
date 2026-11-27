@@ -1724,6 +1724,8 @@ public partial class MainViewModel :
                     vp.VideoPlayer.SetAudioTrack(savedAudioTrack.Id);
                     var _ = Task.Run(LoadAudioTrackMenuItems);
                 }
+
+                ApplyFrontCenterAudio();
             });
         }
     }
@@ -1795,6 +1797,40 @@ public partial class MainViewModel :
         }
 
         player.VideoPlayer.SetAudioTrack(audioTrack.Id);
+        ApplyFrontCenterAudio();
+    }
+
+    /// <summary>
+    /// "Use only front center channel for 5.1 audio" also for playback, like SE 4 (#17233):
+    /// mpv plays only the FC channel of the active audio track, and the players show "FC"
+    /// after the time code. Only for a track with a front center channel - 5.1 and up, as
+    /// "pan=mono|c0=FC" fails on stereo. Call whenever the video, the audio track or the
+    /// setting changes.
+    /// </summary>
+    private void ApplyFrontCenterAudio()
+    {
+        var on = Se.Settings.General.FfmpegUseCenterChannelOnly &&
+                 !string.IsNullOrEmpty(_videoFileName) &&
+                 _audioTrack?.Channels >= 6;
+        LibMpvDynamicPlayer.SessionFrontCenterAudioOnly = on;
+
+        foreach (var control in new[] { VideoPlayerControl, _fullScreenVideoPlayerControl, _videoPlayerUndockedViewModel?.VideoPlayerControl }.Distinct())
+        {
+            if (control == null)
+            {
+                continue;
+            }
+
+            if (control.VideoPlayer is LibMpvDynamicPlayer mpv)
+            {
+                mpv.ApplyFrontCenterAudio();
+                control.IsFrontCenterAudioOnly = on;
+            }
+            else
+            {
+                control.IsFrontCenterAudioOnly = false;
+            }
+        }
     }
 
     private void RefreshSubtitlePreview()
@@ -10613,6 +10649,7 @@ public partial class MainViewModel :
         // With a single audio track, toggling lands on the same track - don't reload the waveform.
         var trackChanged = track.FfIndex != (_audioTrack?.FfIndex ?? -1);
         _audioTrack = track;
+        ApplyFrontCenterAudio();
         var _ = Task.Run(LoadAudioTrackMenuItems);
 
         ShowStatus(string.Format(Se.Language.Main.AudioTrackIsNowX, track));
@@ -10648,6 +10685,7 @@ public partial class MainViewModel :
 
             vp.VideoPlayer.SetAudioTrack(audioTrack.Id);
             _audioTrack = audioTrack;
+            ApplyFrontCenterAudio();
             var _ = Task.Run(LoadAudioTrackMenuItems);
             ShowStatus(string.Format(Se.Language.Main.AudioTrackIsNowX, _audioTrack));
 
@@ -16154,6 +16192,7 @@ public partial class MainViewModel :
             if (centerChannelChanged)
             {
                 SettingsViewModel.DeleteWaveformAndSpectrogramFiles();
+                ApplyFrontCenterAudio();
             }
 
             if (!string.IsNullOrEmpty(_videoFileName))
@@ -31534,6 +31573,7 @@ public partial class MainViewModel :
 
         _videoOpenTokenSource?.Cancel();
         _audioTrack = null;
+        ApplyFrontCenterAudio(); // off while loading - the new file may be stereo (#17233)
         ClearSubtitleEndPreview();
         await vp.Open(videoFileName, startPositionSeconds);
         _videoFileName = videoFileName;
@@ -31587,6 +31627,8 @@ public partial class MainViewModel :
                 _audioTrack = chosen;
             }
         }
+
+        ApplyFrontCenterAudio();
 
         if (vp.VideoPlayer != null && vp.VideoPlayer.Duration > 0)
         {
@@ -32904,6 +32946,7 @@ public partial class MainViewModel :
         FrameGridOffsetSeconds = 0;
         IsVideoLoaded = false;
         _mediaInfo = null;
+        ApplyFrontCenterAudio(); // _videoFileName is empty, so this turns it off (#17233)
 
         if (AudioVisualizer != null)
         {
