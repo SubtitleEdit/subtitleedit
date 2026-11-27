@@ -723,6 +723,7 @@ public partial class SettingsViewModel : ObservableObject
         SubtitleSingleClickActionTypes =
         [
             Se.Language.General.None,
+            Se.Language.Options.Settings.GridFocusTextBox,
             Se.Language.Options.Settings.GridGoToSubtitleOnlyWaveformOnly,
             Se.Language.Options.Settings.GridGoToSubtitleAndPause,
             Se.Language.Options.Settings.GridGoToSubtitleAndPlay,
@@ -1718,6 +1719,7 @@ public partial class SettingsViewModel : ObservableObject
         { SubtitleSingleClickActionType.GoToSubtitleAndSetVideoPosition.ToString(), Se.Language.Options.Settings.GridGoToSubtitleAndSetVideoPosition },
         { SubtitleSingleClickActionType.GoToSubtitleAndPauseAndFocusTextBox.ToString(), Se.Language.Options.Settings.GridGoToSubtitleAndPauseAndFocusTextBox },
         { SubtitleSingleClickActionType.GoToSubtitleAndPlayAndFocusTextBox.ToString(), Se.Language.Options.Settings.GridGoToSubtitleAndPlayAndFocusTextBox },
+        { SubtitleSingleClickActionType.FocusTextBox.ToString(), Se.Language.Options.Settings.GridFocusTextBox },
     };
 
     private static Dictionary<string, string> SingleClickTextToActionMap => ReverseTranslationMap(_singleClickActionToTextMap);

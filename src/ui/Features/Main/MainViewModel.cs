@@ -38542,6 +38542,40 @@ public partial class MainViewModel :
         }
     }
 
+    /// <summary>
+    /// Whether a subtitle grid single-click action moves keyboard focus to the text box.
+    /// </summary>
+    internal static bool SingleClickFocusesTextBox(string? action)
+    {
+        return action == SubtitleSingleClickActionType.FocusTextBox.ToString() ||
+               action == SubtitleSingleClickActionType.GoToSubtitleAndPauseAndFocusTextBox.ToString() ||
+               action == SubtitleSingleClickActionType.GoToSubtitleAndPlayAndFocusTextBox.ToString();
+    }
+
+    /// <summary>
+    /// Focuses the text box with the caret after the last character, like a click at the end of
+    /// the text - the single-click "Focus text box" action (#17218).
+    /// </summary>
+    private void FocusEditTextBoxCaretAtEnd()
+    {
+        Dispatcher.UIThread.Post(async () =>
+        {
+            if (AudioVisualizer != null && AudioVisualizer.IsFocused)
+            {
+                AudioVisualizer.SkipNextPointerEntered = true;
+            }
+
+            ActivateWindow(Window);
+            EditTextBox.Focus();
+            await Task.Delay(10);
+            EditTextBox.Focus();
+
+            // Gaining focus can select or reposition text, so place the caret once it settled.
+            EditTextBox.ClearSelection();
+            EditTextBox.CaretIndex = EditTextBox.Text?.Length ?? 0;
+        });
+    }
+
     internal void OnSubtitleGridSingleTapped(object? sender)
     {
         if (sender is not TableView grid || grid.SelectedItem == null)
@@ -38551,14 +38585,27 @@ public partial class MainViewModel :
 
         if (grid.SelectedItem is SubtitleLineViewModel selectedItem)
         {
-            if (Se.Settings.General.SubtitleSingleClickAction == SubtitleSingleClickActionType.None.ToString())
+            var action = Se.Settings.General.SubtitleSingleClickAction;
+            if (action == SubtitleSingleClickActionType.None.ToString())
             {
+                return;
+            }
+
+            if (action == SubtitleSingleClickActionType.FocusTextBox.ToString())
+            {
+                FocusEditTextBoxCaretAtEnd();
                 return;
             }
 
             var vp = GetVideoPlayerControl();
             if (vp == null)
             {
+                // No video to seek - the "... and focus text box" actions still focus it (#17218).
+                if (SingleClickFocusesTextBox(action))
+                {
+                    FocusEditTextBox();
+                }
+
                 return;
             }
 
