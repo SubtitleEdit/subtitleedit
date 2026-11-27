@@ -391,6 +391,10 @@ public static class InitNativeMacMenu
         videoItems.Items.Add(new NativeMenuItemSeparator());
         videoItems.Items.Add(Conditional(Clean(l.UndockVideoControls), v => v.VideoUndockControlsCommand,
             v => !v.AreVideoControlsUndocked, nameof(MainViewModel.AreVideoControlsUndocked)));
+        videoItems.Items.Add(Conditional(Clean(l.UndockVideoOnly), v => v.VideoUndockVideoOnlyCommand,
+            v => !v.AreVideoControlsUndocked, nameof(MainViewModel.AreVideoControlsUndocked)));
+        videoItems.Items.Add(Conditional(Clean(l.UndockWaveformOnly), v => v.VideoUndockWaveformOnlyCommand,
+            v => !v.AreVideoControlsUndocked, nameof(MainViewModel.AreVideoControlsUndocked)));
         videoItems.Items.Add(Conditional(Clean(l.DockVideoControls), v => v.VideoRedockControlsCommand,
             v => v.AreVideoControlsUndocked, nameof(MainViewModel.AreVideoControlsUndocked)));
         videoItems.Items.Add(Toggle(Clean(l.SelectSubtitleWhilePlaying), v => v.ToggleCurrentSubtitleWhilePlayingCommand,

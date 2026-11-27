@@ -724,6 +724,8 @@ public partial class MainViewModel :
     public AudioVisualizer? AudioVisualizer { get; set; }
 
     VideoPlayerUndockedViewModel? _videoPlayerUndockedViewModel;
+    UndockMode _undockMode = UndockMode.None;
+    private bool IsVideoUndocked => UndockModeHelper.IsVideoUndocked(_undockMode);
     AudioVisualizerUndockedViewModel? _audioVisualizerUndockedViewModel;
     bool _foregroundBelongsToMainWindow;
     bool _undockedWindowPointerPressed;
@@ -10844,6 +10846,38 @@ public partial class MainViewModel :
     [RelayCommand]
     private void VideoUndockControls()
     {
+        UndockControls(UndockMode.Both);
+    }
+
+    [RelayCommand]
+    private void VideoUndockVideoOnly()
+    {
+        UndockControls(UndockMode.VideoOnly);
+    }
+
+    [RelayCommand]
+    private void VideoUndockWaveformOnly()
+    {
+        UndockControls(UndockMode.WaveformOnly);
+    }
+
+    private static UndockMode GetSavedUndockMode()
+    {
+        return UndockModeHelper.FromSettings(true, Se.Settings.General.UndockMode);
+    }
+
+    /// <summary>
+    /// Moves the video player and/or the waveform into their own windows - both, or just one of
+    /// them with the other kept docked in the main window (#17218). Also re-run with the current
+    /// mode to rebuild the undocked windows after Settings/toolbar changes.
+    /// </summary>
+    private void UndockControls(UndockMode mode)
+    {
+        if (mode == UndockMode.None)
+        {
+            return;
+        }
+
         var vp = GetVideoPlayerControl();
         if (Window == null || vp == null)
         {
@@ -10860,7 +10894,10 @@ public partial class MainViewModel :
             // back once both windows exist.
             var windowToReactivate = GetActiveWindowOtherThanMainAndUndocked();
 
+            _undockMode = mode;
             AreVideoControlsUndocked = true;
+            var undockVideo = UndockModeHelper.IsVideoUndocked(mode);
+            var undockWaveform = UndockModeHelper.IsWaveformUndocked(mode);
 
             // Not vp.Position: this rebuild can land while the outgoing player is still
             // restoring its own position - Settings -> Apply rebuilds the undocked windows and
@@ -10872,9 +10909,13 @@ public partial class MainViewModel :
 
             // The undocked window below builds its own player, so this one is finished. Close()
             // alone stopped its timers but left the native player core alive for the rest of the
-            // session (issue #13048).
-            VideoPlayerControl?.CloseAndDisposePlayer();
-            VideoPlayerControl = null;
+            // session (issue #13048). With only the waveform undocked the docked player stays:
+            // the layout rebuild below carries it over (InitVideoPlayer.MakeLayoutVideoPlayer).
+            if (undockVideo)
+            {
+                VideoPlayerControl?.CloseAndDisposePlayer();
+                VideoPlayerControl = null;
+            }
 
             if (_videoPlayerUndockedViewModel != null)
             {
@@ -10890,28 +10931,34 @@ public partial class MainViewModel :
                 _audioVisualizerUndockedViewModel = null;
             }
 
-            _windowService.ShowIndependentWindow<VideoPlayerUndockedWindow, VideoPlayerUndockedViewModel>((window, vm) =>
+            if (undockVideo)
             {
-                _videoPlayerUndockedViewModel = vm;
-                vm.Initialize(_videoFileName ?? string.Empty, position, volume, this);
-                // Float above main while main (or this window) is active, but drop behind when
-                // SE loses focus to another app. Mirrors the Find/Replace helper from #11243.
-                // The two undocked windows are still independent in Alt+Tab — KeepTopmost… is
-                // just a Z-order knob, not an ownership change.
-                WindowService.KeepTopmostWhileOwnerActive(window, Window!, () => WindowService.IsUndockedTopmostSuspended);
-                WatchUndockedForegroundSteal(window);
-            });
+                _windowService.ShowIndependentWindow<VideoPlayerUndockedWindow, VideoPlayerUndockedViewModel>((window, vm) =>
+                {
+                    _videoPlayerUndockedViewModel = vm;
+                    vm.Initialize(_videoFileName ?? string.Empty, position, volume, this);
+                    // Float above main while main (or this window) is active, but drop behind when
+                    // SE loses focus to another app. Mirrors the Find/Replace helper from #11243.
+                    // The two undocked windows are still independent in Alt+Tab — KeepTopmost… is
+                    // just a Z-order knob, not an ownership change.
+                    WindowService.KeepTopmostWhileOwnerActive(window, Window!, () => WindowService.IsUndockedTopmostSuspended);
+                    WatchUndockedForegroundSteal(window);
+                });
+            }
 
-            _windowService.ShowIndependentWindow<AudioVisualizerUndockedWindow, AudioVisualizerUndockedViewModel>((window, vm) =>
+            if (undockWaveform)
             {
-                _audioVisualizerUndockedViewModel = vm;
-                vm.Initialize(AudioVisualizer, this);
-                ReloadAudioVisualizer();
-                WindowService.KeepTopmostWhileOwnerActive(window, Window!, () => WindowService.IsUndockedTopmostSuspended);
-                WatchUndockedForegroundSteal(window);
-            });
+                _windowService.ShowIndependentWindow<AudioVisualizerUndockedWindow, AudioVisualizerUndockedViewModel>((window, vm) =>
+                {
+                    _audioVisualizerUndockedViewModel = vm;
+                    vm.Initialize(AudioVisualizer, this);
+                    ReloadAudioVisualizer();
+                    WindowService.KeepTopmostWhileOwnerActive(window, Window!, () => WindowService.IsUndockedTopmostSuspended);
+                    WatchUndockedForegroundSteal(window);
+                });
+            }
 
-            InitLayout.MakeLayoutWithoutVideoKeepVideo(MainView!, this);
+            InitLayout.MakeLayoutForUndockMode(MainView!, this, mode);
             if (Se.Settings.Appearance.RightToLeft && Window != null)
             {
                 // The rebuilt layout starts left to right; re-apply the mode.
@@ -11177,6 +11224,7 @@ public partial class MainViewModel :
     private void VideoRedockControls()
     {
         AreVideoControlsUndocked = false;
+        _undockMode = UndockMode.None;
         var videoFileName = _videoFileName ?? string.Empty;
 
         // Re-docking re-opens the video in the rebuilt layout's player, and VideoOpenFile clears
@@ -11197,6 +11245,12 @@ public partial class MainViewModel :
             _audioVisualizerUndockedViewModel.Window?.Close();
         }
 
+        _videoPlayerUndockedViewModel = null;
+        _audioVisualizerUndockedViewModel = null;
+
+        // With only the waveform undocked the docked player is still alive - dispose it, the
+        // rebuilt layout makes a fresh one (#13048, #17218).
+        VideoPlayerControl?.CloseAndDisposePlayer();
         VideoPlayerControl = null;
         SetLayout(Se.Settings.General.LayoutNumber);
 
@@ -16164,7 +16218,7 @@ public partial class MainViewModel :
         RefreshGridColumnsFromSettings();
         if (AreVideoControlsUndocked)
         {
-            VideoUndockControls();
+            UndockControls(_undockMode);
         }
         else
         {
@@ -16298,7 +16352,7 @@ public partial class MainViewModel :
         {
             return _fullScreenVideoPlayerControl;
         }
-        else if (AreVideoControlsUndocked)
+        else if (IsVideoUndocked)
         {
             return _videoPlayerUndockedViewModel?.VideoPlayerControl;
         }
@@ -16927,7 +16981,7 @@ public partial class MainViewModel :
         // user dragged, which the fresh grids would otherwise reset (#16001).
         if (AreVideoControlsUndocked)
         {
-            VideoUndockControls();
+            UndockControls(_undockMode);
         }
         else
         {
@@ -23398,7 +23452,7 @@ public partial class MainViewModel :
         // the Options/Settings close path.
         if (AreVideoControlsUndocked)
         {
-            VideoUndockControls();
+            UndockControls(_undockMode);
         }
         else
         {
@@ -30947,6 +31001,10 @@ public partial class MainViewModel :
 
             UiUtil.SaveWindowPosition(Window);
             Se.Settings.General.UndockVideoControls = Se.Settings.General.RememberPositionAndSize && AreVideoControlsUndocked;
+            if (AreVideoControlsUndocked)
+            {
+                Se.Settings.General.UndockMode = _undockMode.ToString();
+            }
             Se.Settings.Appearance.CurrentLayoutPositions = InitLayout.SaveLayoutPositions(ContentGrid.Children.FirstOrDefault() as Grid);
 
             if (_findViewModel != null)
@@ -31069,7 +31127,7 @@ public partial class MainViewModel :
         {
             if (Se.Settings.General.UndockVideoControls)
             {
-                VideoUndockControls();
+                UndockControls(GetSavedUndockMode());
             }
 
             InitLayout.RestoreLayoutPositions(Se.Settings.Appearance.CurrentLayoutPositions, ContentGrid.Children.FirstOrDefault() as Grid);
@@ -31228,7 +31286,7 @@ public partial class MainViewModel :
                         {
                             if (Se.Settings.General.UndockVideoControls)
                             {
-                                VideoUndockControls();
+                                UndockControls(GetSavedUndockMode());
                                 skipLoadVideo = true;
                             }
 
@@ -31261,7 +31319,7 @@ public partial class MainViewModel :
                         UiUtil.RestoreWindowPosition(Window);
                         if (Se.Settings.General.UndockVideoControls)
                         {
-                            VideoUndockControls();
+                            UndockControls(GetSavedUndockMode());
                         }
 
                         InitLayout.RestoreLayoutPositions(Se.Settings.Appearance.CurrentLayoutPositions, ContentGrid.Children.FirstOrDefault() as Grid);
@@ -31284,7 +31342,7 @@ public partial class MainViewModel :
                     UiUtil.RestoreWindowPosition(Window);
                     if (Se.Settings.General.UndockVideoControls)
                     {
-                        VideoUndockControls();
+                        UndockControls(GetSavedUndockMode());
                     }
 
                     InitLayout.RestoreLayoutPositions(Se.Settings.Appearance.CurrentLayoutPositions, ContentGrid.Children.FirstOrDefault() as Grid);

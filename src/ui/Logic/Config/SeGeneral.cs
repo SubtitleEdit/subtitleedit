@@ -169,6 +169,11 @@ public class SeGeneral
     /// </summary>
     public bool TitleBarFullFileName { get; set; }
     public bool UndockVideoControls { get; set; }
+
+    /// <summary>
+    /// What was undocked when <see cref="UndockVideoControls"/> is set: Both, VideoOnly or WaveformOnly (#17218).
+    /// </summary>
+    public string UndockMode { get; set; } = "Both";
     public List<SeWindowPosition> WindowPositions { get; set; } = new List<SeWindowPosition>();
     public bool AutoSave { get; set; }
     public bool CheckSubtitleFileChangedOutside { get; set; }

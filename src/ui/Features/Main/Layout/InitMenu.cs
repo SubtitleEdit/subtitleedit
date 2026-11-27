@@ -880,6 +880,18 @@ public static class InitMenu
                 },
                 new MenuItem
                 {
+                    Header = l.UndockVideoOnly,
+                    Command = vm.VideoUndockVideoOnlyCommand,
+                    [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.AreVideoControlsUndocked)) {  Converter = InverseBooleanConverter.Instance },
+                },
+                new MenuItem
+                {
+                    Header = l.UndockWaveformOnly,
+                    Command = vm.VideoUndockWaveformOnlyCommand,
+                    [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.AreVideoControlsUndocked)) {  Converter = InverseBooleanConverter.Instance },
+                },
+                new MenuItem
+                {
                     Header = l.ToggleSelectSubtitleWhilePlayingCurrentlyOn,
                     Command = vm.ToggleCurrentSubtitleWhilePlayingCommand,
                     [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.SelectCurrentSubtitleWhilePlaying)),
