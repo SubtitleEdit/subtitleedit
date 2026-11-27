@@ -284,7 +284,16 @@ public class ReviewSpeechWindow : Window
             {
                 Mode = BindingMode.TwoWay,
             },
+            FontSize = textBox.FontSize,
+            FontWeight = textBox.FontWeight,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            CornerRadius = new CornerRadius(8),
         }.WithAccessibleName(spokenTextLabel);
+        if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
+        {
+            spokenText.FontFamily = textBox.FontFamily;
+        }
         grid.Add(new StackPanel
         {
             Spacing = 4,

@@ -149,6 +149,7 @@ public static class ActorVoiceDetector
                     continue;
 
                 case IrodoriTtsCrispAsr when !File.Exists(IrodoriTtsCrispAsr.Executable)
+                    || !IrodoriTtsCrispAsr.IsRuntimeSupported()
                     || !IrodoriTtsCrispAsr.AreModelsInstalled():
                     continue;
 

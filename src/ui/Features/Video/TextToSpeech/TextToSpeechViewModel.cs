@@ -3752,7 +3752,9 @@ public partial class TextToSpeechViewModel : ObservableObject
                 }
                 resultList.Add(new TtsStepResult
                 {
-                    Text = resolution.Text,
+                    // The subtitle's own (cleaned) text; what was actually spoken lives in
+                    // SpokenText when the user set an override.
+                    Text = TtsSpokenText.Clean(GetSubtitleTextWithoutVoiceTags(paragraph)),
                     SpokenText = _spokenTextOverrides.GetValueOrDefault(paragraph),
                     CurrentFileName = speakResult.FileName,
                     Paragraph = paragraph,
@@ -4391,12 +4393,15 @@ public partial class TextToSpeechViewModel : ObservableObject
     // out of the text so the engine doesn't speak the tag. Falls back to the global engine/voice
     // when the paragraph has no actor, the mapping points at an unknown engine, or that engine's
     // voice list couldn't be loaded.
+    private string GetSubtitleTextWithoutVoiceTags(Paragraph paragraph) =>
+        _castKind == ActorVoiceDetector.CastKind.WebVttVoices
+            ? ActorVoiceDetector.StripWebVttVoiceTags(paragraph.Text)
+            : paragraph.Text;
+
     private ResolvedVoice ResolveVoiceForParagraph(Paragraph paragraph, CastContext ctx, ITtsEngine defaultEngine, Voice defaultVoice)
     {
         var actor = ActorVoiceDetector.GetParagraphActor(paragraph, _castKind);
-        var rawText = _castKind == ActorVoiceDetector.CastKind.WebVttVoices
-            ? ActorVoiceDetector.StripWebVttVoiceTags(paragraph.Text)
-            : paragraph.Text;
+        var rawText = GetSubtitleTextWithoutVoiceTags(paragraph);
         // Strip formatting markup (<i>…</i>, <font …>, {\an8}, …) before synthesis. TTS engines
         // don't interpret subtitle tags, and some — notably MOSS-TTS (CrispASR) — vocalize them
         // ("<i>" spoken as "I") or run away into garbled audio rather than ignoring them (#12757).
