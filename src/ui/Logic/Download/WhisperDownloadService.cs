@@ -37,7 +37,10 @@ public class WhisperDownloadService : IWhisperDownloadService
 
     // Upstream renamed this asset in b5454 (was whisper-cublas-12.4.0-bin-x64.zip); same Release/ layout.
     private const string WindowsUrlCuBlass = "https://github.com/ggml-org/whisper.cpp/releases/download/b5907/whisper-bin-win-cuda-12.4.0-x64.zip";
-    private const string WindowsUrlCppVulkan = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-196/whisper-vulkan-x64.zip";
+    // whispercpp-197 is the same b5907 source as -196, rebuilt with GGML_CPU_ALL_VARIANTS so ggml
+    // picks a ggml-cpu-*.dll at runtime. -196 shipped one ggml-cpu.dll tuned for the AVX-512 build
+    // runner, which crashed with 0xC000001D on AVX2-only CPUs (issue #17252).
+    private const string WindowsUrlCppVulkan = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-197/whisper-vulkan-x64.zip";
     private const string LinuxUrlCuBlass = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-196/whisper-cuda-linux64.zip";
     
     private const string DownloadUrlConstMe = "https://github.com/Const-me/Whisper/releases/download/1.12.0/cli.zip";
