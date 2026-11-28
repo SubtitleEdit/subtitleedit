@@ -29,13 +29,15 @@ public class CommandPaletteRowsTests
     [InlineData("transcirbe", "Speech to text")]
     [InlineData("captions burn", "Generate video with burned-in subtitles")]
     [InlineData("text\tspeech", "Speech to text")]
+    [InlineData("transcribe speech", "Speech to text")]
+    [InlineData("hardcode video", "Generate video with burned-in subtitles")]
     public void Search_MatchesAliasesTyposAndReorderedWords(string query, string expected)
     {
         var command = new RelayCommand(() => { });
         var vm = new CommandPaletteViewModel();
         vm.Initialize([
             new("speech", "Speech to text", "Video", "", command, "transcribe"),
-            new("burn", "Generate video with burned-in subtitles", "Video", "", command, "burn captions"),
+            new("burn", "Generate video with burned-in subtitles", "Video", "", command, "burn captions hardcode"),
         ]);
 
         vm.SearchText = query;
@@ -55,9 +57,12 @@ public class CommandPaletteRowsTests
         vm.SearchText = "save";
         Assert.Equal(new[] { exact, typo, settings }, vm.Items.ToArray());
 
+        Assert.False(vm.IsNothingFound);
+
         vm.SearchText = "zoom anchor";
         Assert.Same(settings, vm.SelectedItem);
         Assert.Single(vm.Items);
+        Assert.True(vm.IsNothingFound); // no command matched, even with the settings row shown
 
         vm.SearchText = "";
         Assert.DoesNotContain(settings, vm.Items);

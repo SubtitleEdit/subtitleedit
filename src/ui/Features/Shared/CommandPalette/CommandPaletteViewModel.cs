@@ -79,13 +79,14 @@ public partial class CommandPaletteViewModel : ObservableObject
             Items.Add(item);
         }
 
+        // Only real command matches count, so the hint still shows above the settings row.
+        IsNothingFound = Items.Count == 0;
         if (tokens.Length > 0 && _searchSettingsItem != null)
         {
             Items.Add(_searchSettingsItem);
         }
 
         SelectedItem = Items.FirstOrDefault();
-        IsNothingFound = Items.Count == 0;
         if (SelectedItem != null)
         {
             ListBox?.ScrollIntoView(SelectedItem);
@@ -102,13 +103,13 @@ public partial class CommandPaletteViewModel : ObservableObject
         var initialsMatch = tokens.Length == 1 && query.Length > 1 && item.Initials.StartsWith(query, StringComparison.Ordinal);
         if (!initialsMatch && !SearchQuery.Matches(item.SearchText, tokens))
         {
-            if (SearchQuery.Matches(item.SearchAliases, tokens))
+            // Each word may come from the name, group, keys or aliases ("transcribe speech").
+            if (SearchQuery.Matches(item.SearchTextWithAliases, tokens))
             {
                 return 6;
             }
 
-            return SearchQuery.Matches(item.SearchName, tokens, allowTypos: true) ||
-                   SearchQuery.Matches(item.SearchAliases, tokens, allowTypos: true) ? 7 : -1;
+            return SearchQuery.Matches(item.SearchNameWithAliases, tokens, allowTypos: true) ? 7 : -1;
         }
 
         if (item.SearchName.StartsWith(query, StringComparison.Ordinal))

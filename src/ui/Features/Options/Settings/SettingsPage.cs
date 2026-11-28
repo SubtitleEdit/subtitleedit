@@ -161,6 +161,7 @@ public class SettingsPage : UserControl
         ApplyChromeBrushes();
 
         UpdateVisibleSections(vm.InitialSearchText);
+        _searchBox.CaretIndex = vm.InitialSearchText.Length; // keep typing after the text from the command palette
 
         // Search updates immediately, without the category navigation fade.
         _searchBox.TextChanged += (_, e) => UpdateVisibleSections(_searchBox.Text ?? string.Empty);
