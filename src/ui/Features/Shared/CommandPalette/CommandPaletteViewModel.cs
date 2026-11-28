@@ -29,6 +29,7 @@ public partial class CommandPaletteViewModel : ObservableObject
     public IRelayCommand? SelectedCommand { get; private set; }
 
     private List<CommandPaletteItem> _allItems;
+    private CommandPaletteItem? _searchSettingsItem;
 
     public CommandPaletteViewModel()
     {
@@ -37,9 +38,10 @@ public partial class CommandPaletteViewModel : ObservableObject
         Items = new ObservableCollection<CommandPaletteItem>();
     }
 
-    public void Initialize(List<CommandPaletteItem> items)
+    public void Initialize(List<CommandPaletteItem> items, CommandPaletteItem? searchSettingsItem = null)
     {
         _allItems = items;
+        _searchSettingsItem = searchSettingsItem;
         Filter();
     }
 
@@ -51,7 +53,7 @@ public partial class CommandPaletteViewModel : ObservableObject
     private void Filter()
     {
         var query = (SearchText ?? string.Empty).Trim().ToLowerInvariant();
-        var tokens = query.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        var tokens = SearchQuery.Tokenize(query);
 
         IEnumerable<CommandPaletteItem> result;
         if (tokens.Length == 0)
@@ -77,8 +79,14 @@ public partial class CommandPaletteViewModel : ObservableObject
             Items.Add(item);
         }
 
-        SelectedItem = Items.FirstOrDefault();
+        // Only real command matches count, so the hint still shows above the settings row.
         IsNothingFound = Items.Count == 0;
+        if (tokens.Length > 0 && _searchSettingsItem != null)
+        {
+            Items.Add(_searchSettingsItem);
+        }
+
+        SelectedItem = Items.FirstOrDefault();
         if (SelectedItem != null)
         {
             ListBox?.ScrollIntoView(SelectedItem);
@@ -93,15 +101,15 @@ public partial class CommandPaletteViewModel : ObservableObject
     private static int GetScore(CommandPaletteItem item, string query, string[] tokens)
     {
         var initialsMatch = tokens.Length == 1 && query.Length > 1 && item.Initials.StartsWith(query, StringComparison.Ordinal);
-        if (!initialsMatch)
+        if (!initialsMatch && !SearchQuery.Matches(item.SearchText, tokens))
         {
-            foreach (var token in tokens)
+            // Each word may come from the name, group, keys or aliases ("transcribe speech").
+            if (SearchQuery.Matches(item.SearchTextWithAliases, tokens))
             {
-                if (!item.SearchText.Contains(token, StringComparison.Ordinal))
-                {
-                    return -1;
-                }
+                return 6;
             }
+
+            return SearchQuery.Matches(item.SearchNameWithAliases, tokens, allowTypos: true) ? 7 : -1;
         }
 
         if (item.SearchName.StartsWith(query, StringComparison.Ordinal))
@@ -158,11 +166,14 @@ public partial class CommandPaletteViewModel : ObservableObject
             return;
         }
 
-        RecentActionNames.Remove(item.ActionName);
-        RecentActionNames.Insert(0, item.ActionName);
-        if (RecentActionNames.Count > MaxRecent)
+        if (item != _searchSettingsItem)
         {
-            RecentActionNames.RemoveAt(RecentActionNames.Count - 1);
+            RecentActionNames.Remove(item.ActionName);
+            RecentActionNames.Insert(0, item.ActionName);
+            if (RecentActionNames.Count > MaxRecent)
+            {
+                RecentActionNames.RemoveAt(RecentActionNames.Count - 1);
+            }
         }
 
         SelectedCommand = item.Command;

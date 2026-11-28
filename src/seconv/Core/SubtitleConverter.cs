@@ -108,6 +108,11 @@ internal class SubtitleConverter
         var inputFiles = GetInputFiles(options);
         foreach (var target in targets)
         {
+            if (merged.Cancelled)
+            {
+                break;
+            }
+
             var result = await ConvertSingleTargetAsync(options with { TranslateTo = target }, new List<string>(inputFiles));
             merged.TotalFiles += result.TotalFiles;
             merged.SuccessfulFiles += result.SuccessfulFiles;
@@ -115,6 +120,7 @@ internal class SubtitleConverter
             merged.Errors.AddRange(result.Errors.Select(p => $"[{target}] {p}"));
             merged.Warnings.AddRange(result.Warnings.Select(p => $"[{target}] {p}"));
             merged.Files.AddRange(result.Files);
+            merged.Cancelled |= result.Cancelled;
         }
 
         return merged;
@@ -204,6 +210,7 @@ internal class SubtitleConverter
             var fileIndex = 1;
             foreach (var inputFile in inputFiles)
             {
+                CliCancellation.ThrowIfCancellationRequested();
                 // --keep-timestamp: read the source's timestamps before anything is written, as
                 // --overwrite can make the output the input file itself.
                 var sourceTimestamps = options.KeepTimestamp ? FileTimestampHelper.Capture(inputFile) : null;
@@ -265,6 +272,7 @@ internal class SubtitleConverter
 
                         foreach (var track in tracks)
                         {
+                            CliCancellation.ThrowIfCancellationRequested();
                             var outputFile = ResolveOutputFileName(inputFile, options, AppendForcedToken(translateToSuffix ?? LanguageToken(options, track.LanguageCode), track.IsForced), track.TrackNumber, _usedOutputFileNames);
                             EnsureBurnInWritable(outputFile, options);
                             var trackLabel = track.TrackNumber.HasValue ? $"#{track.TrackNumber.Value} " : string.Empty;
@@ -288,7 +296,7 @@ internal class SubtitleConverter
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (!CliCancellation.IsCancellationRequested)
                 {
                     var msg = ErrorMessageFormatter.FormatForUser(ex, options.Verbose);
                     result.FailedFiles++;
@@ -304,9 +312,15 @@ internal class SubtitleConverter
                 fileIndex++;
             }
         }
-        catch (Exception ex)
+        catch (Exception ex) when (!CliCancellation.IsCancellationRequested)
         {
             result.Errors.Add($"Conversion failed: {ErrorMessageFormatter.FormatForUser(ex, options.Verbose)}");
+        }
+        catch (Exception) when (CliCancellation.IsCancellationRequested)
+        {
+            // Ctrl+C: whatever failed after it (a killed ffmpeg/llama-server, a cancelled
+            // request) is the cancellation, not a broken file. Files already done stay listed.
+            result.Cancelled = true;
         }
 
         return result;
@@ -483,7 +497,7 @@ internal class SubtitleConverter
                 }
             }
         }
-        catch (Exception ex)
+        catch (Exception ex) when (!CliCancellation.IsCancellationRequested)
         {
             var msg = ErrorMessageFormatter.FormatForUser(ex, options.Verbose);
             result.FailedFiles = vobFiles.Count;
@@ -620,7 +634,7 @@ internal class SubtitleConverter
                 AnsiConsole.MarkupLine($" [green]done ({items.Count} bitmap(s)).[/]");
             }
         }
-        catch (Exception ex)
+        catch (Exception ex) when (!CliCancellation.IsCancellationRequested)
         {
             var msg = ErrorMessageFormatter.FormatForUser(ex, options.Verbose);
             result.FailedFiles++;
@@ -708,7 +722,7 @@ internal class SubtitleConverter
                     AnsiConsole.MarkupLine($" [green]done ({items.Count} bitmap(s)).[/]");
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!CliCancellation.IsCancellationRequested)
             {
                 var msg = ErrorMessageFormatter.FormatForUser(ex, options.Verbose);
                 result.FailedFiles++;
@@ -786,7 +800,7 @@ internal class SubtitleConverter
                     AnsiConsole.MarkupLine($" [green]done ({items.Count} bitmap(s)).[/]");
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!CliCancellation.IsCancellationRequested)
             {
                 var msg = ErrorMessageFormatter.FormatForUser(ex, options.Verbose);
                 result.FailedFiles++;
@@ -894,7 +908,7 @@ internal class SubtitleConverter
                     AnsiConsole.MarkupLine($" [green]done ({items.Count} bitmap(s)).[/]");
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!CliCancellation.IsCancellationRequested)
             {
                 var msg = ErrorMessageFormatter.FormatForUser(ex, options.Verbose);
                 result.FailedFiles++;
@@ -1125,7 +1139,7 @@ internal class SubtitleConverter
         // batch convert order (fix-common-errors etc. run on the translated text).
         if (_translateRunner != null)
         {
-            await _translateRunner.TranslateAsync(subtitle, CancellationToken.None);
+            await _translateRunner.TranslateAsync(subtitle, CliCancellation.Token);
         }
 
         if (options.Operations.Count > 0)
@@ -1173,6 +1187,8 @@ internal class SubtitleConverter
             BurnInRunner.ApplyEffects(subtitle, options.BurnInEffects);
         }
 
+        // The last point to stop before an existing output is replaced.
+        CliCancellation.ThrowIfCancellationRequested();
         LibSEIntegration.SaveSubtitle(
             subtitle,
             outputFile,
@@ -1612,7 +1628,11 @@ internal class ConversionResult
     public List<string> Warnings { get; set; } = new();
 
     public List<FileConversionResult> Files { get; set; } = new();
-    public bool Success => FailedFiles == 0 && Errors.Count == 0;
+
+    /// <summary>Stopped by Ctrl+C; <see cref="Files"/> lists what was done before that.</summary>
+    public bool Cancelled { get; set; }
+
+    public bool Success => FailedFiles == 0 && Errors.Count == 0 && !Cancelled;
 }
 
 internal sealed record FileConversionResult(string Input, string? Output, bool Success, string? Error, IReadOnlyList<string>? Warnings = null);

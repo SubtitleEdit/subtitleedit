@@ -166,7 +166,8 @@ internal class Program
 
         try
         {
-            return app.Run(args);
+            using var ctrlC = CliCancellation.Listen();
+            return app.Run(args, CliCancellation.Token);
         }
         catch (CommandAppException ex)
         {

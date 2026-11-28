@@ -4,7 +4,7 @@ using System.Collections.Concurrent;
 
 namespace Nikse.SubtitleEdit.UiLogic.Export;
 
-public class ExportHandlerBluRaySup : IExportHandler
+public class ExportHandlerBluRaySup : IExportHandler, IDisposable
 {
     public ExportImageType ExportImageType => ExportImageType.BluRaySup;
     public string Extension => ".sup";
@@ -115,6 +115,18 @@ public class ExportHandlerBluRaySup : IExportHandler
         FlushPending();
         _pictures.Clear();
         _fileStream!.Close();
+    }
+
+    /// <summary>
+    /// Releases the file without finishing it - for an export that failed or was cancelled
+    /// half way. <see cref="WriteFooter"/> is the normal end; calling this after it is harmless.
+    /// </summary>
+    public void Dispose()
+    {
+        _pending.Clear();
+        _pictures.Clear();
+        _fileStream?.Dispose();
+        _fileStream = null;
     }
 
     private void FlushPending()

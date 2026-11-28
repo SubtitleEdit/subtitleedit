@@ -60,7 +60,7 @@ seconv movie.srt subrip --json                  # per-file results
 
 An unrecognised option is an error, never a silent no-op: `seconv` exits 1 and names the closest
 real option rather than converting the file without the operation that was asked for. Exit codes
-are only ever 0 (success) or 1 (any failure).
+are 0 (success), 1 (any failure) or 130 (stopped with Ctrl+C).
 
 ## Full reference
 

@@ -87,23 +87,14 @@ public class SettingsItem
             return;
         }
 
-        if (_label != null && _label.Contains(filter, StringComparison.OrdinalIgnoreCase))
-        {
-            IsVisible = true;
-            return;
-        }
+        var tokens = SearchQuery.Tokenize(filter);
+        bool Matches(string? text) => SearchQuery.Matches(text, tokens, allowTypos: true);
 
-        if (SearchTerms != null && SearchTerms.Any(term =>
-                term.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
-                EnglishLabelLookup.GetEnglish(term)?.Contains(filter, StringComparison.OrdinalIgnoreCase) == true))
-        {
-            IsVisible = true;
-            return;
-        }
-
-        // With a translated UI, also match the English name used in docs and tutorials (#15945).
-        var english = EnglishLabel ?? EnglishLabelLookup.GetEnglish(_label);
-        IsVisible = english != null && english.Contains(filter, StringComparison.OrdinalIgnoreCase);
+        // Also match the English labels used in docs and tutorials (#15945).
+        IsVisible = Matches(_label) ||
+                    Matches(EnglishLabel ?? EnglishLabelLookup.GetEnglish(_label)) ||
+                    (SearchTerms != null && SearchTerms.Any(term =>
+                        Matches(term) || Matches(EnglishLabelLookup.GetEnglish(term))));
     }
 
     public Control Build(bool includeLabel = true)

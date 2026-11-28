@@ -27,6 +27,9 @@ public class SettingsSearchGroupedItemsTests
         item.Filter("align");
         Assert.True(item.IsVisible);
 
+        item.Filter("aligment");
+        Assert.True(item.IsVisible);
+
         item.Filter("preview");
         Assert.True(item.IsVisible);
 
