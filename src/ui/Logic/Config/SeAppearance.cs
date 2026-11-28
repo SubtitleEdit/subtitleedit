@@ -37,6 +37,12 @@ public class SeAppearance
     /// <see cref="Features.Options.Settings.SubtitleGridTextDisplayMode"/> name.
     /// </summary>
     public string SubtitleGridTextDisplay { get; set; }
+
+    /// <summary>
+    /// Where the text box sits relative to the subtitle grid: "Below" (default), "Inline" or
+    /// "Above". Stored as the <see cref="Features.Options.Settings.SubtitleEditBoxPosition"/> name.
+    /// </summary>
+    public string SubtitleEditBoxPosition { get; set; }
     public double SubtitleTextBoxFontSize { get; set; }
     public string SubtitleTextBoxAndGridFontName { get; set; }
     public bool SubtitleTextBoxFontBold { get; set; }
@@ -148,6 +154,7 @@ public class SeAppearance
         SubtitleGridFontSize = 13d;
         SubtitleGridTextSingleLineSeparator = " ⏎ "; // "<br />";
         SubtitleGridTextDisplay = nameof(Features.Options.Settings.SubtitleGridTextDisplayMode.Clip);
+        SubtitleEditBoxPosition = nameof(Features.Options.Settings.SubtitleEditBoxPosition.Below);
         SubtitleTextBoxFontSize = 15d;
         SubtitleTextBoxFontBold = true;
         SubtitleTextBoxColorTags = true;

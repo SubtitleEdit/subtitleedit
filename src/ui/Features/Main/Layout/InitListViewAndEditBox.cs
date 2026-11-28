@@ -87,12 +87,28 @@ public static partial class InitListViewAndEditBox
 
         vm.SubtitleGridAlternatingRowBrush = null;
 
+        // A layout with its own (detached) text box keeps it where the layout puts it; the
+        // position setting only moves a text box docked with the grid.
+        var editBoxPosition = detachedEditBox ? SubtitleEditBoxPosition.Below : SubtitleEditBoxPositionDisplay.FromSettings();
+        var gridRowIndex = editBoxPosition == SubtitleEditBoxPosition.Above ? 1 : 0;
+        var editRowIndex = editBoxPosition == SubtitleEditBoxPosition.Above ? 0 : 1;
+
         var mainGrid = new Grid();
-        mainGrid.RowDefinitions.Add(new RowDefinition(GridLength.Star) { MinHeight = SubtitleGridMinimumHeight });
-        if (!detachedEditBox)
+        var subtitleGridRow = new RowDefinition(GridLength.Star) { MinHeight = SubtitleGridMinimumHeight };
+        if (detachedEditBox || editBoxPosition == SubtitleEditBoxPosition.Inline)
+        {
+            mainGrid.RowDefinitions.Add(subtitleGridRow);
+        }
+        else if (editBoxPosition == SubtitleEditBoxPosition.Above)
+        {
+            mainGrid.RowDefinitions.Add(MakeEditSectionRow(vm));
+            mainGrid.RowDefinitions.Add(subtitleGridRow);
+        }
+        else
         {
             // GridSplitter constrains the row definition, so include editGrid's outer
             // margin to preserve the text box's 92 px minimum at the drag limit.
+            mainGrid.RowDefinitions.Add(subtitleGridRow);
             mainGrid.RowDefinitions.Add(MakeEditSectionRow(vm));
         }
 
@@ -803,7 +819,7 @@ public static partial class InitListViewAndEditBox
             Source = vm,
         };
 
-        Grid.SetRow(dropHost, 0);
+        Grid.SetRow(dropHost, gridRowIndex);
         mainGrid.Children.Add(dropHost);
 
         // Create a Flyout for the DataGrid
@@ -2328,9 +2344,16 @@ public static partial class InitListViewAndEditBox
         editGrid.Children.Add(textEditGrid);
 
         editSection = editGrid;
-        if (!detachedEditBox)
+        if (!detachedEditBox && editBoxPosition == SubtitleEditBoxPosition.Inline)
         {
-            Grid.SetRow(editGrid, 1);
+            // Inline editing (prototype): no docked edit section. The text box is lifted out of
+            // the (unparented) edit section and floated over the Text cell of the selected row.
+            textEditGrid.Children.Remove(textEditor);
+            AttachInlineTextEditor(vm, mainGrid, subtitleGrid, textEditor);
+        }
+        else if (!detachedEditBox)
+        {
+            Grid.SetRow(editGrid, editRowIndex);
             mainGrid.Children.Add(editGrid);
 
             // GridSplitter overlaying the boundary between the subtitle grid (row 0) and the
@@ -2340,17 +2363,21 @@ public static partial class InitListViewAndEditBox
             // VerticalAlignment.Top it resizes the row above (grid, Star) and its own row
             // (edit box, Auto -> becomes Pixel once the user drags). The negative top margin
             // centers the 4 px strip on the boundary.
+            // With the text box above the grid the splitter sits on the edit row's bottom edge.
+            var above = editBoxPosition == SubtitleEditBoxPosition.Above;
             var editBoxSplitter = new GridSplitter
             {
                 Height = UiUtil.SplitterWidthOrHeight,
                 HorizontalAlignment = HorizontalAlignment.Stretch,
-                VerticalAlignment = VerticalAlignment.Top,
-                Margin = new Thickness(0, -UiUtil.SplitterWidthOrHeight / 2.0, 0, 0)
+                VerticalAlignment = above ? VerticalAlignment.Bottom : VerticalAlignment.Top,
+                Margin = above
+                    ? new Thickness(0, 0, 0, -UiUtil.SplitterWidthOrHeight / 2.0)
+                    : new Thickness(0, -UiUtil.SplitterWidthOrHeight / 2.0, 0, 0)
             };
-            Grid.SetRow(editBoxSplitter, 1);
+            Grid.SetRow(editBoxSplitter, editRowIndex);
             mainGrid.Children.Add(editBoxSplitter);
 
-            TrackEditSectionMinimumHeight(mainGrid, textEditGrid);
+            TrackEditSectionMinimumHeight(mainGrid.RowDefinitions[editRowIndex], textEditGrid);
         }
 
 
@@ -2388,7 +2415,7 @@ public static partial class InitListViewAndEditBox
         hostGrid.Children.Add(editBoxSplitter);
 
         var textEditGrid = editSection.Children.OfType<Grid>().First(g => g.Name == "SubtitleTextEditGrid");
-        TrackEditSectionMinimumHeight(hostGrid, textEditGrid);
+        TrackEditSectionMinimumHeight(hostGrid.RowDefinitions[1], textEditGrid);
     }
 
     // Background for a grid cell tinted with the error color. The row's IsSelected goes along
@@ -2923,7 +2950,7 @@ public static partial class InitListViewAndEditBox
     /// than its DesiredSize, which is clamped to the space the row offered.
     /// </para>
     /// </summary>
-    private static void TrackEditSectionMinimumHeight(Grid mainGrid, Grid textEditGrid)
+    private static void TrackEditSectionMinimumHeight(RowDefinition row, Grid textEditGrid)
     {
         var timeControlsPanel = (textEditGrid.Parent as Grid)?.Children
             .OfType<StackPanel>()
@@ -2950,8 +2977,6 @@ public static partial class InitListViewAndEditBox
             {
                 needed = timeControlsNeeded;
             }
-
-            var row = mainGrid.RowDefinitions[1];
 
             // Only react to a real change - assigning MinHeight re-triggers layout, so an
             // unconditional write here would spin.

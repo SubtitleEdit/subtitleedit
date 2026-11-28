@@ -53,6 +53,10 @@ public class LanguageSettings
     public string SubtitleGridTextDisplayClip { get; set; }
     public string SubtitleGridTextDisplayWrap { get; set; }
     public string SubtitleGridTextDisplayEllipsis { get; set; }
+    public string SubtitleEditBoxPosition { get; set; }
+    public string SubtitleEditBoxPositionBelow { get; set; }
+    public string SubtitleEditBoxPositionInline { get; set; }
+    public string SubtitleEditBoxPositionAbove { get; set; }
     public string SubtitleGridLiveSpellCheck { get; set; }
     public string SubtitleGridCenterText { get; set; }
     public string SubtitleGridShowFormatting { get; set; }
@@ -462,6 +466,10 @@ public class LanguageSettings
         SubtitleGridTextDisplayClip = "Clip (single line)";
         SubtitleGridTextDisplayWrap = "Wrap to fit window";
         SubtitleGridTextDisplayEllipsis = "Single line with ellipsis";
+        SubtitleEditBoxPosition = "Subtitle text box position";
+        SubtitleEditBoxPositionBelow = "Text box below grid";
+        SubtitleEditBoxPositionInline = "Inline editing in grid";
+        SubtitleEditBoxPositionAbove = "Text box above grid";
         SubtitleGridLiveSpellCheck = "Live spell check in subtitle grid";
         SubtitleGridCenterText = "Center text in subtitle grid";
         SubtitleGridShowFormatting = "Show formatted (HTML/ASSA) text in subtitle grid";
