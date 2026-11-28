@@ -100,7 +100,7 @@ Right-click the preview to tick or untick many rows at once:
 - **Select none** (`Ctrl+D`) — untick every row, so single rows can be picked
 - **Invert selection** (`Ctrl+Shift+I`) — tick the unticked rows and untick the ticked ones
 
-`Space` toggles the checkbox of the rows that are highlighted, so a range selected with Shift+click can be flipped in one go. These gestures work while the preview has focus; the rules tree keeps its own shortcuts below.
+`Space` toggles the checkbox of the rows that are highlighted, so a range selected with Shift+click can be flipped in one go. These gestures work while the preview has focus (`Ctrl+3` goes there); the categories and rules lists keep their own shortcuts below.
 
 Editing a rule regenerates the preview, which ticks every row again.
 
@@ -170,26 +170,43 @@ The rules are added in the order they were entered, which is the order they run 
 
 ### Keyboard shortcuts
 
+The whole window can be used without the mouse. These keys are fixed and not part of **Options** → **Shortcuts**.
+
+**Moving around**
+
 | Shortcut | Action |
 |---|---|
-| `Ctrl+N` | Add a new rule to the selected category, or insert after the selected rule |
+| `Ctrl+1` / `Ctrl+2` / `Ctrl+3` | Go to the categories list / the rules list / the preview |
+| `Ctrl+E` | Go to the rules filter box |
+| `Tab` / `Shift+Tab` | Next / previous control: categories, category buttons, filter, type-in row, rules, rule buttons, preview, then **Apply** / **Cancel** / **OK** |
+| `F3` / `Shift+F3` | Select the next / previous line in the preview (the focus stays where it is, so **Applied rules** can be read line by line) |
+
+**Categories and rules** (in the categories list or the rules list)
+
+| Shortcut | Action |
+|---|---|
+| `Space` | Turn the selected category or rule on/off |
+| `Shift+Space` | Make the selected category the only active one (in the rules list: the only active rule in its category) |
+| `Ctrl+N` / `Insert` | Add a new rule to the selected category (the cursor goes to the type-in row) |
 | `Ctrl+Shift+N` | Open **Add rules** for the selected category or rule |
 | `F2` / `Enter` | Edit the selected rule in its row (`F2` renames the selected category) |
 | `Enter` / `Escape` while editing a row | Keep the change / put the texts back |
 | `Ctrl+D` | Duplicate the selected rule |
 | `Ctrl+F` | Find a rule by name / text |
-| `Ctrl+Up` / `Ctrl+Down` | Move the selected category or rule up / down (`Cmd` on macOS) |
-| `Ctrl+Home` / `Ctrl+End` | Move the selected category or rule to the top / bottom (`Cmd` on macOS) |
-| `Ctrl+Shift+-` | Collapse all categories |
-| `Ctrl+Shift++` | Expand all categories |
-| `Delete` | Delete the selected rule (focus must be in the rules tree) |
-| `Space` | Toggle the selected node (category or rule) on/off |
+| `Ctrl+Up` / `Ctrl+Down` | Move the selected category or rule up / down |
+| `Ctrl+Home` / `Ctrl+End` | Move the selected category or rule to the top / bottom |
+| `Delete` | Delete the selected category or rule |
+
+**Window**
+
+| Shortcut | Action |
+|---|---|
+| `Ctrl+Enter` | **Apply** — change the subtitle and keep the window open for the next round |
+| `Enter` | **OK** (when the focused control does not use `Enter` itself) |
 | `Escape` | Close the window |
 | `F1` | Open help |
 
-On macOS `Cmd` works for every `Ctrl` shortcut above. The context menus show the shortcut next to each action.
-
-The expand/collapse buttons (`+` / `−`) above the tree expand or collapse all categories at once (`Ctrl+Shift++` / `Ctrl+Shift+-`).
+On macOS `Cmd` works for every `Ctrl` shortcut above. The context menus show the shortcut next to each action. The preview has its own `Space`, `Ctrl+A`, `Ctrl+D` and `Ctrl+Shift+I` (see [Choosing which fixes to apply](#choosing-which-fixes-to-apply)).
 
 > **Note:** `Ctrl+D` duplicates the selected rule, except while the fixes preview has focus — there it unticks every row, as in the other preview lists (see [Choosing which fixes to apply](#choosing-which-fixes-to-apply)).
 

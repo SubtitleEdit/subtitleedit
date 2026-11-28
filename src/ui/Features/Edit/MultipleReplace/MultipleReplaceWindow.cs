@@ -68,6 +68,7 @@ public class MultipleReplaceWindow : Window
         right.Add(rulesView, 0, 0);
         right.Add(new GridSplitter
         {
+            IsTabStop = false, // a Tab stop that does nothing visible (#17247)
             Height = 5,
             Background = EditorChrome.LineBrush,
             HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -89,6 +90,7 @@ public class MultipleReplaceWindow : Window
         content.Add(categoriesView, 0, 0);
         content.Add(new GridSplitter
         {
+            IsTabStop = false,
             Width = 5,
             Background = EditorChrome.LineBrush,
             HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -114,6 +116,7 @@ public class MultipleReplaceWindow : Window
         Closing += (_, _) => vm.OnClosing();
         Loaded += (_, _) => vm.OnLoaded();
         KeyDown += vm.OnKeyDown;
+        AddHandler(KeyDownEvent, vm.OnPreviewKeyDown, RoutingStrategies.Tunnel);
     }
 
     private static bool IsContextClick(PointerReleasedEventArgs e)
@@ -138,6 +141,8 @@ public class MultipleReplaceWindow : Window
             {
                 var checkBox = new CheckBox
                 {
+                    // Space on the row toggles it, so Tab does not need to stop on the box (#17247).
+                    Focusable = false,
                     VerticalAlignment = VerticalAlignment.Center,
                     Margin = new Thickness(0),
                     Padding = new Thickness(0),
@@ -265,6 +270,7 @@ public class MultipleReplaceWindow : Window
             [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.NewestFirst)) { Source = vm, Mode = BindingMode.TwoWay },
         };
         var textBoxFilter = EditorChrome.MakeSearchBox(vm, nameof(vm.RulesFilter), Se.Language.Edit.MultipleReplace.FilterRules, 220);
+        vm.RulesFilterTextBox = textBoxFilter;
         textBoxFilter.KeyDown += (_, e) =>
         {
             // the list filters while typing - Enter must not reach the window, where it means OK
@@ -509,10 +515,12 @@ public class MultipleReplaceWindow : Window
             Spacing = 4,
             Children = { buttonRemove, buttonEdit, buttonMoveTo, buttonUp, buttonDown },
         };
-        var actions = new DockPanel { Margin = new Thickness(0, 6, 0, 0), MinHeight = EditorChrome.FieldHeight };
+        // Add rules sits on the right but comes last, so Tab walks the buttons left to right (#17247).
+        var actions = new DockPanel { Margin = new Thickness(0, 6, 0, 0), MinHeight = EditorChrome.FieldHeight, LastChildFill = false };
+        DockPanel.SetDock(ruleActions, Dock.Left);
         DockPanel.SetDock(buttonAddRules, Dock.Right);
-        actions.Children.Add(buttonAddRules);
         actions.Children.Add(ruleActions);
+        actions.Children.Add(buttonAddRules);
 
         var panel = new Grid
         {
@@ -729,6 +737,7 @@ public class MultipleReplaceWindow : Window
             },
         });
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedFix)) { Source = vm });
+        vm.FixesTable = dataGrid;
 
         TableViewExtras.AddSpaceToggle<MultipleReplaceFix>(dataGrid,
             item => item.Apply, (item, v) => item.Apply = v);
