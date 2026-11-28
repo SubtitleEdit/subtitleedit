@@ -45,6 +45,7 @@ public class SettingsPage : UserControl
     // The app theme the chrome brushes and the sections were built for. Attaching the page to
     // its window also raises ActualThemeVariantChanged (the default variant resolves to the
     // window's), which must not rebuild everything a second time on every open.
+    private string? _appliedFilter;
     private ThemeVariant? _builtThemeVariant = Application.Current?.ActualThemeVariant;
 
     public SettingsPage(SettingsViewModel vm)
@@ -164,7 +165,16 @@ public class SettingsPage : UserControl
         _searchBox.CaretIndex = vm.InitialSearchText.Length; // keep typing after the text from the command palette
 
         // Search updates immediately, without the category navigation fade.
-        _searchBox.TextChanged += (_, e) => UpdateVisibleSections(_searchBox.Text ?? string.Empty);
+        // Setting Text above raises TextChanged later - skip it when the filter is unchanged, so
+        // opening the window does not rebuild the sections it just built.
+        _searchBox.TextChanged += (_, e) =>
+        {
+            var filter = _searchBox.Text ?? string.Empty;
+            if (filter != _appliedFilter)
+            {
+                UpdateVisibleSections(filter);
+            }
+        };
         ActualThemeVariantChanged += (_, _) => Dispatcher.UIThread.Post(() =>
         {
             var themeVariant = Application.Current?.ActualThemeVariant;
@@ -279,6 +289,7 @@ public class SettingsPage : UserControl
     /// </summary>
     private void UpdateVisibleSections(string filter)
     {
+        _appliedFilter = filter;
         _contentPanel.Children.Clear();
         var showAllSections = !string.IsNullOrWhiteSpace(filter);
 
