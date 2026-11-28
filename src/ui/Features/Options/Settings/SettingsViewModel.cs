@@ -3562,6 +3562,8 @@ public partial class SettingsViewModel : ObservableObject
         return e.KeyModifiers == KeyModifiers.Alt && e.Key is Key.Left or Key.Right;
     }
 
+    internal string InitialSearchText { get; set; } = string.Empty;
+
     internal void Initialize(MainViewModel mainViewModel)
     {
         _mainViewModel = mainViewModel;

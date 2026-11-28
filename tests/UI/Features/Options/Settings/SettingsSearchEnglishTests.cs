@@ -50,6 +50,12 @@ public class SettingsSearchEnglishTests
         item.Filter("abstand");
         Assert.True(item.IsVisible);
 
+        item.Filter("gap  mni");
+        Assert.False(item.IsVisible); // Short words require an exact substring.
+
+        item.Filter("ms  gap min");
+        Assert.True(item.IsVisible);
+
         item.Filter("duration");
         Assert.False(item.IsVisible);
     }

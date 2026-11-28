@@ -55,6 +55,7 @@ public class SettingsPage : UserControl
 
         _searchBox = new TextBox
         {
+            Text = vm.InitialSearchText,
             PlaceholderText = Se.Language.Options.Settings.SearchSettingsDotDotDot,
             Margin = new Thickness(10, 12, 10, 8),
             HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -159,7 +160,8 @@ public class SettingsPage : UserControl
         Content = grid;
         ApplyChromeBrushes();
 
-        UpdateVisibleSections(string.Empty);
+        UpdateVisibleSections(vm.InitialSearchText);
+        _searchBox.CaretIndex = vm.InitialSearchText.Length; // keep typing after the text from the command palette
 
         // Search updates immediately, without the category navigation fade.
         _searchBox.TextChanged += (_, e) => UpdateVisibleSections(_searchBox.Text ?? string.Empty);

@@ -24,6 +24,50 @@ public class CommandPaletteRowsTests
         Assert.Equal(expected, MakeItem("Name", shortcut).ShortcutKeys);
     }
 
+    [Theory]
+    [InlineData("transcribe", "Speech to text")]
+    [InlineData("transcirbe", "Speech to text")]
+    [InlineData("captions burn", "Generate video with burned-in subtitles")]
+    [InlineData("text\tspeech", "Speech to text")]
+    [InlineData("transcribe speech", "Speech to text")]
+    [InlineData("hardcode video", "Generate video with burned-in subtitles")]
+    public void Search_MatchesAliasesTyposAndReorderedWords(string query, string expected)
+    {
+        var command = new RelayCommand(() => { });
+        var vm = new CommandPaletteViewModel();
+        vm.Initialize([
+            new("speech", "Speech to text", "Video", "", command, "transcribe"),
+            new("burn", "Generate video with burned-in subtitles", "Video", "", command, "burn captions hardcode"),
+        ]);
+
+        vm.SearchText = query;
+
+        Assert.Equal(expected, vm.SelectedItem?.DisplayName);
+    }
+
+    [Fact]
+    public void Search_PutsExactCommandsBeforeTyposAndSettings()
+    {
+        var vm = new CommandPaletteViewModel();
+        var exact = MakeItem("Save");
+        var typo = MakeItem("Wave");
+        var settings = MakeItem("Search settings");
+        vm.Initialize([typo, exact], settings);
+
+        vm.SearchText = "save";
+        Assert.Equal(new[] { exact, typo, settings }, vm.Items.ToArray());
+
+        Assert.False(vm.IsNothingFound);
+
+        vm.SearchText = "zoom anchor";
+        Assert.Same(settings, vm.SelectedItem);
+        Assert.Single(vm.Items);
+        Assert.True(vm.IsNothingFound); // no command matched, even with the settings row shown
+
+        vm.SearchText = "";
+        Assert.DoesNotContain(settings, vm.Items);
+    }
+
     [AvaloniaFact]
     public void Rows_ShowTheItemsLeftAfterASearch()
     {

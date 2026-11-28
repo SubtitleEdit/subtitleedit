@@ -75,14 +75,20 @@ public class CommandPaletteWindow : Window
             FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Top,
-            Margin = new Thickness(0, 20, 0, 0),
+            Margin = new Thickness(0, 16, 0, 8),
         }.WithBindVisible(vm, nameof(vm.IsNothingFound));
 
-        var listPanel = new Panel
+        // The hint sits above the list, so it never overlaps the "Search for settings..." row.
+        var listPanel = new Grid
         {
-            Children = { listBox, labelNothingFound },
+            RowDefinitions =
+            {
+                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+            },
         };
+        listPanel.Add(labelNothingFound, 0);
+        listPanel.Add(listBox, 1);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
