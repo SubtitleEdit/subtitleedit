@@ -27,6 +27,9 @@ public class TestApp : Application
 {
     public override void Initialize()
     {
+        // No libmpv in the test bin: an unanswered "Download mpv?" box would hold keyboard focus.
+        Nikse.SubtitleEdit.Features.Main.MainViewModel.SuppressLibMpvDownloadPrompt = true;
+
         // The custom up/down controls embed a ButtonSpinner + TextBox that need a
         // theme to resolve their templates when shown in a headless window.
         Styles.Add(new Fluent2Theme());
