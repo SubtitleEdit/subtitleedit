@@ -3266,7 +3266,8 @@ public static class DownloadHashManager
             },
             [WhisperCpp.WindowsVulkan] = new[]
             {
-                "9882d767f33b195cea5e43e6c87de93e0963d58e421feefc12e30bd9791f13cf", // whispercpp-196 / v1.9.6 (b5907) (current download URL)
+                "5cb0a2545a51bc2a48804164fbef4d7f1709c5de4764712c68d9940d1e9823ea", // whispercpp-197 / v1.9.6 (b5907) (current download URL — runtime CPU variants, #17252)
+                "9882d767f33b195cea5e43e6c87de93e0963d58e421feefc12e30bd9791f13cf", // whispercpp-196 / v1.9.6 (b5907) (AVX-512-only ggml-cpu.dll)
                 "89f2c36455939ad42e08b2107bd6b47105b6d9c1a2b0916cbb500ec27deb520a", // whispercpp-195 / v1.9.5
                 "b576bd3cc7282478ad49b32692416f02c0987b7cbc736b3b63cd39207a7a57af", // whispercpp-194 / v1.9.4
                 "2b3829c69c64b3bbd117ef3fa3ae1de2574cab36a4a572199bf3c291404ff1cc", // whispercpp-193 / v1.9.3
@@ -3347,7 +3348,8 @@ public static class DownloadHashManager
             },
             [WhisperCpp.WindowsVulkanExecutable] = new[]
             {
-                "274753613138916340cd6d1a282251829d7e9ea6b5306928a49150bcba3e7842", // whispercpp-196 / v1.9.6 (b5907) (current download URL)
+                "59824f37b87224ddf1075a1a54664614881c6d4c5e58762fb264f3be5d46d266", // whispercpp-197 / v1.9.6 (b5907) (current download URL — runtime CPU variants, #17252)
+                "274753613138916340cd6d1a282251829d7e9ea6b5306928a49150bcba3e7842", // whispercpp-196 / v1.9.6 (b5907) (AVX-512-only ggml-cpu.dll)
                 "1ef8f16edf2f8df429e7e1d18c9af073f66d594813e9aae739e5bdf015a61985", // whispercpp-195 / v1.9.5
                 "26a64c217a57e23da96c56a38f4fb35a3a27c9488631086f799a4e32fd1331e1", // whispercpp-194 / v1.9.4
                 "a99280f4497f867bb17d4e4e138b3694c930a42a897609974a19dc5b651ac2c5", // whispercpp-193 / v1.9.3
