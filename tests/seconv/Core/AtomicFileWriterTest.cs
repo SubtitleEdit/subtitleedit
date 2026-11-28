@@ -43,6 +43,43 @@ public class AtomicFileWriterTest : IDisposable
     }
 
     [Fact]
+    public void WriteViaTempPath_MovesFileAndCompanionIntoPlace()
+    {
+        var path = Path.Combine(_folder, "movie.sub");
+        File.WriteAllText(path, "old sub");
+        File.WriteAllText(Path.ChangeExtension(path, ".idx"), "old idx");
+
+        AtomicFileWriter.WriteViaTempPath(path, temp =>
+        {
+            Assert.NotEqual(path, temp);
+            Assert.Equal(".sub", Path.GetExtension(temp));
+            File.WriteAllText(temp, "new sub");
+            File.WriteAllText(Path.ChangeExtension(temp, ".idx"), "new idx");
+        }, ".idx");
+
+        Assert.Equal("new sub", File.ReadAllText(path));
+        Assert.Equal("new idx", File.ReadAllText(Path.ChangeExtension(path, ".idx")));
+        Assert.Equal(2, Directory.GetFiles(_folder).Length);
+    }
+
+    [Fact]
+    public void WriteViaTempPath_Throws_KeepsOldFilesAndDeletesTempFiles()
+    {
+        var path = Path.Combine(_folder, "movie.sub");
+        File.WriteAllText(path, "old sub");
+
+        Assert.Throws<OperationCanceledException>(() => AtomicFileWriter.WriteViaTempPath(path, temp =>
+        {
+            File.WriteAllText(temp, "half");
+            File.WriteAllText(Path.ChangeExtension(temp, ".idx"), "half");
+            throw new OperationCanceledException();
+        }, ".idx"));
+
+        Assert.Equal("old sub", File.ReadAllText(path));
+        Assert.Equal(new[] { path }, Directory.GetFiles(_folder));
+    }
+
+    [Fact]
     public void WriteAllText_ReplacesContentAndWritesPreamble()
     {
         var path = Path.Combine(_folder, "subs.srt");
