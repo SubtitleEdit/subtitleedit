@@ -353,6 +353,7 @@ internal static class CliSchema
             {
                 new { code = 0, meaning = "All matched files converted successfully (or the subcommand succeeded)" },
                 new { code = 1, meaning = "Any failure: bad usage, unknown option, no files matched, or one or more files failed" },
+                new { code = 130, meaning = "Stopped with Ctrl+C; files finished before that are kept and listed (--json: \"cancelled\": true)" },
             },
             arguments = new[]
             {

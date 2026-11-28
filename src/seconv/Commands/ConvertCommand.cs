@@ -1112,11 +1112,19 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             if (settings.Json)
             {
                 EmitJsonResult(result, stopwatch.Elapsed);
-                return result.Success ? 0 : 1;
+                return result.Cancelled ? CliCancellation.ExitCode : result.Success ? 0 : 1;
             }
 
             // Display results
             AnsiConsole.WriteLine();
+            if (result.Cancelled)
+            {
+                AnsiConsole.MarkupLine($"[yellow]⚠[/] Conversion cancelled");
+                AnsiConsole.MarkupLine($"[dim]Converted {result.SuccessfulFiles} file(s) before that, in {elapsed}[/]");
+                PrintWarnings(result);
+                return CliCancellation.ExitCode;
+            }
+
             if (result.Success)
             {
                 if (result.Warnings.Count > 0)
@@ -1161,6 +1169,19 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             }
 
             return 0;
+        }
+        catch (Exception) when (CliCancellation.IsCancellationRequested)
+        {
+            if (settings.Json)
+            {
+                Console.Out.WriteLine(JsonOut.Cancelled());
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("[yellow]Conversion cancelled[/]");
+            }
+
+            return CliCancellation.ExitCode;
         }
         catch (Exception ex)
         {
@@ -1300,6 +1321,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         var payload = new
         {
             success = result.Success,
+            cancelled = result.Cancelled,
             totalFiles = result.TotalFiles,
             successfulFiles = result.SuccessfulFiles,
             failedFiles = result.FailedFiles,

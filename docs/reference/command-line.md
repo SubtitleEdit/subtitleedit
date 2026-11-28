@@ -973,8 +973,14 @@ Run `seconv formats` for the full catalog (380+ entries, including input-only fo
 |---|---|
 | `0` | Conversion succeeded for all matched files |
 | `1` | Any error: bad usage, unknown option, rejected option value, no files matched, parse error, OCR engine missing, invalid `--settings` file, or one or more files failed to convert |
+| `130` | Stopped with Ctrl+C |
 
-There are only these two. Every failure path — including argument parsing — exits 1.
+Every failure path — including argument parsing — exits 1.
+
+The first Ctrl+C stops the run at the next safe point — between files, tracks, OCR images or
+translation batches — and an output that was being written is not replaced, so an existing file
+is left as it was. Files finished before that are kept and listed (with `--json`, the result has
+`"cancelled": true`). A second Ctrl+C ends seconv at once.
 
 ## Legacy syntax
 

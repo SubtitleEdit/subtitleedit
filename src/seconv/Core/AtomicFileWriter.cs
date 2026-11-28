@@ -62,6 +62,65 @@ internal static class AtomicFileWriter
     }
 
     /// <summary>
+    /// The same for writers that open the file themselves (the Blu-ray sup / DVD sup / VobSub
+    /// export handlers): <paramref name="write"/> gets a temp path in the target's folder with the
+    /// target's extension, and on success that file - plus any companion that sits next to it
+    /// with one of <paramref name="companionExtensions"/>, e.g. VobSub's ".idx" - is renamed over
+    /// the target. On failure the temp files are deleted and the old output is left as it was.
+    /// <paramref name="write"/> must have closed its files when it returns or throws.
+    /// </summary>
+    public static void WriteViaTempPath(string path, Action<string> write, params string[] companionExtensions)
+    {
+        var target = ResolveTarget(path);
+        var directory = Path.GetDirectoryName(Path.GetFullPath(target));
+        if (string.IsNullOrEmpty(directory))
+        {
+            directory = Directory.GetCurrentDirectory();
+        }
+
+        // Ends in the target's own extension: VobSubWriter derives the .idx name from it.
+        var tempPath = Path.Combine(directory,
+            "." + Path.GetFileNameWithoutExtension(target) + "." + Path.GetRandomFileName().Replace('.', '_') + Path.GetExtension(target));
+        try
+        {
+            // Reserve the name; also tells whether the folder is writable at all.
+            new FileStream(tempPath, FileMode.CreateNew, FileAccess.Write, FileShare.None).Dispose();
+        }
+        catch (Exception ex) when (ex is UnauthorizedAccessException or IOException)
+        {
+            // The folder is not writable (the file may still be) - write in place as before.
+            write(target);
+            return;
+        }
+
+        var companions = companionExtensions
+            .Select(ext => (Temp: Path.ChangeExtension(tempPath, ext), Target: Path.ChangeExtension(target, ext)))
+            .ToList();
+        try
+        {
+            write(tempPath);
+            CopyUnixFileMode(target, tempPath);
+            ReplaceFile(tempPath, target);
+            foreach (var (temp, final) in companions)
+            {
+                if (File.Exists(temp))
+                {
+                    CopyUnixFileMode(final, temp);
+                    ReplaceFile(temp, final);
+                }
+            }
+        }
+        finally
+        {
+            TryDelete(tempPath);
+            foreach (var (temp, _) in companions)
+            {
+                TryDelete(temp);
+            }
+        }
+    }
+
+    /// <summary>
     /// A rename over a symbolic link would replace the link with a regular file - write to the
     /// file it points at instead.
     /// </summary>

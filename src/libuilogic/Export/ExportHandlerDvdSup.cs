@@ -4,7 +4,7 @@ using Nikse.SubtitleEdit.Core.VobSub;
 
 namespace Nikse.SubtitleEdit.UiLogic.Export;
 
-public class ExportHandlerDvdSup : IExportHandler
+public class ExportHandlerDvdSup : IExportHandler, IDisposable
 {
     public ExportImageType ExportImageType => ExportImageType.DvdSup;
     public string Extension => ".sup";
@@ -78,5 +78,15 @@ public class ExportHandlerDvdSup : IExportHandler
         }
 
         _dvdSupWriter.Dispose();
+    }
+
+    /// <summary>
+    /// Releases the file without finishing it - for an export that failed or was cancelled
+    /// half way. <see cref="WriteFooter"/> is the normal end; calling this after it is harmless.
+    /// </summary>
+    public void Dispose()
+    {
+        _dvdSupWriter?.Dispose();
+        _dvdSupWriter = null;
     }
 }

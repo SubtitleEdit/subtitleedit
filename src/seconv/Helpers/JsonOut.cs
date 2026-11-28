@@ -33,12 +33,27 @@ internal static class JsonOut
     public static string UsageError(string message) => Serialize(new
     {
         success = false,
+        cancelled = false,
         totalFiles = 0,
         successfulFiles = 0,
         failedFiles = 0,
         elapsedMs = 0,
         files = Array.Empty<object>(),
         errors = new[] { message },
+        warnings = Array.Empty<string>(),
+    });
+
+    /// <summary>The envelope for a run stopped by Ctrl+C before any result was collected.</summary>
+    public static string Cancelled() => Serialize(new
+    {
+        success = false,
+        cancelled = true,
+        totalFiles = 0,
+        successfulFiles = 0,
+        failedFiles = 0,
+        elapsedMs = 0,
+        files = Array.Empty<object>(),
+        errors = Array.Empty<string>(),
         warnings = Array.Empty<string>(),
     });
 }

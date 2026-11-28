@@ -67,6 +67,12 @@ internal static class ImageOutputWriter
             throw new InvalidOperationException("No paragraphs to render.");
         }
 
+        WriteStaged(handler, filePath, path => WriteRendered(subtitle, path, handler, options));
+    }
+
+    private static void WriteRendered(Subtitle subtitle, string filePath, IExportHandler handler, ConversionOptions options)
+    {
+
         var (screenWidth, screenHeight) = options.Resolution ?? (1920, 1080);
         ApplyReelDuration(handler, options);
 
@@ -96,6 +102,7 @@ internal static class ImageOutputWriter
         var apply3D = Stereo3DImage.IsModeSupported(handler.ExportImageType);
         for (var i = 0; i < paragraphs.Count; i++)
         {
+            CliCancellation.ThrowIfCancellationRequested();
             var p = paragraphs[i];
             var ip = BuildParameter(p, i, screenWidth, screenHeight, scriptHeight, options, assaStyles);
             ip.Bitmap = ImageRenderer.GenerateBitmap(ip);
@@ -112,6 +119,41 @@ internal static class ImageOutputWriter
             ip.Bitmap?.Dispose();
         }
         handler.WriteFooter();
+    }
+
+    /// <summary>
+    /// The single-file binary outputs (Blu-ray sup, DVD sup, VobSub .sub + .idx) are written to a
+    /// temp file and renamed into place when complete, like the text formats: a failed or
+    /// Ctrl+C'd export no longer leaves a truncated file over the old output, and the handler's
+    /// file is closed on failure. Folder-style outputs (BDN-XML, PNG sets, ...) write directly.
+    /// </summary>
+    private static void WriteStaged(IExportHandler handler, string filePath, Action<string> write)
+    {
+        string[]? companions = handler.ExportImageType switch
+        {
+            ExportImageType.BluRaySup or ExportImageType.DvdSup => [],
+            ExportImageType.VobSub => [".idx"],
+            _ => null,
+        };
+
+        if (companions is null || handler is not IDisposable disposable)
+        {
+            write(filePath);
+            return;
+        }
+
+        AtomicFileWriter.WriteViaTempPath(filePath, path =>
+        {
+            try
+            {
+                write(path);
+            }
+            catch
+            {
+                disposable.Dispose();
+                throw;
+            }
+        }, companions);
     }
 
     /// <summary>
@@ -155,6 +197,15 @@ internal static class ImageOutputWriter
             throw new InvalidOperationException("No bitmaps to write.");
         }
 
+        WriteStaged(handler, filePath, path => WritePreserved(items, path, handler, options));
+    }
+
+    private static void WritePreserved(
+        IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem> items,
+        string filePath,
+        IExportHandler handler,
+        ConversionOptions options)
+    {
         var (defaultWidth, defaultHeight) = options.Resolution ?? (1920, 1080);
 
         var first = items[0];
@@ -165,6 +216,7 @@ internal static class ImageOutputWriter
         var apply3D = Stereo3DImage.IsModeSupported(handler.ExportImageType);
         for (var i = 0; i < items.Count; i++)
         {
+            CliCancellation.ThrowIfCancellationRequested();
             var item = items[i];
             var ip = BuildPreservedParameter(item, i, defaultWidth, defaultHeight, options);
             if (apply3D)
