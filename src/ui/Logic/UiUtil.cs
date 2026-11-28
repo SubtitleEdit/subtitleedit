@@ -498,6 +498,7 @@ public static class UiUtil
         if (accessKey.HasValue)
         {
             button.HotKey = new KeyGesture(accessKey.Value, KeyModifiers.Alt);
+            NameAccessTextButton(button, displayText);
         }
 
         if (Se.Settings.Appearance.UseFocusedButtonBackgroundColor)
@@ -509,6 +510,27 @@ public static class UiUtil
         }
 
         return button;
+    }
+
+    /// <summary>
+    /// A button whose content is an <see cref="AccessText"/> gets its UIA name from the raw text,
+    /// so screen readers read "_OK" / "C_ancel" (#12087). Name it with the display text, and drop
+    /// that name again if the content is later replaced, so the new content speaks for itself.
+    /// An accessible name set by the caller afterwards is left alone.
+    /// </summary>
+    private static void NameAccessTextButton(Button button, string displayText)
+    {
+        AutomationProperties.SetName(button, displayText);
+        var initialContent = button.Content;
+        button.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == ContentControl.ContentProperty &&
+                !ReferenceEquals(button.Content, initialContent) &&
+                AutomationProperties.GetName(button) == displayText)
+            {
+                button.ClearValue(AutomationProperties.NameProperty);
+            }
+        };
     }
 
     private static IBrush? _focusedButtonBackgroundBrush;
@@ -2453,7 +2475,6 @@ public static class UiUtil
         }
 
         MakeNumeriUpDownMouseWheelHandler(control);
-        ForwardAutomationNameToInnerTextBox(control);
 
         return control;
     }
@@ -2497,7 +2518,6 @@ public static class UiUtil
         }
 
         MakeNumeriUpDownMouseWheelHandler(control);
-        ForwardAutomationNameToInnerTextBox(control);
 
         return control;
     }
@@ -2539,7 +2559,6 @@ public static class UiUtil
         }
 
         MakeNumeriUpDownMouseWheelHandler(control);
-        ForwardAutomationNameToInnerTextBox(control);
 
         return control;
     }
@@ -2579,7 +2598,6 @@ public static class UiUtil
         }
 
         MakeNumeriUpDownMouseWheelHandler(control);
-        ForwardAutomationNameToInnerTextBox(control);
 
         return control;
     }
@@ -2620,7 +2638,6 @@ public static class UiUtil
         }
 
         MakeNumeriUpDownMouseWheelHandler(control);
-        ForwardAutomationNameToInnerTextBox(control);
 
         return control;
     }
@@ -2649,35 +2666,13 @@ public static class UiUtil
     }
 
     /// <summary>
-    /// Forwards the accessible name (and LabeledBy link) set on a <see cref="NumericUpDown"/>
-    /// to its inner PART_TextBox. The text box is the element that actually receives keyboard focus,
-    /// so without this a screen reader would announce the focused field with no name
-    /// (issue #11553). Callers just set <c>AutomationProperties.Name</c> on the control.
-    /// </summary>
-    private static void ForwardAutomationNameToInnerTextBox(NumericUpDown control)
-    {
-        control.TemplateApplied += (_, e) =>
-        {
-            var textBox = e.NameScope.Find<TextBox>("PART_TextBox");
-            textBox?.Bind(AutomationProperties.NameProperty, control.GetObservable(AutomationProperties.NameProperty));
-            textBox?.Bind(AutomationProperties.LabeledByProperty, control.GetObservable(AutomationProperties.LabeledByProperty));
-
-            var spinner = e.NameScope.Find<ButtonSpinner>("PART_Spinner");
-            if (spinner != null)
-            {
-                spinner.TemplateApplied += (_, spinnerArgs) => NameSpinnerButtons(spinnerArgs.NameScope);
-            }
-        };
-    }
-
-    /// <summary>
     /// The Fluent ButtonSpinner template gives its increase/decrease buttons a PathIcon as
     /// content and no accessible name, so a screen reader announced them as
     /// "Avalonia.Controls.PathIcon button" (#12087). Name them, and take them out of the tab
     /// order: the text box already changes the value with the Up/Down arrows, so the two
     /// extra tab stops per field only added noise for keyboard users.
     /// </summary>
-    private static void NameSpinnerButtons(INameScope nameScope)
+    internal static void NameSpinnerButtons(INameScope nameScope)
     {
         if (nameScope.Find<InputElement>("PART_IncreaseButton") is { } increase)
         {
@@ -3004,6 +2999,42 @@ public static class UiUtil
         return UiTheme.GetDarkThemeBackgroundColor();
     }
 
+    /// <summary>
+    /// Exposes a layout panel to screen readers as a named group (or tool bar, status bar...),
+    /// optionally a landmark. Plain panels are left out of the UIA control view, so without this
+    /// every control in the main window sat flat under the window with no context (#12087).
+    /// </summary>
+    public static T WithAccessibleGroup<T>(this T control, string name,
+        Avalonia.Automation.Peers.AutomationControlType controlType = Avalonia.Automation.Peers.AutomationControlType.Group,
+        Avalonia.Automation.Peers.AutomationLandmarkType? landmark = Avalonia.Automation.Peers.AutomationLandmarkType.Region)
+        where T : Control
+    {
+        AutomationProperties.SetName(control, name);
+        AutomationProperties.SetControlTypeOverride(control, controlType);
+        AutomationProperties.SetIsControlElementOverride(control, true);
+        if (landmark.HasValue)
+        {
+            AutomationProperties.SetLandmarkType(control, landmark.Value);
+        }
+
+        return control;
+    }
+
+    /// <summary>
+    /// Accessible name for a toolbar hint like "Start a new subtitle file {0}", where {0} is the
+    /// shortcut slot of the tooltip. Screen readers read the raw placeholder as "zero" (#12087);
+    /// the shortcut is already in the tooltip, which UIA exposes as the help text.
+    /// </summary>
+    public static string AccessibleNameFromHint(string hint)
+    {
+        if (string.IsNullOrEmpty(hint))
+        {
+            return string.Empty;
+        }
+
+        return hint.Replace("{0}", string.Empty).Replace("  ", " ").Trim();
+    }
+
     public static string? MakeToolTip(string hint, List<ShortCut> shortcuts, string shortcutName = "")
     {
         if (!Se.Settings.Appearance.ShowHints)
@@ -3145,6 +3176,7 @@ public static class UiUtil
 
     internal static void InitializeWindow(Window window, string name)
     {
+        AccessibleLabels.RegisterInnerTextBoxNames();
         window.Icon = GetSeIcon();
         window.Name = name;
 
