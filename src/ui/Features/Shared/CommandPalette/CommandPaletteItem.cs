@@ -23,8 +23,9 @@ public class CommandPaletteItem
     internal string SearchName { get; }
     internal string SearchText { get; }
     internal string Initials { get; }
+    internal string? SearchAliases { get; }
 
-    public CommandPaletteItem(string actionName, string displayName, string groupName, string shortcutText, IRelayCommand command)
+    public CommandPaletteItem(string actionName, string displayName, string groupName, string shortcutText, IRelayCommand command, string? searchAliases = null)
     {
         ActionName = actionName;
         DisplayName = displayName;
@@ -37,6 +38,7 @@ public class CommandPaletteItem
 
         ShortcutKeys = keys;
         Command = command;
+        SearchAliases = searchAliases;
 
         SearchName = displayName.ToLowerInvariant();
         SearchText = (displayName + " " + groupName + " " + shortcutText).ToLowerInvariant();

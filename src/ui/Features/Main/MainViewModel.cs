@@ -15911,7 +15911,9 @@ public partial class MainViewModel :
     private bool _oldFfmpegUseCenterChannelOnly;
 
     [RelayCommand]
-    private async Task CommandShowSettings()
+    private Task CommandShowSettings() => ShowSettings();
+
+    private async Task ShowSettings(string searchText = "")
     {
         _oldGenerateSpectrogram = Se.Settings.Waveform.GenerateSpectrogram;
         _oldSpectrogramStyle = Se.Settings.Waveform.SpectrogramStyle;
@@ -15922,7 +15924,11 @@ public partial class MainViewModel :
         // Restore the remembered size/state before the window is shown - restoring it on Loaded
         // showed the window at its default size first and then visibly grew/maximized it.
         var viewModel = await ShowDialogAsync<SettingsWindow, SettingsViewModel>(
-    vm => { vm.Initialize(this); }, UiUtil.RestoreWindowPosition);
+            vm =>
+            {
+                vm.Initialize(this);
+                vm.InitialSearchText = searchText;
+            }, UiUtil.RestoreWindowPosition);
 
         if (!viewModel.OkPressed && !viewModel.SettingsImported)
         {
@@ -20596,10 +20602,22 @@ public partial class MainViewModel :
             var keys = shortcut.Keys.Count > 0
                 ? string.Join("+", ShortcutManager.OrderKeys(shortcut.Keys).Select(ShortcutManager.GetKeyDisplayName))
                 : string.Empty;
-            items.Add(new CommandPaletteItem(shortcut.Name, displayName, ShortcutGroupUi.GetName(shortcut.Group), keys, shortcut.Action));
+            var aliases = shortcut.Name switch
+            {
+                nameof(ShowSpeechToTextWhisperCommand) => "transcribe transcription asr",
+                nameof(ShowVideoBurnInCommand) => "burn captions hardcode subtitles hardsub",
+                _ => null,
+            };
+            items.Add(new CommandPaletteItem(shortcut.Name, displayName, ShortcutGroupUi.GetName(shortcut.Group), keys, shortcut.Action, aliases));
         }
 
-        var viewModel = await ShowDialogAsync<CommandPaletteWindow, CommandPaletteViewModel>(vm => vm.Initialize(items));
+        var viewModel = await ShowDialogAsync<CommandPaletteWindow, CommandPaletteViewModel>(vm =>
+        {
+            var searchSettings = new CommandPaletteItem(
+                nameof(ShowSettings), Se.Language.Options.Settings.SearchSettingsDotDotDot,
+                string.Empty, string.Empty, new AsyncRelayCommand(() => ShowSettings(vm.SearchText.Trim())));
+            vm.Initialize(items, searchSettings);
+        });
         if (viewModel.SelectedCommand != null)
         {
             await ExecuteCommandAndWait(viewModel.SelectedCommand);
