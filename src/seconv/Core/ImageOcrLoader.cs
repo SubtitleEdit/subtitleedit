@@ -529,6 +529,9 @@ internal static class ImageOcrLoader
 
         for (var i = 0; i < count; i++)
         {
+            // OCR of a long track takes minutes - Ctrl+C stops between images.
+            CliCancellation.ThrowIfCancellationRequested();
+
             // Reported before the image is recognised, so the count is images *finished* -
             // 100% must not show while the last one is still running.
             if (showProgress)

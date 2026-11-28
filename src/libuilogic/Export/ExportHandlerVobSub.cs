@@ -4,7 +4,7 @@ using Nikse.SubtitleEdit.Core.VobSub;
 
 namespace Nikse.SubtitleEdit.UiLogic.Export;
 
-public class ExportHandlerVobSub : IExportHandler
+public class ExportHandlerVobSub : IExportHandler, IDisposable
 {
     public ExportImageType ExportImageType => ExportImageType.VobSub;
     public string Extension => ".sub";
@@ -91,5 +91,15 @@ public class ExportHandlerVobSub : IExportHandler
 
         _vobSubWriter.WriteIdxFile();
         _vobSubWriter.Dispose();
+    }
+
+    /// <summary>
+    /// Releases the file without finishing it - for an export that failed or was cancelled
+    /// half way. <see cref="WriteFooter"/> is the normal end; calling this after it is harmless.
+    /// </summary>
+    public void Dispose()
+    {
+        _vobSubWriter?.Dispose();
+        _vobSubWriter = null;
     }
 }

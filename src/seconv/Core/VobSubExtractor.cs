@@ -117,9 +117,12 @@ internal static class VobSubExtractor
 
             var languageCode = ifo?.GetLanguageCode(streamId);
             var language = string.IsNullOrEmpty(languageCode) ? null : DvdSubtitleLanguage.GetLanguageOrNull(languageCode);
-            var written = palette is { Count: > 0 }
-                ? CopyOneStream(streamPacks, outputPath, isPal, streamId, language ?? DvdSubtitleLanguage.English, palette)
-                : WriteOneStream(streamPacks, outputPath, isPal, streamId, language ?? DvdSubtitleLanguage.English);
+            // Via a temp .sub/.idx pair renamed into place when both are complete: a failed or
+            // Ctrl+C'd rip of a big VOB set must not truncate an earlier output.
+            var written = 0;
+            AtomicFileWriter.WriteViaTempPath(outputPath, path => written = palette is { Count: > 0 }
+                ? CopyOneStream(streamPacks, path, isPal, streamId, language ?? DvdSubtitleLanguage.English, palette)
+                : WriteOneStream(streamPacks, path, isPal, streamId, language ?? DvdSubtitleLanguage.English), ".idx");
             outputs.Add(new StreamOutput(outputPath, streamId, written));
         }
 
@@ -166,6 +169,7 @@ internal static class VobSubExtractor
         using var writer = new VobSubWriter(outputPath, 720, isPal ? 576 : 480, streamId, language, palette);
         foreach (var pack in packs)
         {
+            CliCancellation.ThrowIfCancellationRequested();
             // the merged PES payloads can run past the unit (padding) - its first word is its size
             var data = pack.SubPictureData;
             var size = pack.SubPicture.SubPictureDateSize;
@@ -207,6 +211,7 @@ internal static class VobSubExtractor
         var written = 0;
         foreach (var pack in packs)
         {
+            CliCancellation.ThrowIfCancellationRequested();
             using var bmp = pack.GetBitmap();
             if (bmp is null)
             {

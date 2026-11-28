@@ -102,7 +102,7 @@ public class CliSchemaTest
 
         // Exit codes are part of the contract a caller scripts against.
         var codes = root.GetProperty("exitCodes").EnumerateArray().Select(e => e.GetProperty("code").GetInt32());
-        Assert.Equal([0, 1], codes.ToArray());
+        Assert.Equal([0, 1, 130], codes.ToArray());
 
         // All three value syntaxes are accepted; the schema has to say so, because guessing
         // wrong used to be indistinguishable from success.
