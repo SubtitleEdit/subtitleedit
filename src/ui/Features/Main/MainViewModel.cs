@@ -31275,6 +31275,13 @@ public partial class MainViewModel :
 
     internal void MarkStartupLayoutReady() => _startupLayoutReady.TrySetResult();
 
+    /// <summary>
+    /// Set by the headless UI tests, which host the main view without libmpv: nothing answers the
+    /// startup "Download mpv?" box there, and the unanswered modal keeps pulling keyboard focus to
+    /// its default button, so focus-dependent tests (EditBoxActorTests) failed.
+    /// </summary>
+    internal static bool SuppressLibMpvDownloadPrompt;
+
     internal void OnLoaded()
     {
         StartBackgroundWork();
@@ -31285,7 +31292,7 @@ public partial class MainViewModel :
             Layout.InitNativeMacMenu.Sync(this);
         }
 
-        if (OperatingSystem.IsWindows() && string.IsNullOrEmpty(Se.Settings.General.LibMpvPath))
+        if (OperatingSystem.IsWindows() && string.IsNullOrEmpty(Se.Settings.General.LibMpvPath) && !SuppressLibMpvDownloadPrompt)
         {
             Dispatcher.UIThread.Post(async void () =>
             {
