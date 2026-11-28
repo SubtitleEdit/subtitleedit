@@ -1151,6 +1151,7 @@ public class SettingsPage : UserControl
             new SettingsItem(Se.Language.Options.Settings.SubtitleGridTextSingleLineSeparator,
                 () => UiUtil.MakeTextBox(150, _vm, nameof(_vm.SubtitleGridTextSingleLineSeparator))),
             new SettingsItem(Se.Language.Options.Settings.SubtitleGridTextDisplay, () => UiUtil.MakeComboBox(_vm.SubtitleGridTextDisplayModes, _vm, nameof(_vm.SelectedSubtitleGridTextDisplayMode))),
+            new SettingsItem(Se.Language.Options.Settings.SubtitleEditBoxPosition, () => UiUtil.MakeComboBox(_vm.SubtitleEditBoxPositions, _vm, nameof(_vm.SelectedSubtitleEditBoxPosition))),
             new SettingsItem(Se.Language.Options.Settings.SubtitleGridShowFormatting, () => UiUtil.MakeComboBox(_vm.SubtitleGridFormattings, _vm, nameof(_vm.SubtitleGridFormatting))),
             MakeCheckboxSetting(Se.Language.Options.Settings.SubtitleGridLiveSpellCheck, nameof(_vm.SubtitleGridLiveSpellCheck)),
             MakeCheckboxSetting(Se.Language.Options.Settings.SubtitleGridCenterText, nameof(_vm.SubtitleGridCenterText)),
