@@ -211,7 +211,7 @@ Dialogs that preview their changes in a list of checkboxes — [Remove text for 
 | Ctrl+Shift+I | Invert selection |
 | Space | Toggle the checkbox of the highlighted rows |
 
-The same three actions sit in the list's right-click menu. In Multiple replace they apply to the fixes preview on the right; the rules tree on the left keeps its own `Ctrl+D` (duplicate rule). Other tools with such a list (Fix common errors, Merge continuation lines, Remove unicode characters, Fix Netflix errors, AI review) put buttons below the list for the same job.
+The same three actions sit in the list's right-click menu. In Multiple replace they apply to the fixes preview; the rules list keeps its own `Ctrl+D` (duplicate rule), and the window has more keys of its own — `Space` / `Shift+Space` on categories and rules, `Ctrl+1/2/3` to jump between the panels, `F3` through the preview and `Ctrl+Enter` to apply (see [Multiple replace keyboard shortcuts](../features/edit.md#keyboard-shortcuts)). Other tools with such a list (Fix common errors, Merge continuation lines, Remove unicode characters, Fix Netflix errors, AI review) put buttons below the list for the same job.
 
 ## Beautify Time Codes
 

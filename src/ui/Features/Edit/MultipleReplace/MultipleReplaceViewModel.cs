@@ -64,6 +64,8 @@ public partial class MultipleReplaceViewModel : ObservableObject
     public ListBox CategoriesListBox { get; internal set; }
     public TableView RulesTable { get; internal set; }
     public TextBox? NewFindTextBox { get; internal set; }
+    public TextBox? RulesFilterTextBox { get; internal set; }
+    public TableView? FixesTable { get; internal set; }
     private bool _refreshingRules;
     private ObservableCollection<RuleTreeNode>? _watchedRules;
     public Window? Window { get; set; }
@@ -1412,6 +1414,67 @@ public partial class MultipleReplaceViewModel : ObservableObject
     /// and - with <paramref name="focus"/> - puts keyboard focus on its row, so the next
     /// Ctrl+Up/Down keeps walking the same node (#14136).
     /// </summary>
+    // Ctrl/Cmd+1/2/3 jump between the three panels without walking every button with Tab (#17247).
+    private void FocusCategories()
+    {
+        var category = SelectedCategory ?? Nodes.FirstOrDefault();
+        if (category != null)
+        {
+            FocusNode(category);
+        }
+    }
+
+    private void FocusRules()
+    {
+        var rule = SelectedNode is { IsCategory: false } selected && VisibleRules.Contains(selected)
+            ? selected
+            : VisibleRules.FirstOrDefault();
+        if (rule != null)
+        {
+            FocusNode(rule);
+        }
+        else
+        {
+            NewFindTextBox?.Focus();
+        }
+    }
+
+    private void FocusFixes()
+    {
+        if (FixesTable == null || Fixes.Count == 0)
+        {
+            return;
+        }
+
+        if (SelectedFix == null || !Fixes.Contains(SelectedFix))
+        {
+            SelectedFix = Fixes[0];
+            FixesTable.SelectedItem = SelectedFix;
+        }
+
+        FixesTable.ScrollIntoView(SelectedFix);
+        Dispatcher.UIThread.Post(() => TableViewExtras.FocusRow(FixesTable), DispatcherPriority.Input);
+    }
+
+    /// <summary>
+    /// F3 / Shift+F3: the next / previous changed line in the preview, wherever the focus is -
+    /// so the "Applied rules" panel can be read line by line while toggling rules.
+    /// </summary>
+    private void SelectFix(int delta)
+    {
+        if (FixesTable == null || Fixes.Count == 0)
+        {
+            return;
+        }
+
+        var index = SelectedFix != null && Fixes.IndexOf(SelectedFix) is var current && current >= 0
+            ? Math.Clamp(current + delta, 0, Fixes.Count - 1)
+            : delta > 0 ? 0 : Fixes.Count - 1;
+        SelectedFix = Fixes[index];
+        FixesTable.SelectedItem = SelectedFix;
+        FixesTable.ScrollIntoView(SelectedFix);
+    }
+
     private void FocusNode(RuleTreeNode node, bool focus = true)
     {
         if (node.IsCategory)
@@ -1440,6 +1503,19 @@ public partial class MultipleReplaceViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Ctrl/Cmd+Enter applies without closing, for the "toggle categories, apply, toggle again"
+    /// round (#17247). Tunneling, because the category list takes Ctrl+Enter as a selection key.
+    /// </summary>
+    internal void OnPreviewKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter && IsCommand(e))
+        {
+            e.Handled = true;
+            Apply();
+        }
+    }
+
     internal void OnKeyDown(object? sender, KeyEventArgs e)
     {
         if (e.Key == Key.Escape)
@@ -1457,10 +1533,37 @@ public partial class MultipleReplaceViewModel : ObservableObject
             e.Handled = true;
             Ok();
         }
-        else if (e.Key == Key.N && IsCommand(e))
+        else if ((e.Key == Key.N && IsCommand(e)) ||
+                 (e.Key == Key.Insert && e.KeyModifiers == KeyModifiers.None && e.Source is not TextBox))
         {
             e.Handled = true;
             AddRule();
+        }
+        else if (e.Key is Key.D1 or Key.NumPad1 && IsCommand(e))
+        {
+            e.Handled = true;
+            FocusCategories();
+        }
+        else if (e.Key is Key.D2 or Key.NumPad2 && IsCommand(e))
+        {
+            e.Handled = true;
+            FocusRules();
+        }
+        else if (e.Key is Key.D3 or Key.NumPad3 && IsCommand(e))
+        {
+            e.Handled = true;
+            FocusFixes();
+        }
+        else if (e.Key == Key.E && IsCommand(e))
+        {
+            e.Handled = true;
+            RulesFilterTextBox?.Focus();
+            RulesFilterTextBox?.SelectAll();
+        }
+        else if (e.Key == Key.F3 && e.KeyModifiers is KeyModifiers.None or KeyModifiers.Shift)
+        {
+            e.Handled = true;
+            SelectFix(e.KeyModifiers == KeyModifiers.Shift ? -1 : 1);
         }
         else if (e.Key == Key.N && IsCommand(e, KeyModifiers.Shift))
         {
@@ -1552,13 +1655,49 @@ public partial class MultipleReplaceViewModel : ObservableObject
     /// </summary>
     internal void RulesTable_PreviewKeyDown(object? sender, KeyEventArgs e)
     {
-        if (e.Source is not TextBox) // Ctrl+Home/End in an inline edit box moves the caret
+        if (e.Source is not TextBox) // Ctrl+Home/End in an inline edit box moves the caret, Space types
         {
             MoveKeyDown(e, SelectedNode);
+            SpaceKeyDown(e, SelectedNode);
         }
     }
 
-    internal void CategoriesListBox_PreviewKeyDown(object? sender, KeyEventArgs e) => MoveKeyDown(e, SelectedCategory);
+    internal void CategoriesListBox_PreviewKeyDown(object? sender, KeyEventArgs e)
+    {
+        MoveKeyDown(e, SelectedCategory);
+        SpaceKeyDown(e, SelectedCategory);
+    }
+
+    /// <summary>
+    /// Space toggles the selected category or rule on/off, Shift+Space makes it the only active
+    /// one among its siblings. This has to tunnel too: the list box takes Space as "select the
+    /// focused item" and marks it handled, so a bubbling handler never saw it (#17247).
+    /// </summary>
+    private void SpaceKeyDown(KeyEventArgs e, RuleTreeNode? node)
+    {
+        if (e.Handled || e.Key != Key.Space || node == null)
+        {
+            return;
+        }
+
+        if (e.KeyModifiers == KeyModifiers.None)
+        {
+            e.Handled = true;
+            node.IsActive = !node.IsActive;
+            _dirty = true;
+        }
+        else if (e.KeyModifiers == KeyModifiers.Shift)
+        {
+            e.Handled = true;
+            var siblings = node.IsCategory ? Nodes : node.Parent?.SubNodes;
+            foreach (var sibling in siblings ?? [node])
+            {
+                sibling.IsActive = ReferenceEquals(sibling, node);
+            }
+
+            _dirty = true;
+        }
+    }
 
     private void MoveKeyDown(KeyEventArgs e, RuleTreeNode? node)
     {
@@ -1603,16 +1742,6 @@ public partial class MultipleReplaceViewModel : ObservableObject
         {
             e.Handled = true;
             _ = RemoveSelectedRule();
-        }
-        else if (e.Key == Key.Space && e.KeyModifiers == KeyModifiers.None)
-        {
-            e.Handled = true;
-            var node = SelectedNode;
-            if (node != null)
-            {
-                node.IsActive = !node.IsActive;
-                _dirty = true;
-            }
         }
         else if (e.Key == Key.Enter && e.KeyModifiers == KeyModifiers.None && SelectedNode != null)
         {
@@ -1743,16 +1872,6 @@ public partial class MultipleReplaceViewModel : ObservableObject
         {
             e.Handled = true;
             _ = CategoryDeleteAsync(SelectedCategory);
-        }
-        else if (e.Key == Key.Space && e.KeyModifiers == KeyModifiers.None)
-        {
-            e.Handled = true;
-            var category = SelectedCategory;
-            if (category != null)
-            {
-                category.IsActive = !category.IsActive;
-                _dirty = true;
-            }
         }
     }
 
