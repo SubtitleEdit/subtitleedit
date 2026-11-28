@@ -440,6 +440,9 @@ namespace Nikse.SubtitleEdit
                 // Make combo box / spinner value changes audible to screen readers (#12087).
                 ScreenReaderAnnouncements.Initialize();
 
+                // Name the focused text box inside spinners, autocomplete and editable combo boxes.
+                AccessibleLabels.RegisterInnerTextBoxNames();
+
                 // Set application name
                 b.Instance.Name = AppName;
 

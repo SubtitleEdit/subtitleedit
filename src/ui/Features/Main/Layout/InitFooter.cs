@@ -32,6 +32,9 @@ public static class InitFooter
             Margin = new Thickness(5, 0, 5, 0),
         };
 
+        // A status bar NVDA can read on demand (Insert+End), not loose text blocks (#12087).
+        grid.WithAccessibleGroup(Se.Language.General.Status, Avalonia.Automation.Peers.AutomationControlType.StatusBar, landmark: null);
+
         var waveformBusyIcon = new Icon
         {
             Value = IconNames.Electron,
@@ -86,6 +89,11 @@ public static class InitFooter
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Center,
             DataContext = vm,
+
+            // Status messages ("Saved", "3 lines deleted", "not found") were silent for screen
+            // reader users (#12087). A polite live region is spoken when its text changes,
+            // without moving focus away from the grid or text box.
+            [AutomationProperties.LiveSettingProperty] = AutomationLiveSetting.Polite,
         };
         grid.Add(vm.StatusTextLeftLabel, 0, 2);
         vm.StatusTextLeftLabel.Bind(TextBlock.TextProperty, new Binding(nameof(vm.StatusTextLeft)));

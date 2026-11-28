@@ -489,6 +489,10 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
         public VideoPlayerControl(IVideoPlayer videoPlayerInstance)
         {
+            // A named region, so a screen reader user can jump to the player and hears where
+            // its buttons and sliders belong (#12087).
+            this.WithAccessibleGroup(Se.Language.General.VideoPlayer);
+
             // A right to left UI language sets the whole window to RightToLeft, which
             // mirrors every visual, including this video surface (the picture and any
             // overlay would render flipped). Pin the player to left to right so the

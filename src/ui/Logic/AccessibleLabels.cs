@@ -1,5 +1,7 @@
 ﻿using Avalonia.Automation;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.LogicalTree;
 using Nikse.SubtitleEdit.Controls;
@@ -22,6 +24,50 @@ namespace Nikse.SubtitleEdit.Logic;
 /// </summary>
 public static class AccessibleLabels
 {
+    private static bool _innerTextBoxNamesRegistered;
+
+    /// <summary>
+    /// A NumericUpDown, an AutoCompleteBox and an editable ComboBox hold keyboard focus in a
+    /// text box inside their template, so a screen reader announced the focused field with no
+    /// name - the name and LabeledBy link live on the outer control (#11553, #12087). This
+    /// forwards both to the inner text box for every such control, however it was created,
+    /// and names every spinner's increase/decrease buttons. Safe to call more than once.
+    /// </summary>
+    public static void RegisterInnerTextBoxNames()
+    {
+        if (_innerTextBoxNamesRegistered)
+        {
+            return;
+        }
+
+        _innerTextBoxNamesRegistered = true;
+        TemplatedControl.TemplateAppliedEvent.AddClassHandler<NumericUpDown>((control, e) =>
+            ForwardNameToInnerTextBox(control, e.NameScope.Find<TextBox>("PART_TextBox")));
+
+        // Every spinner's increase/decrease buttons: NumericUpDown's, and those of the custom
+        // TimeCodeUpDown/SecondsUpDown (Start time, Duration).
+        TemplatedControl.TemplateAppliedEvent.AddClassHandler<ButtonSpinner>((_, e) =>
+            UiUtil.NameSpinnerButtons(e.NameScope));
+        TemplatedControl.TemplateAppliedEvent.AddClassHandler<AutoCompleteBox>((control, e) =>
+            ForwardNameToInnerTextBox(control, e.NameScope.Find<TextBox>("PART_TextBox")));
+        TemplatedControl.TemplateAppliedEvent.AddClassHandler<ComboBox>((control, e) =>
+            ForwardNameToInnerTextBox(control, e.NameScope.Find<TextBox>("PART_EditableTextBox")));
+    }
+
+    private static void ForwardNameToInnerTextBox(Control outer, TextBox? inner)
+    {
+        // A name the template or the window gave the text box itself wins.
+        if (inner == null ||
+            inner.IsSet(AutomationProperties.NameProperty) ||
+            inner.IsSet(AutomationProperties.LabeledByProperty))
+        {
+            return;
+        }
+
+        inner.Bind(AutomationProperties.NameProperty, outer.GetObservable(AutomationProperties.NameProperty));
+        inner.Bind(AutomationProperties.LabeledByProperty, outer.GetObservable(AutomationProperties.LabeledByProperty));
+    }
+
     /// <summary>
     /// Labels every unnamed input control under <paramref name="root"/>. Returns the
     /// controls that were linked to a label.

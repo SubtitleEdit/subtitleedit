@@ -311,7 +311,14 @@ public class SettingsPage : UserControl
 
         foreach (var (section, button) in _menuButtons)
         {
-            button.Classes.Set(SettingsChrome.SelectedClass, section == highlighted);
+            var isSelected = section == highlighted;
+            button.Classes.Set(SettingsChrome.SelectedClass, isSelected);
+
+            // The highlight is visual only - tell screen readers which category is shown (#12087).
+            // NVDA reads the help text as the description, Narrator reads the item status.
+            var status = isSelected ? Se.Language.General.Selected : null;
+            AutomationProperties.SetItemStatus(button, status);
+            AutomationProperties.SetHelpText(button, status);
         }
     }
 

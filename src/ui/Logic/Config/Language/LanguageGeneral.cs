@@ -212,6 +212,7 @@ public class LanguageGeneral
     public string Duration { get; set; }
     public string DurationMinutes { get; set; }
     public string Edit { get; set; }
+    public string EditSubtitle { get; set; }
     public string EditDotDotDot { get; set; }
     public string Editing { get; set; }
     public string Effect { get; set; }
@@ -560,6 +561,7 @@ public class LanguageGeneral
     public string NoMatches { get; set; }
     public string Seconds { get; set; }
     public string SelectAll { get; set; }
+    public string Selected { get; set; }
     public string SelectFilesToConvert { get; set; }
     public string SelectForcedLines { get; set; }
     public string SelectNone { get; set; }
@@ -1269,6 +1271,7 @@ public class LanguageGeneral
         Duration = "Duration";
         DurationMinutes = "Duration in minutes";
         Edit = "Edit";
+        EditSubtitle = "Edit subtitle";
         EditDotDotDot = "Edit...";
         Editing = "Editing";
         Effect = "Effect";
@@ -1617,6 +1620,7 @@ public class LanguageGeneral
         NoMatches = "No matches";
         Seconds = "Seconds";
         SelectAll = "Select all";
+        Selected = "Selected";
         SelectFilesToConvert = "Select files to convert";
         SelectForcedLines = "Select forced lines";
         SelectNone = "Select none";

@@ -222,6 +222,9 @@ internal static class FindWindowParts
             TextWrapping = Avalonia.Media.TextWrapping.Wrap,
             FontSize = EditorChrome.FieldFontSize,
             MaxWidth = 220,
+
+            // "Found 3" / "Replaced 2" / "Not found" is spoken without leaving the field (#12087).
+            [AutomationProperties.LiveSettingProperty] = AutomationLiveSetting.Polite,
         };
 
         return new StackPanel

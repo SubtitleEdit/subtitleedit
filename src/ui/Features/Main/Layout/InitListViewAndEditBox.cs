@@ -130,6 +130,9 @@ public static partial class InitListViewAndEditBox
         // even with no rows - like an empty list view on Windows.
         subtitleGrid.Focusable = true;
 
+        // Without a name a screen reader announced the main grid as a bare "list" (#12087).
+        AutomationProperties.SetName(subtitleGrid, Se.Language.General.Subtitles);
+
         subtitleGrid.Height = double.NaN;
         subtitleGrid.Margin = new Thickness(Se.Settings.Appearance.GridCompactMode ? 0 : 2);
         subtitleGrid.ItemsSource = vm.Subtitles;
@@ -1690,6 +1693,9 @@ public static partial class InitListViewAndEditBox
             // the fixed-height text box.
             RowDefinitions = new RowDefinitions("*")
         };
+
+        // A named region for the current line's times, text and buttons (#12087).
+        editGrid.WithAccessibleGroup(Se.Language.General.EditSubtitle);
 
         // Left panel for time controls
         var timeControlsPanel = new StackPanel

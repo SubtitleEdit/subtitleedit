@@ -1,8 +1,11 @@
 ﻿using Avalonia.Automation.Peers;
+using Avalonia.Controls.Primitives;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.LogicalTree;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;
 using Nikse.SubtitleEdit.Features.Main;
@@ -89,6 +92,11 @@ public class AccessibleNamesTests
                     }
                 }
 
+                foreach (var problem in MisreadNames(window))
+                {
+                    unnamed.AppendLine($"{type.Name}: {problem}");
+                }
+
                 foreach (var list in window.GetLogicalDescendants().OfType<ItemsControl>()
                              .Where(c => c is ListBox or ComboBox && c.TemplatedParent == null && c.IsEffectivelyVisible))
                 {
@@ -140,6 +148,46 @@ public class AccessibleNamesTests
         }
 
         return announced == item.GetType().ToString() ? announced : null;
+    }
+
+    /// <summary>
+    /// Names that exist but read wrong (#12087): a "{0}" placeholder left in a hint, an
+    /// access-key underscore ("C_ancel") from AccessText content, and the focused text box
+    /// inside a NumericUpDown/AutoCompleteBox/editable ComboBox left unnamed while the outer
+    /// control carries the label. Walks the visual tree, since template parts are not in the
+    /// logical tree.
+    /// </summary>
+    private static IEnumerable<string> MisreadNames(Window window)
+    {
+        foreach (var control in window.GetVisualDescendants().OfType<Control>())
+        {
+            if (!control.IsEffectivelyVisible)
+            {
+                continue;
+            }
+
+            var name = AutomationProperties.GetName(control);
+            if (name != null && name.Contains("{0}"))
+            {
+                yield return $"{control.GetType().Name} named \"{name}\" (unformatted placeholder)";
+            }
+
+            if (control is Button { Content: AccessText } button &&
+                ControlAutomationPeer.CreatePeerForElement(button).GetName() is { } buttonName &&
+                buttonName.Contains('_'))
+            {
+                yield return $"Button announced as \"{buttonName}\" (access-key underscore)";
+            }
+
+            if (control is TextBox { Name: "PART_TextBox" or "PART_EditableTextBox" } inner &&
+                inner.TemplatedParent is NumericUpDown or AutoCompleteBox or ComboBox &&
+                inner.TemplatedParent is Control outer &&
+                AccessibleLabels.HasAccessibleName(outer) &&
+                string.IsNullOrEmpty(ControlAutomationPeer.CreatePeerForElement(inner).GetName()))
+            {
+                yield return $"{outer.GetType().Name} is named but its focused inner text box is not {Describe(outer)}";
+            }
+        }
     }
 
     /// <summary>

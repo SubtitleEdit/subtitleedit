@@ -1476,6 +1476,9 @@ public class InitWaveform
         vm.AudioVisualizer.AddHandler(DragDrop.DragOverEvent, vm.VideoOnDragOver, RoutingStrategies.Bubble);
         vm.AudioVisualizer.AddHandler(DragDrop.DropEvent, vm.VideoOnDrop, RoutingStrategies.Bubble);
 
+        // A named region groups the waveform toolbar and zoom sliders for screen readers (#12087).
+        mainGrid.WithAccessibleGroup(Se.Language.General.WaveformSpectrogram);
+
         return mainGrid;
     }
 
